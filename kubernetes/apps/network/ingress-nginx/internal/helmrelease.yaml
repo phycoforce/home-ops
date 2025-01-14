@@ -27,7 +27,7 @@ spec:
       service:
         annotations:
           lbipam.cilium.io/ips: "10.0.20.249"
-          external-dns.alpha.kubernetes.io/hostname: &hostname "internal.${SECRET_DOMAIN}"
+          external-dns.alpha.kubernetes.io/hostname: "internal.${SECRET_DOMAIN}"
         externalTrafficPolicy: Cluster
       ingressClassResource:
         name: internal
@@ -73,7 +73,6 @@ spec:
             any: true
       extraArgs:
         default-ssl-certificate: "network/${SECRET_DOMAIN/./-}-production-tls"
-        publish-status-address: *hostname
       resources:
         requests:
           cpu: 100m
