@@ -22,3 +22,4 @@ resources:
   - ./piraeus.yaml
   - ./cloudnative-pg.yaml
   - ./node-feature-discovery.yaml
+  - ./intel.yaml
