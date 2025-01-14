@@ -17,3 +17,4 @@ resources:
   - ./spegel.yaml
   - ./stakater.yaml
   - ./longhorn.yaml
+  - ./external-secrets.yaml
