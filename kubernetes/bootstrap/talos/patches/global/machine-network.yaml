@@ -1,0 +1,5 @@
+machine:
+  network:
+    disableSearchDomain: true
+    nameservers:
+      - 192.168.0.9
