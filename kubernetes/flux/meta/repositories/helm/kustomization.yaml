@@ -21,3 +21,4 @@ resources:
   - ./backube.yaml
   - ./piraeus.yaml
   - ./cloudnative-pg.yaml
+  - ./node-feature-discovery.yaml
