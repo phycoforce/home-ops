@@ -18,3 +18,4 @@ resources:
   - ./stakater.yaml
   - ./longhorn.yaml
   - ./external-secrets.yaml
+  - ./backube.yaml
