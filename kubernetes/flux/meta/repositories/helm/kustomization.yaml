@@ -16,3 +16,4 @@ resources:
   - ./prometheus-community.yaml
   - ./spegel.yaml
   - ./stakater.yaml
+  - ./longhorn.yaml
