@@ -7,4 +7,7 @@ metadata:
 spec:
   allowFirstLastIPs: "Yes"
   blocks:
-    - cidr: "10.0.20.0/24"
+    - # Controller VIP: 10.0.20.250
+      start: 10.0.20.201
+      stop: 10.0.20.249
+
