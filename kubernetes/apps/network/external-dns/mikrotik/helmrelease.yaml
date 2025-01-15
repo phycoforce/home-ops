@@ -41,22 +41,22 @@ spec:
           - name: MIKROTIK_BASEURL
             valueFrom:
               secretKeyRef:
-                name: externaldns-internal-secrets
+                name: external-dns-internal-secret
                 key: MIKROTIK_BASEURL
           - name: MIKROTIK_USERNAME
             valueFrom:
               secretKeyRef:
-                name: externaldns-internal-secrets
+                name: external-dns-internal-secret
                 key: MIKROTIK_USERNAME
           - name: MIKROTIK_PASSWORD
             valueFrom:
               secretKeyRef:
-                name: externaldns-internal-secrets
+                name: external-dns-internal-secret
                 key: MIKROTIK_PASSWORD
           - name: MIKROTIK_SKIP_TLS_VERIFY
             valueFrom:
               secretKeyRef:
-                name: externaldns-internal-secrets
+                name: external-dns-internal-secret
                 key: MIKROTIK_SKIP_TLS_VERIFY
 
         livenessProbe:
