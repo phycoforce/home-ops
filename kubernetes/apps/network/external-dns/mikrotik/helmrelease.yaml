@@ -89,7 +89,7 @@ spec:
             - target:
                 version: v1
                 kind: Deployment
-                name: *name
+                name: *app
               patch: |
                 - op: add
                   path: /spec/template/spec/enableServiceLinks
