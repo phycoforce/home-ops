@@ -3,4 +3,4 @@ kind: Kustomization
 namespace: networking
 resources:
   - ./externalsecret.yaml
-  - ./helm-release.yaml
+  - ./helmrelease.yaml
