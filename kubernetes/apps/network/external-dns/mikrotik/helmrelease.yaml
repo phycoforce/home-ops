@@ -59,18 +59,18 @@ spec:
                 name: external-dns-internal-secret
                 key: MIKROTIK_SKIP_TLS_VERIFY
 
-        livenessProbe:
-          httpGet:
-            path: /healthz
-            port: http-webhook
-          initialDelaySeconds: 10
-          timeoutSeconds: 5
-        readinessProbe:
-          httpGet:
-            path: /readyz
-            port: http-webhook
-          initialDelaySeconds: 10
-          timeoutSeconds: 5
+        #livenessProbe:
+        #  httpGet:
+        #    path: /healthz
+        #    port: http-webhook
+        #  initialDelaySeconds: 10
+        #  timeoutSeconds: 5
+        #readinessProbe:
+        #  httpGet:
+        #    path: /readyz
+        #    port: http-webhook
+        #  initialDelaySeconds: 10
+        #  timeoutSeconds: 5
 
     resources:
       requests:
