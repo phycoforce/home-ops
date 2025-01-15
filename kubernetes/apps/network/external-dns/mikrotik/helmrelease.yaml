@@ -4,7 +4,6 @@ apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
   name: external-dns-internal
-  namespace: networking
 spec:
   interval: 5m
   chart:
@@ -14,14 +13,14 @@ spec:
       version: 1.15.0
       sourceRef:
         kind: HelmRepository
-        name: external-dns-charts
+        name: external-dns
         namespace: flux-system
       interval: 5m
   values:
     fullnameOverride: &name externaldns-internal
 
     domainFilters:
-      - skylab.fi
+      - ${SECRET_DOMAIN}
 
     podAnnotations:
       secret.reloader.stakater.com/reload: externaldns-internal-secrets
@@ -87,9 +86,9 @@ spec:
       - ingress
       - crd
 
-    txtPrefix: "k8s-nebula."
+    txtPrefix: "k8s."
     extraArgs:
-      - --ingress-class=internal-nginx
+      - --ingress-class=internal
       - --managed-record-types=A
       - --managed-record-types=AAAA
       - --managed-record-types=CNAME
