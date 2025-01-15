@@ -17,13 +17,9 @@ spec:
         namespace: flux-system
       interval: 5m
   values:
-    fullnameOverride: &name externaldns-internal
 
     domainFilters:
       - ${SECRET_DOMAIN}
-
-    podAnnotations:
-      secret.reloader.stakater.com/reload: externaldns-internal-secrets
 
     policy: sync
     provider:
