@@ -26,15 +26,6 @@ spec:
     - name: snapshot-controller
       namespace: volsync-system
   values:
-      image:
-        repository: harbor.icylair.com/library/volsync_1504
-        tag: v0.0.2
-      manageCRDs: true
-      metrics:
-        disableAuth: true
-      replicaCount: 1
-      restic:
-        repository: harbor.icylair.com/library/volsync_1504
-        tag: v0.0.2
-      serviceAccount:
-        create: true
+    manageCRDs: true
+    metrics:
+      disableAuth: true
