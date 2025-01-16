@@ -75,4 +75,4 @@ spec:
       fsGroup: 568
     enableFileDeletion: true
     cleanupCachePVC: true
-    cleanupTempPVC: false
+    cleanupTempPVC: true
