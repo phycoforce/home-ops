@@ -1,9 +1,9 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: ingress-nginx-internal
+  name: &app ingress-nginx-internal
 spec:
   interval: 30m
   chart:
@@ -20,17 +20,17 @@ spec:
   upgrade:
     cleanupOnFail: true
     remediation:
+      strategy: rollback
       retries: 3
   values:
-    fullnameOverride: ingress-nginx-internal
+    fullnameOverride: *app
     controller:
+      replicaCount: 2
       service:
         annotations:
-          lbipam.cilium.io/ips: "10.0.20.249"
-          external-dns.alpha.kubernetes.io/hostname: "internal.${SECRET_DOMAIN}"
+          external-dns.alpha.kubernetes.io/hostname: &hostname internal.${SECRET_DOMAIN}
+          lbipam.cilium.io/ips: 10.0.20.249
           external-dns.alpha.kubernetes.io/ttl: "120"
-          external-dns.alpha.kubernetes.io/webhook-match-subdomain: "false"
-        externalTrafficPolicy: Cluster
       ingressClassResource:
         name: internal
         default: true
@@ -75,8 +75,14 @@ spec:
             any: true
       extraArgs:
         default-ssl-certificate: "network/${SECRET_DOMAIN/./-}-production-tls"
+        publish-status-address: *hostname
+      terminationGracePeriodSeconds: 120
+      publishService:
+        enabled: false
       resources:
         requests:
           cpu: 100m
         limits:
           memory: 500Mi
+    defaultBackend:
+      enabled: false
