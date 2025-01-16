@@ -95,7 +95,6 @@ spec:
       app:
         annotations:
           external-dns.alpha.kubernetes.io/target: internal.${SECRET_DOMAIN}
-          external-dns.alpha.kubernetes.io/ttl: "60"
         className: internal
         hosts:
           - host: bazarr.${SECRET_DOMAIN}
