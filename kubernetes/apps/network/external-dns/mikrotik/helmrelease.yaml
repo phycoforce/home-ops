@@ -24,7 +24,7 @@ spec:
       retries: 3
   values:
 fullnameOverride: *app
-logLevel: &logLevel debug
+logLevel: debug
 logFormat: text
 interval: 3s
 sources: ["ingress", "service"]
