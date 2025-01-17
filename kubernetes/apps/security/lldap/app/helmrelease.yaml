@@ -101,8 +101,6 @@ spec:
       main:
         enabled: true
         className: internal
-        annotations:
-          external-dns.alpha.kubernetes.io/target: internal.${SECRET_DOMAIN}
         hosts:
           - host: &host lldap.${SECRET_DOMAIN}
             paths:
