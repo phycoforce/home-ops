@@ -30,12 +30,14 @@ spec:
       webhook:
         image:
           repository: ghcr.io/mirceanton/external-dns-provider-mikrotik
-          tag: v1.2.6@sha256:7e57384c7c31e4d0dacd1b48cc279b6c46e24752c0d4b7add900fc112321f253
+          tag: pr-173v8
         env:
           - name: LOG_FORMAT
             value: json
           - name: LOG_LEVEL
             value: debug
+          - name: MIKROTIK_DEFAULT_TTL
+            value: "1800"
           - name: MIKROTIK_BASEURL
             valueFrom:
               secretKeyRef:
