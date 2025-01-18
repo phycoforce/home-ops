@@ -1,0 +1,71 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app teslamate
+spec:
+  interval: 15m
+  chart:
+    spec:
+      chart: app-template
+      version: 3.6.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+      interval: 15m
+  maxHistory: 3
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    controllers:
+      teslamate:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          init-db:
+            image:
+              repository: ghcr.io/onedr0p/postgres-init
+              tag: 16.6@sha256:5c98db91663fa586c4905a0c91ab4159e6a5e9a8718cf2cb1e82c9d510392498
+              pullPolicy: Always
+            envFrom:
+              - secretRef:
+                  name: teslamate-secret
+        containers:
+          app:
+            image:
+              repository: teslamate/teslamate
+              tag: 1.32.0@sha256:8c282ada5c72b7b0cbd316ec7bc010a9214d5943cf1e1b36ab9b7a98f45a5809
+            env:
+              TZ: Europe/London
+              DISABLE_MQTT: "true"
+            envFrom:
+              - secretRef:
+                  name: teslamate-secret
+    service:
+      app:
+        controller: *app
+        ports:
+          http:
+            port: 4000
+    ingress:
+      app:
+        className: internal
+        annotations:
+          external-dns.alpha.kubernetes.io/target: internal.${SECRET_DOMAIN}
+        hosts:
+          - host: "{{ .Release.Name }}.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
