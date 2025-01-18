@@ -24,3 +24,4 @@ resources:
   - ./node-feature-discovery.yaml
   - ./intel.yaml
   - ./ananace-charts.yaml
+  - ./grafana.yaml
