@@ -13,7 +13,7 @@ spec:
   path: ./kubernetes/apps/observability/blackbox-exporter/app
   sourceRef:
     kind: GitRepository
-    name: home-kubernetes
+    name: flux-system
   prune: true
   wait: false
   interval: 30m
