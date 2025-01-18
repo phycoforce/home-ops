@@ -87,14 +87,13 @@ spec:
         controller: plex
         type: LoadBalancer
         annotations:
-          io.cilium/lb-ipam-ips: 10.0.60.15
+          io.cilium/lb-ipam-ips: 10.0.20.245
         ports:
           http:
             port: 32400
     ingress:
       app:
         annotations:
-          external-dns.alpha.kubernetes.io/target: external.${SECRET_DOMAIN}
           nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
         className: external
         hosts:
