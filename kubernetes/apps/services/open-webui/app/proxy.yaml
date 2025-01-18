@@ -1,0 +1,52 @@
+---
+apiVersion: networking.k8s.io/v1
+kind: Ingress
+metadata:
+  name: openwebui
+  namespace: services
+  labels:
+    kubernetes.io/service-name: openwebui
+  annotations:
+    nginx.ingress.kubernetes.io/rewrite-target: /
+spec:
+  ingressClassName: internal
+  rules:
+  - host: "llm.${SECRET_DOMAIN}"
+    http:
+      paths:
+      - path: /
+        pathType: Prefix
+        backend:
+          service:
+            name: openwebui
+            port:
+              number: 80
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: openwebui
+  namespace: services
+spec:
+  ports:
+    - port: 80
+      protocol: TCP
+      targetPort: 3000
+      name: http
+---
+apiVersion: discovery.k8s.io/v1
+kind: EndpointSlice
+metadata:
+  name: openwebui # Must be equal to Service name for automatic mapping
+  namespace: services
+  labels:
+    kubernetes.io/service-name: openwebui
+addressType: IPv4
+ports:
+  - name: http
+    appProtocol: http
+    protocol: TCP
+    port: 3000
+endpoints:
+  - addresses:
+      - 10.0.10.18
