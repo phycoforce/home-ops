@@ -19,7 +19,7 @@ spec:
   values:
     image:
       repository: ghcr.io/element-hq/synapse
-      tag: v1.121.1
+      tag: v1.122.0
     serverName: m.${SECRET_DOMAIN}
     publicServerName: synapse.${SECRET_DOMAIN}
     wellknown:
