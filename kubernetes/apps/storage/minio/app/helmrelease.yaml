@@ -112,6 +112,6 @@ spec:
       config:
         type: nfs
         server: aionios.internal
-        path: /var/bionis/minio
+        path: /mnt/bionis/minio
         globalMounts:
           - path: /data
