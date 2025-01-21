@@ -93,18 +93,12 @@ spec:
     persistence:
       config:
         existingClaim: radarr
-      media:
+      downloads:
         type: nfs
         server: aionios.internal
         path: /mnt/mechonis/media_data
         globalMounts:
           - path: /data
-      downloads:
-        type: nfs
-        server: aionios.internal
-        path: /mnt/bionis/usenet
-        globalMounts:
-          - path: /usenet
       tmp:
          type: emptyDir
       scripts:
