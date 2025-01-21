@@ -101,8 +101,9 @@ spec:
       downloads:
         type: nfs
         server: aionios.internal
-        path: /var/bionis/usenet
+        path: /mnt/mechonis/media_data
         globalMounts:
           - path: /usenet
+            subPath: usenet
       tmp:
         type: emptyDir
