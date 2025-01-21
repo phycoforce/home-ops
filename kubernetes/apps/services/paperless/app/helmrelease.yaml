@@ -72,10 +72,10 @@ spec:
               USERMAP_GID: "1004"
               PAPERLESS_OCR_USER_ARGS: '{"invalidate_digital_signatures": true}'
               # Configure folders
-              PAPERLESS_CONSUMPTION_DIR: /bionis/paperless/consume
-              PAPERLESS_DATA_DIR: /mechonis/paperless/data
-              PAPERLESS_EXPORT_DIR: /bionis/paperless/export
-              PAPERLESS_MEDIA_ROOT: /mechonis/paperless/media
+              PAPERLESS_CONSUMPTION_DIR: /data/paperless/consume
+              PAPERLESS_DATA_DIR: /data/paperless/data
+              PAPERLESS_EXPORT_DIR: /data/paperless/export
+              PAPERLESS_MEDIA_ROOT: /data/paperless/media
             envFrom: *envFrom
             resources:
               requests:
@@ -100,17 +100,10 @@ spec:
                   identifier: app
                   port: http
     persistence:
-      mechonis:
+      paperless:
         enabled: true
         type: nfs
         server: aionios.internal
-        path: /var/mechonis/data/paperless
+        path: /mnt/mechonis/paperless
         globalMounts:
-          - path: /mechonis/paperless
-      bionis:
-        enabled: true
-        type: nfs
-        server: aionios.internal
-        path: /var/bionis/paperless
-        globalMounts:
-          - path: /bionis/paperless
+          - path: /data/paperless
