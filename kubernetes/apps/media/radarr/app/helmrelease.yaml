@@ -96,9 +96,15 @@ spec:
       media:
         type: nfs
         server: aionios.internal
-        path: /mnt/mechonis/media_data
+        path: /var/mechonis/data
         globalMounts:
-          - path: /media
+          - path: /data
+      downloads:
+        type: nfs
+        server: aionios.internal
+        path: /var/bionis/usenet
+        globalMounts:
+          - path: /usenet
       tmp:
          type: emptyDir
       scripts:
