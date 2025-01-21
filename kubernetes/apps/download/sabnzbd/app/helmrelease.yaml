@@ -103,7 +103,6 @@ spec:
         server: aionios.internal
         path: /mnt/mechonis/media_data
         globalMounts:
-          - path: /media/usenet
-            subPath: usenet
+          - path: /data
       tmp:
         type: emptyDir
