@@ -11,9 +11,9 @@ resources:
   - ./bazarr/ks.yaml
   #- ./prowlarr/ks.yaml
   - ./lidarr/ks.yaml
-  #- ./overseerr/ks.yaml
+  - ./overseerr/ks.yaml
   #- ./plex/ks.yaml
-  #- ./tautulli/ks.yaml
-  #- ./recyclarr/ks.yaml
+  - ./tautulli/ks.yaml
+  - ./recyclarr/ks.yaml
   #- ./filebrowser/ks.yaml
 
