@@ -122,24 +122,10 @@ spec:
         type: emptyDir
       transcode:
         type: emptyDir
-      tv:
+      media:
         type: nfs
         server: aionios.internal
-        path: /var/mechonis/data/media/tv
+        path: /mnt/mechonis/media_data/media
         globalMounts:
-          - path: /tv
-            readOnly: true
-      movie:
-        type: nfs
-        server: aionios.internal
-        path: /var/mechonis/data/media/movies
-        globalMounts:
-          - path: /movies
-            readOnly: true
-      music:
-        type: nfs
-        server: aionios.internal
-        path: /var/mechonis/data/media/music
-        globalMounts:
-          - path: /music
+          - path: /media
             readOnly: true
