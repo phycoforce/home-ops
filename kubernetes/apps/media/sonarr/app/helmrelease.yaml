@@ -93,7 +93,7 @@ spec:
     persistence:
       config:
         existingClaim: sonarr
-      downloads:
+      media:
         type: nfs
         server: aionios.internal
         path: /mnt/mechonis/media_data

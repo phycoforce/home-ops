@@ -93,7 +93,7 @@ spec:
     persistence:
       config:
         existingClaim: radarr
-      downloads:
+      media:
         type: nfs
         server: aionios.internal
         path: /mnt/mechonis/media_data
