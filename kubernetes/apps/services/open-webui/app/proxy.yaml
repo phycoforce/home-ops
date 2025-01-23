@@ -49,4 +49,4 @@ ports:
     port: 3000
 endpoints:
   - addresses:
-      - 10.0.10.18
+      - 10.0.20.10
