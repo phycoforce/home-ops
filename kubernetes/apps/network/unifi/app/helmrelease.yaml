@@ -1,0 +1,111 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: &app unifi
+  namespace: network
+spec:
+  interval: 30m
+  chart:
+    spec:
+      chart: app-template
+      version: 3.6.1
+      sourceRef:
+        kind: HelmRepository
+        name: bjw-s
+        namespace: flux-system
+  maxHistory: 2
+  install:
+    createNamespace: true
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  uninstall:
+    keepHistory: false
+  values:
+    controllers:
+      unifi:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: jacobalberty/unifi
+              tag: v9.0.108@sha256:18f9e126fde4d45b457ef222dc6a52bc1f8b943f80b023ed6db54bcc012c540e
+              pullPolicy: IfNotPresent
+            env:
+              RUNAS_UID0: "false"
+              UNIFI_UID: "999"
+              UNIFI_GID: "999"
+              UNIFI_STDOUT: "true"
+              JVM_INIT_HEAP_SIZE:
+              JVM_MAX_HEAP_SIZE: 1024M
+            resources:
+              requests:
+                memory: 2Gi
+                cpu: 50m
+    service:
+      app:
+        controller: *app
+        type: LoadBalancer
+        externalTrafficPolicy: Local
+        loadBalancerIP: 10.0.60.16
+        ports:
+          http:
+            port: 8443
+            protocol: HTTPS
+          controller:
+            enabled: true
+            port: 8080
+            protocol: TCP
+          portal-http:
+            enabled: false
+            port: 8880
+            protocol: HTTP
+          portal-https:
+            enabled: false
+            port: 8843
+            protocol: HTTPS
+          speedtest:
+            enabled: true
+            port: 6789
+            protocol: TCP
+          stun:
+            enabled: true
+            port: 3478
+            protocol: UDP
+          syslog:
+            enabled: true
+            port: 5514
+            protocol: UDP
+          discovery:
+            enabled: true
+            port: 10001
+            protocol: UDP
+    ingress:
+      app:
+        enabled: true
+        className: internal
+        annotations:
+          cert-manager.io/cluster-issuer: "letsencrypt-production"
+          nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
+        hosts:
+          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
+        tls:
+          - hosts:
+              - *host
+    persistence:
+      config:
+        enabled: true
+        existingClaim: *app
+        globalMounts:
+          - path: /unifi
