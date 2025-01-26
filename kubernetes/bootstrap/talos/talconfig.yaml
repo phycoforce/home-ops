@@ -38,23 +38,23 @@ nodes:
             - hardwareAddr: "f8:f2:1e:79:e1:10"
               physical: true
         dhcp: false
+        addresses:
+          - "10.0.20.4/24"
+        routes:
+          - network: "0.0.0.0/0"
+            gateway: "10.0.20.1"
         mtu: 1500
         vip:
           ip: "10.0.20.250"
         vlans:
-          - vlanId: 20
-            dhcp: false
-            addresses:
-              - 10.0.20.4/24
-            mtu: 1500
-            routes:
-              - network: "0.0.0.0/0"
-                gateway: "10.0.20.1"
           - vlanId: 40
             dhcp: false
             addresses:
               - 10.0.40.4/24
             mtu: 1500
+            routes:
+              - network: "10.0.40.0/24"
+                gateway: "10.0.40.1"
   - hostname: "logos"
     ipAddress: "10.0.20.2"
     installDisk: "/dev/nvme0n1"
@@ -70,22 +70,23 @@ nodes:
             - hardwareAddr: "f8:f2:1e:79:e5:61"
               physical: true
         dhcp: false
+        addresses:
+          - "10.0.20.2/24"
+        routes:
+          - network: "0.0.0.0/0"
+            gateway: "10.0.20.1"
         mtu: 1500
         vip:
           ip: "10.0.20.250"
         vlans:
-          - vlanId: 20
-            dhcp: false
-            addresses:
-              - 10.0.20.3/24
-            mtu: 1500
-            routes:
-              - network: "0.0.0.0/0"
-                gateway: "10.0.20.1"
           - vlanId: 40
             dhcp: false
             addresses:
               - 10.0.40.2/24
+            mtu: 1500
+            routes:
+              - network: "10.0.40.0/24"
+                gateway: "10.0.40.1"
   - hostname: "ontos"
     ipAddress: "10.0.20.3"
     installDisk: "/dev/nvme0n1"
@@ -106,22 +107,23 @@ nodes:
             - hardwareAddr: "7c:83:34:bf:1a:*"
               physical: true
         dhcp: false
+        addresses:
+          - "10.0.20.3/24"
+        routes:
+          - network: "0.0.0.0/0"
+            gateway: "10.0.20.1"
         mtu: 1500
         vip:
           ip: "10.0.20.250"
         vlans:
-          - vlanId: 20
-            dhcp: false
-            addresses:
-              - 10.0.20.3/24
-            mtu: 1500
-            routes:
-              - network: "0.0.0.0/0"
-                gateway: "10.0.20.1"
           - vlanId: 40
             dhcp: false
             addresses:
               - 10.0.40.3/24
+            mtu: 1500
+            routes:
+              - network: "10.0.40.0/24"
+                gateway: "10.0.40.1"
 
 # Global patches
 patches:
