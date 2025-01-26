@@ -42,7 +42,7 @@ spec:
         maxParallel: 4
       destinationPath: s3://cloudnative-pg/
       endpointURL: http://minio.storage.svc.cluster.local:9000
-      serverName: &currentCluster postgres-006
+      serverName: &currentCluster postgres-007
       s3Credentials:
         accessKeyId:
           name: cloudnative-pg-secret
@@ -52,7 +52,7 @@ spec:
           key: AWS_SECRET_ACCESS_KEY
   bootstrap:
     recovery:
-      source: &previousCluster postgres-005
+      source: &previousCluster postgres-006
   externalClusters:
     - name: *previousCluster
       barmanObjectStore:
