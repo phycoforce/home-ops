@@ -6,8 +6,8 @@ resources:
   - ./namespace.yaml
   - ./prometheus-operator-crds/ks.yaml
   - ./gatus/ks.yaml
-  #- ./kube-prometheus-stack/ks.yaml
-  #- ./loki/ks.yaml
+  - ./kube-prometheus-stack/ks.yaml
+  - ./loki/ks.yaml
   - ./promtail/ks.yaml
   - ./blackbox-exporter/ks.yaml
   - ./grafana/ks.yaml
