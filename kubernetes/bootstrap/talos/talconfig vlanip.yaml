@@ -48,14 +48,18 @@ nodes:
         vlans:
           - vlanId: 40
             mtu: 1500
-            dhcp: false
+            addresses: [ "10.0.40.4/24" ]
             routes:
-              - metric: 4097
+              - network: "10.0.40.0/24"
+                gateway: "10.0.40.1"
+                metric: 4097
           - vlanId: 99
             mtu: 1500
-            dhcp: false
+            addresses: [ "192.168.0.4/24" ]
             routes:
-              - metric: 4096
+              - network: "192.168.0.0/24"
+                gateway: "192.168.0.1"
+                metric: 4096
         dhcpOptions:
           routeMetric: 4000
         vip:
@@ -85,14 +89,18 @@ nodes:
         vlans:
           - vlanId: 40
             mtu: 1500
-            dhcp: false
+            addresses: [ "10.0.40.2/24" ]
             routes:
-              - metric: 4097
+              - network: "10.0.40.0/24"
+                gateway: "10.0.40.1"
+                metric: 4097
           - vlanId: 99
             mtu: 1500
-            dhcp: false
+            addresses: [ "192.168.0.5/24" ]
             routes:
-              - metric: 4096
+              - network: "192.168.0.0/24"
+                gateway: "192.168.0.1"
+                metric: 4096
         dhcpOptions:
           routeMetric: 4000
         vip:
@@ -127,14 +135,18 @@ nodes:
         vlans:
           - vlanId: 40
             mtu: 1500
-            dhcp: false
+            addresses: [ "10.0.40.3/24" ]
             routes:
-              - metric: 4097
+              - network: "10.0.40.0/24"
+                gateway: "10.0.40.1"
+                metric: 4097
           - vlanId: 99
             mtu: 1500
-            dhcp: false
+            addresses: [ "192.168.0.3/24" ]
             routes:
-              - metric: 4096
+              - network: "192.168.0.0/24"
+                gateway: "192.168.0.1"
+                metric: 4096
         dhcpOptions:
           routeMetric: 4000
         vip:
