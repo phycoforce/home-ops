@@ -9,7 +9,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   interval: 30m
-  path: ./kubernetes/apps/networking/multus/app
+  path: ./kubernetes/apps/network/multus/app
   prune: true
   sourceRef:
     kind: GitRepository
@@ -32,7 +32,7 @@ spec:
     - name: multus
       namespace: *namespace
   interval: 30m
-  path: ./kubernetes/apps/networking/multus/networks
+  path: ./kubernetes/apps/network/multus/networks
   prune: true
   sourceRef:
     kind: GitRepository
