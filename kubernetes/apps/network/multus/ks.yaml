@@ -1,42 +1,43 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app multus
-  namespace: flux-system
+  namespace: &namespace network
 spec:
-  targetNamespace: kube-system
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  path: ./kubernetes/apps/kube-system/multus/app
+  interval: 30m
+  path: ./kubernetes/apps/networking/multus/app
   prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
-  wait: true
-  interval: 30m
+    namespace: flux-system
+  targetNamespace: *namespace
   timeout: 5m
+  wait: true
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app multus-networks
-  namespace: flux-system
+  namespace: &namespace network
 spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: multus
+      namespace: *namespace
   interval: 30m
-  path: ./kubernetes/apps/kube-system/multus/networks
+  path: ./kubernetes/apps/networking/multus/networks
   prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: kube-system
+  targetNamespace: *namespace
   timeout: 5m
   wait: true

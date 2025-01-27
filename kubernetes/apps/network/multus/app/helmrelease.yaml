@@ -29,12 +29,12 @@ spec:
           cni-plugins:
             image:
               repository: ghcr.io/buroa/cni-plugins
-              tag: 1.6.2
+              tag: 1.6.2@sha256:b8bf519bda14762782525bb5607d852a76c4bf0da5ffbd8ca021469818ccd8f8
         containers:
           multus:
             image:
               repository: ghcr.io/k8snetworkplumbingwg/multus-cni
-              tag: v4.1.4
+              tag: v4.1.4@sha256:09fdfb7ce090ccbf8927d2728970c3cdeb5917d48209f692de849e384f00d893
             command:
               - /thin_entrypoint
             args:
