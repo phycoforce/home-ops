@@ -36,7 +36,8 @@ spec:
               [{
                 "name":"multus-iot",
                 "namespace": "network",
-                "ips": ["10.0.40.241/24"]
+                "ips": ["10.0.40.241/24"],
+                "mac": "48:c3:71:7c:c5:27"
               }]
         containers:
           app:
