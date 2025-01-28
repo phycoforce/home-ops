@@ -8,7 +8,7 @@ metadata:
               [{
                 "name":"multus-iot",
                 "namespace": "network",
-                "ips": ["10.0.40.153/24"],
+                "ips": ["10.0.40.154/24"],
                 "mac": "92:cf:d7:05:70:85"
               }]
 spec:
