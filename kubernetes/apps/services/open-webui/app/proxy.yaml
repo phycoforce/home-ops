@@ -9,7 +9,7 @@ metadata:
   annotations:
     nginx.ingress.kubernetes.io/rewrite-target: /
 spec:
-  ingressClassName: external
+  ingressClassName: internal
   rules:
   - host: "llm.${SECRET_DOMAIN}"
     http:
