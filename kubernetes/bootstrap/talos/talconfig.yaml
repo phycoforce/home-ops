@@ -31,7 +31,7 @@ nodes:
     talosImageURL: factory.talos.dev/installer/8e5cf1ac0e1e639be5b84a29d7c0c3f67715a5a809082895c505d0d7d136a208
     controlPlane: true
     networkInterfaces:
-      - interface: eth0
+      - interface: bond0
         bond:
           mode: active-backup
           deviceSelectors:
@@ -68,7 +68,7 @@ nodes:
     talosImageURL: factory.talos.dev/installer/8e5cf1ac0e1e639be5b84a29d7c0c3f67715a5a809082895c505d0d7d136a208
     controlPlane: true
     networkInterfaces:
-      - interface: eth0
+      - interface: bond0
         bond:
           mode: active-backup
           deviceSelectors:
@@ -105,7 +105,7 @@ nodes:
     talosImageURL: factory.talos.dev/installer/8e5cf1ac0e1e639be5b84a29d7c0c3f67715a5a809082895c505d0d7d136a208
     controlPlane: true
     networkInterfaces:
-      - interface: eth0
+      - interface: bond0
         bond:
           mode: 802.3ad
           lacpRate: fast
