@@ -43,21 +43,14 @@ nodes:
         routes:
           - network: "0.0.0.0/0"
             gateway: "10.0.20.1"
-            metric: 1
         mtu: 1500
         vlans:
           - vlanId: 40
-            mtu: 1500
+            routes: []
             dhcp: false
-            routes:
-              - metric: 4097
           - vlanId: 99
-            mtu: 1500
+            routes: []
             dhcp: false
-            routes:
-              - metric: 4096
-        dhcpOptions:
-          routeMetric: 4000
         vip:
           ip: "10.0.20.250"
   - hostname: "logos"
@@ -84,17 +77,11 @@ nodes:
         mtu: 1500
         vlans:
           - vlanId: 40
-            mtu: 1500
+            routes: []
             dhcp: false
-            routes:
-              - metric: 4097
           - vlanId: 99
-            mtu: 1500
+            routes: []
             dhcp: false
-            routes:
-              - metric: 4096
-        dhcpOptions:
-          routeMetric: 4000
         vip:
           ip: "10.0.20.250"
   - hostname: "ontos"
@@ -126,17 +113,11 @@ nodes:
         mtu: 1500
         vlans:
           - vlanId: 40
-            mtu: 1500
+            routes: []
             dhcp: false
-            routes:
-              - metric: 4097
           - vlanId: 99
-            mtu: 1500
+            routes: []
             dhcp: false
-            routes:
-              - metric: 4096
-        dhcpOptions:
-          routeMetric: 4000
         vip:
           ip: "10.0.20.250"
 # Global patches
