@@ -8,7 +8,8 @@ metadata:
               [{
                 "name":"multus-iot",
                 "namespace": "network",
-                "ips": ["10.0.40.156/24"]
+                "ips": ["10.0.40.156/24"],
+                "args": {"arpProxy": true}
               }]
 spec:
   containers:
