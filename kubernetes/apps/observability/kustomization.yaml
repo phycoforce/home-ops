@@ -12,5 +12,5 @@ resources:
   - ./blackbox-exporter/ks.yaml
   - ./grafana/ks.yaml
   - ./nut-exporter/ks.yaml
-  #- ./smartctl-exporter/ks.yaml
+  - ./smartctl-exporter/ks.yaml
   - ./teslamate/ks.yaml
