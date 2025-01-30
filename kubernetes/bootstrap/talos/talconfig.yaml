@@ -46,10 +46,8 @@ nodes:
         mtu: 1500
         vlans:
           - vlanId: 40
-            routes: []
             dhcp: false
           - vlanId: 99
-            routes: []
             dhcp: false
         vip:
           ip: "10.0.20.250"
@@ -73,14 +71,11 @@ nodes:
         routes:
           - network: "0.0.0.0/0"
             gateway: "10.0.20.1"
-            metric: 1
         mtu: 1500
         vlans:
           - vlanId: 40
-            routes: []
             dhcp: false
           - vlanId: 99
-            routes: []
             dhcp: false
         vip:
           ip: "10.0.20.250"
@@ -109,14 +104,11 @@ nodes:
         routes:
           - network: "0.0.0.0/0"
             gateway: "10.0.20.1"
-            metric: 1
         mtu: 1500
         vlans:
           - vlanId: 40
-            routes: []
             dhcp: false
           - vlanId: 99
-            routes: []
             dhcp: false
         vip:
           ip: "10.0.20.250"
