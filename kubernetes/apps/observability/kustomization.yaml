@@ -5,12 +5,12 @@ kind: Kustomization
 resources:
   - ./namespace.yaml
   - ./prometheus-operator-crds/ks.yaml
-  #- ./gatus/ks.yaml
-  #- ./kube-prometheus-stack/ks.yaml
-  #- ./loki/ks.yaml
+  - ./gatus/ks.yaml
+  - ./kube-prometheus-stack/ks.yaml
+  - ./loki/ks.yaml
   - ./promtail/ks.yaml
   - ./blackbox-exporter/ks.yaml
-  #- ./grafana/ks.yaml
+  - ./grafana/ks.yaml
   - ./nut-exporter/ks.yaml
   - ./smartctl-exporter/ks.yaml
-  #- ./teslamate/ks.yaml
+  - ./teslamate/ks.yaml
