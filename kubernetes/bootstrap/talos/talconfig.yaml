@@ -28,7 +28,7 @@ nodes:
     installDisk: "/dev/nvme0n1"
     machineSpec:
       secureboot: false
-    talosImageURL: factory.talos.dev/installer/8e5cf1ac0e1e639be5b84a29d7c0c3f67715a5a809082895c505d0d7d136a208
+    talosImageURL: factory.talos.dev/installer/fbf320d018098de798d7ba89b16dcb9c5114ccf4386126854d9984a64d297567
     controlPlane: true
     networkInterfaces:
       - interface: bond0
@@ -56,7 +56,7 @@ nodes:
     installDisk: "/dev/nvme0n1"
     machineSpec:
       secureboot: false
-    talosImageURL: factory.talos.dev/installer/8e5cf1ac0e1e639be5b84a29d7c0c3f67715a5a809082895c505d0d7d136a208
+    talosImageURL: factory.talos.dev/installer/fbf320d018098de798d7ba89b16dcb9c5114ccf4386126854d9984a64d297567
     controlPlane: true
     networkInterfaces:
       - interface: bond0
@@ -84,7 +84,7 @@ nodes:
     installDisk: "/dev/nvme0n1"
     machineSpec:
       secureboot: false
-    talosImageURL: factory.talos.dev/installer/8e5cf1ac0e1e639be5b84a29d7c0c3f67715a5a809082895c505d0d7d136a208
+    talosImageURL: factory.talos.dev/installer/fbf320d018098de798d7ba89b16dcb9c5114ccf4386126854d9984a64d297567
     controlPlane: true
     networkInterfaces:
       - interface: bond0

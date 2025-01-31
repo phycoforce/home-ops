@@ -8,11 +8,12 @@ metadata:
               [{
                 "name":"multus-iot",
                 "namespace": "network",
-                "ips": ["10.0.40.157/24"]
+                "ips": ["10.0.40.157/24"],
+                "mac": "48:c3:71:7c:c5:27"
               }]
 spec:
   nodeSelector:
-    kubernetes.io/hostname: logos
+    kubernetes.io/hostname: pneuma
   containers:
   - name: app
     image: nginx
