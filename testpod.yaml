@@ -13,7 +13,7 @@ metadata:
               }]
 spec:
   nodeSelector:
-    kubernetes.io/hostname: pneuma
+    kubernetes.io/hostname: ontos
   containers:
   - name: app
     image: nginx
