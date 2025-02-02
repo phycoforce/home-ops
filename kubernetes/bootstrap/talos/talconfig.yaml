@@ -47,8 +47,10 @@ nodes:
         vlans:
           - vlanId: 40
             dhcp: false
+            addresses: [ "10.0.40.4/24" ]
           - vlanId: 99
             dhcp: false
+            addresses: [ "192.168.0.4/24" ]
         vip:
           ip: "10.0.20.250"
   - hostname: "logos"
@@ -75,8 +77,10 @@ nodes:
         vlans:
           - vlanId: 40
             dhcp: false
+            addresses: [ "10.0.40.2/24" ]
           - vlanId: 99
             dhcp: false
+            addresses: [ "192.168.0.5/24" ]
         vip:
           ip: "10.0.20.250"
   - hostname: "ontos"
@@ -108,8 +112,10 @@ nodes:
         vlans:
           - vlanId: 40
             dhcp: false
+            addresses: [ "10.0.40.3/24" ]
           - vlanId: 99
             dhcp: false
+            addresses: [ "192.168.0.3/24" ]
         vip:
           ip: "10.0.20.250"
 # Global patches

@@ -31,6 +31,15 @@ spec:
       unifi:
         annotations:
           reloader.stakater.com/auto: "true"
+        pod:
+          annotations:
+            k8s.v1.cni.cncf.io/networks: |
+              [{
+                "name":"multus-mgt",
+                "namespace": "network",
+                "ips": ["10.0.40.241/24"],
+                "mac": "48:c3:71:7c:c5:27"
+              }]
         containers:
           app:
             image:
