@@ -37,8 +37,8 @@ spec:
               [{
                 "name":"multus-mgt",
                 "namespace": "network",
-                "ips": ["10.0.40.241/24"],
-                "mac": "48:c3:71:7c:c5:27"
+                "ips": ["192.168.0.241/24"],
+                "mac": "48:C3:71:81:39:77"
               }]
         containers:
           app:
