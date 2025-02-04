@@ -32,7 +32,7 @@ spec:
         containers:
           app:
             env:
-              NUT_EXPORTER_SERVER: pihole.internal
+              NUT_EXPORTER_SERVER: aionios.internal
               NUT_EXPORTER_SERVERPORT: 3493
             envFrom:
               - secretRef:

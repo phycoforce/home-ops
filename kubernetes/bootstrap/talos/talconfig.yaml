@@ -65,7 +65,7 @@ nodes:
         bond:
           mode: active-backup
           deviceSelectors:
-            - hardwareAddr: "f8:f2:1e:79:e5:61"
+            - hardwareAddr: "f8:f2:1e:79:e5:60"
               driver: i40e
         dhcp: false
         addresses:
@@ -125,6 +125,7 @@ patches:
   - "@./patches/global/machine-network.yaml"
   - "@./patches/global/machine-sysctls.yaml"
   - "@./patches/global/machine-time.yaml"
+  - "@./patches/global/nfs.yaml"
 
 # Controller patches
 controlPlane:
