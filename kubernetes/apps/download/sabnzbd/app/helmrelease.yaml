@@ -72,9 +72,8 @@ spec:
             resources:
               requests:
                 cpu: 300m
-                memory: 1Gi
               limits:
-                memory: 8Gi
+                memory: 3Gi
     service:
       app:
         controller: sabnzbd
