@@ -56,3 +56,4 @@ While most of my infrastructure and workloads are self-hosted I do rely upon the
 | [Oracle Vault](https://www.oracle.com/uk/cloud/)                      | External Secrets                                                   | Free           |
 |                                                                       |                                                                    | Total: ~0£/mo  |
 
+f
