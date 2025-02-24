@@ -25,3 +25,4 @@ resources:
   - ./intel.yaml
   - ./ananace-charts.yaml
   - ./grafana.yaml
+  - ./descheduler.yaml
