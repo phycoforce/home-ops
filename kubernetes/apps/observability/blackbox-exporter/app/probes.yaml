@@ -12,4 +12,3 @@ spec:
     staticConfig:
       static:
         - aionios.internal
-        - pihole.internal
