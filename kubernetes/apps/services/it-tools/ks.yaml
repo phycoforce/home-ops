@@ -10,6 +10,8 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  components:
+    - ../../../../components/gatus/external
   path: ./kubernetes/apps/services/it-tools/app
   prune: true
   sourceRef:

@@ -10,6 +10,9 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  components:
+      - ../../../../components/volsync
+      - ../../../../components/gatus/external
   path: ./kubernetes/apps/security/vaultwarden/app
   sourceRef:
     kind: GitRepository

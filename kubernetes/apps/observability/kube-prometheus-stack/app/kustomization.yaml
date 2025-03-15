@@ -6,4 +6,3 @@ resources:
   - ./helmrelease.yaml
   - ./externalsecret.yaml
   - ./scrapeconfig.yaml
-  - ../../../../templates/gatus/guarded

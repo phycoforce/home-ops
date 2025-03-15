@@ -10,6 +10,9 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  components:
+    - ../../../../components/volsync
+    - ../../../../components/gatus/guarded
   path: ./kubernetes/apps/services/stirling-pdf/app
   prune: true
   sourceRef:

@@ -12,6 +12,9 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  components:
+    - ../../../../components/gatus/external
+    - ../../../../components/volsync
   path: ./kubernetes/apps/communication/matrix-synapse/app
   prune: true
   sourceRef:
