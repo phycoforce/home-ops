@@ -10,6 +10,12 @@ configMapGenerator:
     files:
       - pushover-notify.sh=./resources/pushover-notify.sh
       - refresh-series.sh=./resources/refresh-series.sh
+  - name: sonarr-loki-rules
+    files:
+      - sonarr.yaml=./lokirule.yaml
+    options:
+      labels:
+        loki_rule: "true"
 generatorOptions:
   disableNameSuffixHash: true
   annotations:
