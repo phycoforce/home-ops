@@ -10,8 +10,8 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-    components:
-      - ../../../../components/gatus/guarded
+  components:
+    - ../../../../components/gatus/guarded
   path: ./kubernetes/apps/observability/teslamate/app
   sourceRef:
     kind: GitRepository
