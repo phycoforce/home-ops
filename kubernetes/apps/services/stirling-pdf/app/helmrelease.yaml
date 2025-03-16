@@ -60,17 +60,16 @@ spec:
         ports:
           http:
             port: &port 8080
-    route:
+    ingress:
       app:
-        hostnames: ["pdf.${SECRET_DOMAIN}"]
-        parentRefs:
-          - name: internal
-            namespace: network
-            sectionName: https
-        rules:
-          - backendRefs:
-              - name: *app
-                port: *port
+        className: internal
+        hosts:
+          - host: "pdf.${SECRET_DOMAIN}"
+            paths:
+              - path: /
+                service:
+                  identifier: app
+                  port: http
     persistence:
       config:
         enabled: true
