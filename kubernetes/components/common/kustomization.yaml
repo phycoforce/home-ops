@@ -7,3 +7,4 @@ resources:
   - ./alerts
   - ./sops
   - ./repos
+  - ./cluster-secrets
