@@ -5,15 +5,10 @@ kind: HelmRelease
 metadata:
   name: &app stirling-pdf
 spec:
-  interval: 30m
-  chart:
-    spec:
-      chart: app-template
-      version: 3.7.3
-      sourceRef:
-        kind: HelmRepository
-        name: bjw-s
-        namespace: flux-system
+  interval: 1h
+  chartRef:
+    kind: OCIRepository
+    name: app-template
   install:
     remediation:
       retries: 3
@@ -22,9 +17,6 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
-  dependsOn:
-    - name: longhorn
-      namespace: longhorn-system
   values:
     controllers:
       app:
@@ -35,7 +27,6 @@ spec:
             image:
               repository: ghcr.io/stirling-tools/s-pdf
               tag: 0.44.2@sha256:2608f0661bd4599b9c42bca8739099464455045e167078ac2b6e2644d8f357f8
-              pullPolicy: IfNotPresent
             env:
               TZ: Europe/London
               DOCKER_ENABLE_SECURITY: "false"
@@ -53,15 +44,33 @@ spec:
                   failureThreshold: 90
                   periodSeconds: 5
             securityContext:
+              allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-        pod:
-          securityContext:
-            runAsNonRoot: true
-            runAsUser: 1000
-            runAsGroup: 1000
-            fsGroup: 1000
-            fsGroupChangePolicy: OnRootMismatch
-
+              capabilities: { drop: ["ALL"] }
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+    service:
+      app:
+        controller: stirling-pdf
+        ports:
+          http:
+            port: &port 8080
+    route:
+      app:
+        hostnames: ["pdf.${SECRET_DOMAIN}"]
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: *app
+                port: *port
     persistence:
       config:
         enabled: true
@@ -79,21 +88,3 @@ spec:
         type: emptyDir
         globalMounts:
           - path: /usr/share/tessdata
-
-    service:
-      app:
-        controller: app
-        ports:
-          http:
-            port: 8080
-
-    ingress:
-      app:
-        className: internal
-        hosts:
-          - host: pdf.${SECRET_DOMAIN}
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: http
