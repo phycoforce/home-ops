@@ -5,6 +5,5 @@ metadata:
   name: services
   labels:
     kustomize.toolkit.fluxcd.io/prune: disabled
-    goldilocks.fairwinds.com/enabled: "true"
   annotations:
     volsync.backube/privileged-movers: "true"
