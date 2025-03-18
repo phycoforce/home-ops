@@ -12,9 +12,6 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/volsync
-  dependsOn:
-    - name: volsync
-    - name: longhorn
   path: ./kubernetes/apps/network/unifi/app
   prune: true
   sourceRef:
