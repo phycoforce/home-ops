@@ -15,8 +15,6 @@ spec:
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
-      - name: cloudflared-secret
-        kind: Secret
   prune: true
   retryInterval: 2m
   sourceRef:
