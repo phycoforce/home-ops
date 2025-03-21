@@ -12,9 +12,9 @@ spec:
   components:
     - ../../../../components/volsync
     - ../../../../components/gatus/guarded
-  #dependsOn:
-   # - name: longhorn
-    #  namespace: longhorn-system
+  dependsOn:
+    - name: longhorn
+      namespace: longhorn-system
   interval: 1h
   path: ./kubernetes/apps/media/tautulli/app
   postBuild:

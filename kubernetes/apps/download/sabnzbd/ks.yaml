@@ -12,9 +12,9 @@ spec:
   components:
     - ../../../../components/gatus/guarded
     - ../../../../components/volsync
-  #dependsOn:
-   # - name: longhorn
-    #  namespace: longhorn-system
+  dependsOn:
+    - name: longhorn
+      namespace: longhorn-system
   interval: 1h
   path: ./kubernetes/apps/download/sabnzbd/app
   postBuild:

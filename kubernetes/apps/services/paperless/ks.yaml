@@ -11,9 +11,11 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/gatus/guarded
-  #dependsOn:
-   # - name: longhorn
-    #  namespace: longhorn-system
+  dependsOn:
+    - name: cloudnative-pg-cluster
+      namespace: database
+    - name: external-secrets
+      namespace: security
   interval: 1h
   path: ./kubernetes/apps/services/paperless/app
   postBuild:

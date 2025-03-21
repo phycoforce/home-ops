@@ -12,9 +12,11 @@ spec:
   components:
     - ../../../../components/volsync
     - ../../../../components/gatus/guarded
-  #dependsOn:
-   # - name: longhorn
-    #  namespace: longhorn-system
+  dependsOn:
+    - name: longhorn
+      namespace: longhorn-system
+    - name: external-secrets
+      namespace: security
   interval: 1h
   path: ./kubernetes/apps/services/stirling-pdf/app
   postBuild:

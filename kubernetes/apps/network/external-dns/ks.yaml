@@ -38,9 +38,9 @@ spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  #dependsOn:
-   # - name: longhorn
-    #  namespace: longhorn-system
+  dependsOn:
+    - name: external-secrets
+      namespace: security
   interval: 1h
   path: ./kubernetes/apps/network/external-dns/mikrotik
   postBuild:
