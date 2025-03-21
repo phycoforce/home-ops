@@ -1,5 +1,8 @@
 ---
 instance:
+  distribution:
+    # renovate: datasource=github-releases depName=controlplaneio-fluxcd/distribution
+    version: 2.5.1
   cluster:
     networkPolicy: false
   components:
@@ -12,3 +15,4 @@ instance:
     url: "https://github.com/tajinder400/home-ops.git"
     ref: "refs/heads/main"
     path: kubernetes/flux/cluster
+
