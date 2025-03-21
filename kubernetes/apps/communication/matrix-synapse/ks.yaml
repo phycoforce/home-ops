@@ -8,6 +8,7 @@ metadata:
 spec:
   dependsOn:
     - name: cloudnative-pg-cluster
+      namespace: database
   targetNamespace: communication
   commonMetadata:
     labels:
