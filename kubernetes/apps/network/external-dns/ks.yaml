@@ -1,40 +1,61 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app external-dns-cloudflare
-  namespace: flux-system
+  namespace: &namespace network
 spec:
-  targetNamespace: network
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  #dependsOn:
+   # - name: longhorn
+    #  namespace: longhorn-system
+  interval: 1h
   path: ./kubernetes/apps/network/external-dns/cloudflare
+  postBuild:
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
   prune: true
+  retryInterval: 2m
   sourceRef:
     kind: GitRepository
     name: flux-system
-  wait: true
-  interval: 30m
+    namespace: flux-system
+  targetNamespace: *namespace
   timeout: 5m
+  wait: false
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/kustomization-kustomize-v1.json
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app external-dns-mikrotik
-  namespace: flux-system
+  namespace: &namespace network
 spec:
-  targetNamespace: network
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
+  #dependsOn:
+   # - name: longhorn
+    #  namespace: longhorn-system
+  interval: 1h
   path: ./kubernetes/apps/network/external-dns/mikrotik
+  postBuild:
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
   prune: true
+  retryInterval: 2m
   sourceRef:
     kind: GitRepository
     name: flux-system
-  wait: true
-  interval: 30m
+    namespace: flux-system
+  targetNamespace: *namespace
   timeout: 5m
+  wait: false
+
+
+
