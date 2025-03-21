@@ -2,6 +2,9 @@
 # yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
+namespace: kube-system
+components:
+  - ../../components/common
 resources:
   - ./namespace.yaml
   - ./cilium/ks.yaml
@@ -9,6 +12,5 @@ resources:
   - ./metrics-server/ks.yaml
   - ./reloader/ks.yaml
   - ./spegel/ks.yaml
-  - ./node-feature-discovery/ks.yaml
   - ./intel-device-plugin/ks.yaml
   - ./descheduler/ks.yaml
