@@ -24,7 +24,7 @@ spec:
   interval: 1h
   chartRef:
     kind: OCIRepository
-    name: unifi-dns
+    name: mikrotik-dns
   install:
     remediation:
       retries: 3
