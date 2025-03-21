@@ -10,8 +10,8 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: ingress-nginx-certificates
-      namespace: network
+    - name: cert-manager-tls
+      namespace: cert-manager
   interval: 1h
   path: ./kubernetes/apps/network/ingress-nginx/internal
   postBuild:
@@ -39,8 +39,8 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: ingress-nginx-certificates
-      namespace: network
+    - name: cert-manager-tls
+      namespace: cert-manager
   interval: 1h
   path: ./kubernetes/apps/network/ingress-nginx/external
   postBuild:
