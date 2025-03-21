@@ -21,9 +21,6 @@ spec:
     cleanupOnFail: true
     remediation:
       retries: 3
-  dependsOn:
-    - name: cloudflared
-      namespace: network
   values:
     fullnameOverride: ingress-nginx-external
     controller:
@@ -76,7 +73,7 @@ spec:
           namespaceSelector:
             any: true
       extraArgs:
-        default-ssl-certificate: "network/${SECRET_DOMAIN/./-}-production-tls"
+        default-ssl-certificate: cert-manager/${SECRET_DOMAIN/./-}-production-tls
         publish-status-address: *hostname
       publishService:
         enabled: false
