@@ -168,8 +168,6 @@ spec:
       enabled: true
       auth:
        enabled: true
-       existingSecret: *secret
-       existingSecretPasswordKey: SECRET_MATRIX_REDIS_PASSWORD
 
     synapse:
       strategy:
@@ -181,14 +179,15 @@ spec:
         limits:
           cpu: 1000m
           memory: 2500Mi
-
-
-
     signingkey:
       job:
         enabled: false
       existingSecret: matrix-synapse-signingkey
-
     persistence:
       enabled: true
       existingClaim: synapse
+  valuesFrom:
+    - kind: Secret
+      name: *secret
+      targetPath: redis.auth.password
+      valuesKey: SECRET_MATRIX_REDIS_PASSWORD
