@@ -32,8 +32,6 @@ spec:
       defaultClassReplicaCount: 1
     defaultSettings:
       createDefaultDiskLabeledNodes: true
-      defaultDataLocality: best-effort
-      replicaAutoBalance: best-effort
       storageMinimalAvailablePercentage: 1
       storageReservedPercentageForDefaultDisk: 10
       defaultLonghornStaticStorageClass: longhorn
