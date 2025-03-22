@@ -6,5 +6,4 @@ namespace: communication
 components:
   - ../../components/common
 resources:
-  #- ./matrix-synapse/ks.yaml
   - ./conduwuit/ks.yaml
