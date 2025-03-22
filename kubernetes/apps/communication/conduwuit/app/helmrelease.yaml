@@ -62,7 +62,7 @@ spec:
                 value: "5"
             envFrom:
               - secretRef:
-                  name: conduwuit
+                  name: conduwuit-secret
             resources:
               requests:
                 memory: 512Mi
