@@ -4,3 +4,4 @@ resources:
   - ./helmrelease.yaml
   - ./matrix-signing-key.sops.yaml
   - ./internal-ingress.yaml
+  - ./externalsecret.yaml
