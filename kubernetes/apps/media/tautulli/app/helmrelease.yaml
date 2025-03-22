@@ -17,29 +17,17 @@ spec:
     remediation:
       strategy: rollback
       retries: 3
-  dependsOn:
-    - name: longhorn
-      namespace: longhorn-system
-    - name: volsync
-      namespace: volsync-system
   values:
     controllers:
       tautulli:
-        annotations:
-          reloader.stakater.com/auto: "true"
         containers:
           app:
             image:
-              repository: ghcr.io/tautulli/tautulli
-              tag: v2.15.1@sha256:7755360de25d5b60aaf67a0aa4f1f71fb4fc12a1a668bb9ced09e9f4ab5239cd
+              repository: ghcr.io/home-operations/tautulli
+              tag: 2.15.1@sha256:0925254e24ca12769d437527a9463f0738d98908bc41f1bd77072aa8f0307a4c
             env:
+              TAUTULLI__PORT: &port 8181
               TZ: Europe/London
-            command: ["/usr/local/bin/python", "Tautulli.py"]
-            args: [
-              "--config", "/config/config.ini",
-              "--datadir", "/config",
-              "--port", "80"
-            ]
             probes:
               liveness: &probes
                 enabled: true
@@ -47,21 +35,28 @@ spec:
                 spec:
                   httpGet:
                     path: /status
-                    port: &port 80
+                    port: *port
                   initialDelaySeconds: 0
                   periodSeconds: 10
                   timeoutSeconds: 1
                   failureThreshold: 3
               readiness: *probes
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
             resources:
               requests:
                 cpu: 10m
               limits:
-                memory: 200Mi
+                memory: 512Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 568
+        runAsGroup: 568
+        fsGroup: 568
+        fsGroupChangePolicy: OnRootMismatch
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true

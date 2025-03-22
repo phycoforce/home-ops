@@ -23,8 +23,8 @@ spec:
         initContainers:
           cni-plugins:
             image:
-              repository: ghcr.io/buroa/cni-plugins
-              tag: 1.6.2@sha256:fd78504277d802ec8ad8d8d8c919edfa783ca69065232e59292427f59ab76fb2
+              repository: ghcr.io/home-operations/cni-plugins
+              tag: 1.6.2@sha256:078ddbb602860268c20c4fd3e31a047315f5b686545588de534aade7059a7764
         containers:
           multus:
             image:
