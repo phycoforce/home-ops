@@ -12,5 +12,5 @@ resources:
   - ./reloader/ks.yaml
   - ./spegel/ks.yaml
   - ./node-feature-discovery/ks.yaml
-  #- ./intel-device-plugin-operator/ks.yaml
+  - ./intel-device-plugin-operator/ks.yaml
   - ./descheduler/ks.yaml
