@@ -15,8 +15,8 @@ spec:
   dependsOn:
     - name: cloudnative-pg-cluster
       namespace: database
-    - name: longhorn-system
-      namespace: longhorn
+    - name: longhorn
+      namespace: longhorn-system
   interval: 1h
   path: ./kubernetes/apps/communication/matrix-synapse/app
   postBuild:
