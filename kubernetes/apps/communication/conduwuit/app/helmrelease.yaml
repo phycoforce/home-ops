@@ -111,7 +111,7 @@ spec:
                   port: 8080
 
       int:
-        className: "internal-nginx"
+        className: internal
         hosts:
           - host: ${SECRET_DOMAIN}
             paths:
