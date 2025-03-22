@@ -15,6 +15,6 @@ resources:
   - ./overseerr/ks.yaml
   - ./plex/ks.yaml
   - ./tautulli/ks.yaml
- # - ./recyclarr/ks.yaml
+  - ./recyclarr/ks.yaml
   #- ./filebrowser/ks.yaml
 
