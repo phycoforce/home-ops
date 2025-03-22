@@ -17,8 +17,6 @@ spec:
       strategy: rollback
       retries: 3
   values:
-    defaultPodOptions:
-      automountServiceAccountToken: falseg
     controllers:
       conduwuit:
         type: statefulset
