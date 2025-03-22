@@ -17,6 +17,8 @@ spec:
         namespace: flux-system
       interval: 5m
   values:
+    annotations:
+        secret.reloader.stakater.com/reload: &secret matrix-synapse-secret
     image:
       repository: ghcr.io/element-hq/synapse
       tag: v1.126.0
@@ -152,7 +154,8 @@ spec:
       host: postgres16-rw.database.svc.cluster.local
       port: 5432
       username: synapse
-      password: ${SECRET_MATRIX_POSTGRESQL_PASSWORD}
+      existingSecret: *secret
+      existingSecretPasswordKey: SECRET_MATRIX_POSTGRESQL_PASSWORD
       database: "synapse"
 
     # Will not want to work w/o pass
@@ -165,7 +168,8 @@ spec:
       enabled: true
       auth:
        enabled: true
-       password: ${SECRET_MATRIX_REDIS_PASSWORD}
+       existingSecret: *secret
+       existingSecretPasswordKey: SECRET_MATRIX_REDIS_PASSWORD
 
     synapse:
       strategy:
