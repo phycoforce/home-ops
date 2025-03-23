@@ -1,5 +1,7 @@
 machine:
   kubelet:
+    extraArgs:
+      feature-gates: MutatingAdmissionPolicy=true
     extraMounts:
       - destination: /var/openebs/local
         type: bind
