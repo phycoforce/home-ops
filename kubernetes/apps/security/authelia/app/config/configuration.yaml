@@ -4,7 +4,7 @@ log:
 
 authentication_backend:
   ldap:
-    address: ldap://lldap.default.svc.cluster.local:389
+    address: ldap://lldap.security.svc.cluster.local:389
     implementation: custom
     timeout: 5s
     start_tls: false
@@ -45,7 +45,10 @@ access_control:
   default_policy: two_factor
   networks:
     - name: internal
-      networks: ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]
+      networks:
+        - 10.0.0.0/8
+        - 172.16.0.0/12
+        - 192.168.0.0/16
   rules: []
 
 notifier:
@@ -63,29 +66,9 @@ notifier:
     disable_starttls: false
     disable_html_emails: false
 
-totp:
-  disable: false
-  issuer: authelia.com
-
-webauthn:
-  disable: true
-
-duo_api:
-  disable: true
-
-password_policy:
-  standard:
-    enabled: true
-    min_length: 8
-    max_length: 0
-    require_uppercase: true
-    require_lowercase: true
-    require_number: true
-    require_special: true
-
 identity_validation:
   reset_password:
-    jwt_secret: '{{ env "AUTHELIA_JWT_SECRET" }}'
+    jwt_secret: '{{ env "JWT_SECRET" }}'
 
 identity_providers:
   oidc:
@@ -98,8 +81,7 @@ identity_providers:
       allowed_origins_from_client_redirect_uris: true
     jwks:
       - key_id: default
-        key: {{ env "AUTHELIA_JWKS_KEY" | b64dec | mindent 10 "|" | msquote }}
-        userinfo_signed_response_alg: none
+        key: {{ env "JWKS_KEY" | b64dec | mindent 10 "|" | msquote }}
     clients:
       - client_id: grafana
         client_name: Grafana
