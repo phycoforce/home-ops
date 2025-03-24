@@ -37,17 +37,14 @@ spec:
   values:
     extraInitContainers:
       - name: 01-init-db
-        image: ghcr.io/onedr0p/postgres-init:16
+        image: ghcr.io/home-operations/postgres-init:17.4@sha256:a9f405688344a8a6f718e2c344438342ad21540986aeb5ab5fa781831eb2c597
+        imagePullPolicy: IfNotPresent
         envFrom:
           - secretRef:
               name: grafana-secret
     deploymentStrategy:
       type: Recreate
     env:
-      GF_AUTH_GENERIC_OAUTH_TOKEN_URL: http://authelia.security.svc.cluster.local/api/oidc/token
-      GF_AUTH_GENERIC_OAUTH_API_URL: http://authelia.security.svc.cluster.local/api/oidc/userinfo
-      GF_AUTH_GENERIC_OAUTH_AUTH_URL: https://auth.${SECRET_DOMAIN}/api/oidc/authorization
-      GF_AUTH_GENERIC_OAUTH_CLIENT_ID: grafana
       GF_NEWS_NEWS_FEED_ENABLED: false
       GF_DATE_FORMATS_USE_BROWSER_LOCALE: true
       GF_EXPLORE_ENABLED: true
@@ -65,22 +62,25 @@ spec:
       news:
         news_feed_enabled: false
       auth:
-        oauth_auto_login: false
-        oauth_allow_insecure_email_lookup: true
-        signout_redirect_url: https://auth.${SECRET_DOMAIN}/logout
+        signout_redirect_url: "https://auth.${SECRET_DOMAIN}/logout"
+        oauth_auto_login: true
       auth.generic_oauth:
         enabled: true
         name: Authelia
-        icon: signin
+        client_id: grafana
         scopes: openid profile email groups
         empty_scopes: false
+        auth_url: https://auth.${SECRET_DOMAIN}/api/oidc/authorization
+        token_url: https://auth.${SECRET_DOMAIN}/api/oidc/token
+        api_url: https://auth.${SECRET_DOMAIN}/api/oidc/userinfo
         login_attribute_path: preferred_username
         groups_attribute_path: groups
         name_attribute_path: name
         use_pkce: true
       auth.generic_oauth.group_mapping:
+        role_attribute_path: |
+          contains(groups[*], 'admin') && 'Admin' || contains(groups[*], 'people') && 'Viewer'
         org_id: 1
-        role_attribute_path: contains(groups[*], 'admins') && 'Admin' || 'Editor'
       auth.basic:
         enabled: true
       auth.anonymous:
