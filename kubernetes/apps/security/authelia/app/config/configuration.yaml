@@ -35,8 +35,8 @@ session:
   expiration: 7d
   remember_me: 6M
   cookies:
-    - domain: ${SECRET_DOMAIN}
-      authelia_url: https://auth.${SECRET_DOMAIN}
+    - domain: {{ env "SECRET_DOMAIN" }}'
+      authelia_url: https://auth.'{{ env "SECRET_DOMAIN" }}'
   redis:
     database_index: 2
     host: dragonfly.database.svc.cluster.local
@@ -48,18 +48,19 @@ access_control:
       networks: ["10.0.0.0/8", "172.16.0.0/12", "192.168.0.0/16"]
   rules: []
 
-
 notifier:
   disable_startup_check: false
   smtp:
-    username: ${SECRET_SMTP_USERNAME}
-    password: ${SECRET_SMTP_PASSWORD}
-    host: smtp.gmail.com
-    port: 587
-    sender: ${SECRET_AUTHELIA_SMTP_ADDRESS}
+    address: 'smtp.gmail.com:587'
+    timeout: '5s'
+    username: '{{ env "SECRET_SMTP_USERNAME" }}'
+    password: '{{ env "SECRET_SMTP_PASSWORD" }}'
+    sender: '{{ env "SECRET_AUTHELIA_SMTP_ADDRESS" }}'
+    identifier: 'localhost'
     subject: "[Authelia] {title}"
-    startup_check_address: ${SECRET_AUTHELIA_SMTP_STARTUP_ADDRESS}
+    startup_check_address: '{{ env "SECRET_AUTHELIA_SMTP_STARTUP_ADDRESS" }}'
     disable_require_tls: false
+    disable_starttls: false
     disable_html_emails: false
 
 totp:
@@ -111,5 +112,5 @@ identity_providers:
           - groups
           - email
         redirect_uris:
-          - https://grafana.${SECRET_DOMAIN}/login/generic_oauth
+          - https://grafana.{{ env "SECRET_DOMAIN" }}'/login/generic_oauth
         userinfo_signed_response_alg: none

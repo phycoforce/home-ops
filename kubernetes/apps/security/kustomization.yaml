@@ -7,5 +7,5 @@ components:
 resources:
   - ./vaultwarden/ks.yaml
   - ./lldap/ks.yaml
-  #- ./authelia/ks.yaml
+  - ./authelia/ks.yaml
   - ./external-secrets/ks.yaml
