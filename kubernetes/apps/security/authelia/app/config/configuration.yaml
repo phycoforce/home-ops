@@ -81,7 +81,7 @@ identity_providers:
       allowed_origins_from_client_redirect_uris: true
     jwks:
       - key_id: default
-        key: {{ env "JWKS_KEY" | b64dec | mindent 10 "|" | msquote }}
+        key: '{{ env "JWKS_KEY" }}'
     clients:
       - client_id: grafana
         client_name: Grafana
