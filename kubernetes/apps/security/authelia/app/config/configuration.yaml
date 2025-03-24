@@ -35,8 +35,8 @@ session:
   expiration: 7d
   remember_me: 6M
   cookies:
-    - domain: {{ env "SECRET_DOMAIN" }}'
-      authelia_url: https://auth.'{{ env "SECRET_DOMAIN" }}'
+    - domain: {{ env "SECRET_DOMAIN" }}
+      authelia_url: https://auth.{{ env "SECRET_DOMAIN" }}
   redis:
     database_index: 2
     host: dragonfly.database.svc.cluster.local
@@ -112,5 +112,5 @@ identity_providers:
           - groups
           - email
         redirect_uris:
-          - https://grafana.{{ env "SECRET_DOMAIN" }}'/login/generic_oauth
+          - https://grafana.{{ env "SECRET_DOMAIN" }}/login/generic_oauth
         userinfo_signed_response_alg: none
