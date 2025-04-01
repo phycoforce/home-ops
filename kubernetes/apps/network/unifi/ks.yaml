@@ -14,7 +14,7 @@ spec:
     - ../../../../components/gatus/guarded
   dependsOn:
     - name: rook-ceph-cluster
-      namespace: rook-cephg
+      namespace: rook-ceph
   interval: 1h
   path: ./kubernetes/apps/network/unifi/app
   postBuild:
