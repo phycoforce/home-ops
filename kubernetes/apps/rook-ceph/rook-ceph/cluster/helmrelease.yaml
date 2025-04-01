@@ -74,6 +74,63 @@ spec:
         devicePathFilter: /dev/disk/by-id/ata-INTEL_SSDSC2BB016T4.*
         config:
           osdsPerDevice: "1"
+      resources:
+        mgr:
+          limits:
+            cpu: 500m
+            memory: 700Mi
+          requests:
+            cpu: 50m
+            memory: 320Mi
+        mon:
+          limits:
+            cpu: 500m
+            memory: 640Mi
+          requests:
+            cpu: 100m
+            memory: 320Mi
+        osd:
+          limits:
+            cpu: 500m
+            memory: 1600Mi
+          requests:
+            cpu: 150m
+            memory: 800Mi
+        prepareosd:
+          limits:
+            cpu: 1000m
+            memory: 400Mi
+          requests:
+            cpu: 50m
+            memory: 200Mi
+        mgr-sidecar:
+          limits:
+            cpu: 256m
+            memory: 100Mi
+          requests:
+            cpu: 50m
+            memory: 40Mi
+        crashcollector:
+          limits:
+            cpu: 100m
+            memory: 64M
+          requests:
+            cpu: 15m
+            memory: 32M
+        logcollector:
+          limits:
+            cpu: 50m
+            memory: 32Mi
+          requests:
+            cpu: 5m
+            memory: 16Mi
+        cleanup:
+          limits:
+            cpu: 500m
+            memory: 1Gi
+          requests:
+            cpu: 100m
+            memory: 100Mi
     cephBlockPools:
       - name: ceph-blockpool
         spec:
