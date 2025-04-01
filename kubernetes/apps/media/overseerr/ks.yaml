@@ -13,8 +13,8 @@ spec:
     - ../../../../components/volsync
     - ../../../../components/gatus/external
   dependsOn:
-    - name: longhorn
-      namespace: longhorn-system
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   interval: 1h
   path: ./kubernetes/apps/media/overseerr/app
   postBuild:
