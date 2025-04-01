@@ -7,14 +7,14 @@ components:
   - ../../components/common
 resources:
   # Flux-Kustomizations
-  - ./sonarr/ks.yaml
-  - ./radarr/ks.yaml
-  - ./bazarr/ks.yaml
-  - ./prowlarr/ks.yaml
-  - ./lidarr/ks.yaml
-  - ./overseerr/ks.yaml
-  - ./plex/ks.yaml
-  - ./tautulli/ks.yaml
+  #- ./sonarr/ks.yaml
+  #- ./radarr/ks.yaml
+  #- ./bazarr/ks.yaml
+  #- ./prowlarr/ks.yaml
+  #- ./lidarr/ks.yaml
+  #- ./overseerr/ks.yaml
+  #- ./plex/ks.yaml
+  #- ./tautulli/ks.yaml
   - ./recyclarr/ks.yaml
   #- ./filebrowser/ks.yaml
 
