@@ -9,4 +9,4 @@ resources:
   - ./it-tools/ks.yaml
   #- ./home-assistant/ks.yaml
   - ./open-webui/ks.yaml
-  #- ./stirling-pdf/ks.yaml
+  - ./stirling-pdf/ks.yaml
