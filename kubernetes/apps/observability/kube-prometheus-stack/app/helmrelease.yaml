@@ -50,7 +50,7 @@ spec:
         storage:
           volumeClaimTemplate:
             spec:
-              storageClassName: openebs-hostpath
+              storageClassName: ceph-block
               resources:
                 requests:
                   storage: 1Gi
@@ -90,7 +90,7 @@ spec:
           - memory-snapshot-on-shutdown
           - new-service-discovery-manager
         retention: 14d
-        retentionSize: 25GB
+        retentionSize: 50GB
         resources:
           requests:
             cpu: 100m
@@ -99,10 +99,10 @@ spec:
         storageSpec:
           volumeClaimTemplate:
             spec:
-              storageClassName: openebs-hostpath
+              storageClassName: ceph-block
               resources:
                 requests:
-                  storage: 30Gi
+                  storage: 50Gi
     prometheus-node-exporter:
       fullnameOverride: node-exporter
       prometheus:
