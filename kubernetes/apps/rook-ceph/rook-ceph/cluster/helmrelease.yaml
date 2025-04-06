@@ -50,7 +50,7 @@ spec:
         readAffinity:
           enabled: true
       dashboard:
-        enabled: true
+        enabled: false
         urlPrefix: /
         ssl: false
         prometheusEndpoint: http://prometheus-operated.observability.svc.cluster.local:9090
