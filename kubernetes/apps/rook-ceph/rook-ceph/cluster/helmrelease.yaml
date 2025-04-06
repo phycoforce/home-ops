@@ -170,6 +170,3 @@ spec:
         host:
           name: "rook.${SECRET_DOMAIN}"
           path: /
-        tls:
-          - hosts:
-              - "rook.${SECRET_DOMAIN}"
