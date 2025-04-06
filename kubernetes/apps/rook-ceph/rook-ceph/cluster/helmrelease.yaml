@@ -77,8 +77,8 @@ spec:
       resources:
         mgr:
           limits:
-            cpu: 500m
-            memory: 700Mi
+            cpu: 1000m
+            memory: 2Gi
           requests:
             cpu: 50m
             memory: 320Mi
