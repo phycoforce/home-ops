@@ -56,8 +56,6 @@ spec:
         prometheusEndpoint: http://prometheus-operated.observability.svc.cluster.local:9090
       mgr:
         modules:
-          - name: diskprediction_local
-            enabled: true
           - name: insights
             enabled: true
           - name: pg_autoscaler
