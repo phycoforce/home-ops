@@ -76,61 +76,52 @@ spec:
           osdsPerDevice: "1"
       resources:
         mgr:
-          limits:
-            cpu: 500m
-            memory: 700Mi
           requests:
-            cpu: 50m
-            memory: 320Mi
+            cpu: "100m"
+            memory: "512Mi"
+          limits:
+            cpu: "2000m"
+            memory: "4Gi"
         mon:
-          limits:
-            cpu: 500m
-            memory: 640Mi
           requests:
-            cpu: 100m
-            memory: 320Mi
+            cpu: "100m"
+            memory: "500Mi"
+          limits:
+            cpu: "2000m"
+            memory: "4Gi"
         osd:
-          limits:
-            cpu: 500m
-            memory: 1600Mi
           requests:
-            cpu: 150m
-            memory: 800Mi
-        prepareosd:
+            cpu: "500m"
+            memory: "3Gi"
           limits:
-            cpu: 1000m
-            memory: 400Mi
-          requests:
-            cpu: 50m
-            memory: 200Mi
+            cpu: "2000m"
+            memory: "10Gi"
         mgr-sidecar:
-          limits:
-            cpu: 256m
-            memory: 100Mi
           requests:
-            cpu: 50m
-            memory: 40Mi
+            cpu: "20m"
+            memory: "100Mi"
+          limits:
+            cpu: "1000m"
+            memory: "500Mi"
         crashcollector:
-          limits:
-            cpu: 100m
-            memory: 64M
           requests:
-            cpu: 15m
-            memory: 32M
+            cpu: "15m"
+            memory: "64Mi"
+          limits:
+            memory: "64Mi"
         logcollector:
-          limits:
-            cpu: 50m
-            memory: 32Mi
           requests:
-            cpu: 5m
-            memory: 16Mi
+            cpu: "1m"
+            memory: "100Mi"
+          limits:
+            cpu: "1"
+            memory: "1Gi"
         cleanup:
-          limits:
-            cpu: 500m
-            memory: 1Gi
           requests:
-            cpu: 100m
-            memory: 100Mi
+            cpu: "250m"
+            memory: "100Mi"
+          limits:
+            memory: "1Gi"
     cephBlockPools:
       - name: ceph-blockpool
         spec:
