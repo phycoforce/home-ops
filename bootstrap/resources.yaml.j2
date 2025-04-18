@@ -1,0 +1,8 @@
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: onepassword-secret
+  namespace: security
+stringData:
+  token: op://kubernetes/1password/OP_CONNECT_TOKEN

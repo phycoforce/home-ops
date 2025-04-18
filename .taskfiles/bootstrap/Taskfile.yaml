@@ -32,6 +32,13 @@ tasks:
       - test -f {{.TALHELPER_CONFIG_FILE}}
       - which talhelper sops
 
+  resources:
+    desc: Creates required secrets for cluster
+    cmd: minijinja-cli "{{.ROOT_DIR}}/bootstrap/resources.yaml.j2" | op inject | kubectl apply -f -
+    preconditions:
+      - test -f {{.ROOT_DIR}}/bootstrap/resources.yaml.j2
+      - op user get --me | read -r _ && echo "true" || echo "false"
+
   apps:
     desc: Bootstrap apps into the Talos cluster
     cmds:
@@ -52,3 +59,4 @@ tasks:
       - test -f {{.KUBERNETES_DIR}}/bootstrap/helmfile.yaml
       - test -f {{.SOPS_AGE_KEY_FILE}}
       - which helmfile kubectl sops
+
