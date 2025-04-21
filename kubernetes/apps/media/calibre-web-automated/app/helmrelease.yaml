@@ -76,9 +76,9 @@ spec:
       media:
         type: nfs
         server: aionios.internal
-        path: /mnt/mechonis/media_data/media/books
+        path: /mnt/mechonis/media_data
         globalMounts: # needs to be set to nobody:nobody perms on setup of a fresh volume, because of the weird stuff s6 does, then set it to 1000:1000
           - path: /calibre-library
-            subPath: library
+            subPath: media/books/library
           - path: /cwa-book-ingest
-            subPath: download
+            subPath: media/books/download
