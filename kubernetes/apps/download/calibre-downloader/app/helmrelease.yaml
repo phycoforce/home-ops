@@ -96,7 +96,7 @@ spec:
       media:
         type: nfs
         server: aionios.internal
-        path: /mnt/mechonis/media_data
+        path: /mnt/mechonis/media_data/media/books
         globalMounts:
           - path: /cwa-book-ingest
-            subPath: media/books/download
+            subPath: download
