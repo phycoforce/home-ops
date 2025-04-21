@@ -16,5 +16,5 @@ resources:
   - ./plex/ks.yaml
   - ./tautulli/ks.yaml
   - ./recyclarr/ks.yaml
-  - ./calibre-web-automated/ks.yaml
+  #- ./calibre-web-automated/ks.yaml
 
