@@ -9,7 +9,7 @@ resources:
   - ./cilium/ks.yaml
   - ./coredns/ks.yaml
   - ./metrics-server/ks.yaml
-  #- ./reloader/ks.yaml
+  - ./reloader/ks.yaml
   - ./spegel/ks.yaml
   - ./node-feature-discovery/ks.yaml
   - ./intel-device-plugin-operator/ks.yaml
