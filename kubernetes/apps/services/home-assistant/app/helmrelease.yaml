@@ -112,7 +112,7 @@ spec:
           - hass.${SECRET_DOMAIN}
         parentRefs:
           - name: external
-            namespace: kube-system
+            namespace: network
             sectionName: https
         rules:
           - backendRefs:
@@ -123,7 +123,7 @@ spec:
           - hass-code.${SECRET_DOMAIN}
         parentRefs:
           - name: internal
-            namespace: kube-system
+            namespace: network
             sectionName: https
         rules:
           - backendRefs:
