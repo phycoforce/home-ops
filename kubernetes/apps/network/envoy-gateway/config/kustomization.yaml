@@ -7,3 +7,4 @@ resources:
   - ./client-policy.yaml
   - ./gateway.yaml
   - ./redirect.yaml
+  - ./certificate.yaml
