@@ -84,9 +84,9 @@ spec:
         #  lbipam.cilium.io/ips: 10.0.20.244
         ports:
           http:
-            port: 8123
+            port: &http 8123
           code-server:
-            port: 12321
+            port: &code 12321
     ingress:
       app:
         className: external
@@ -106,6 +106,30 @@ spec:
                 service:
                   identifier: app
                   port: code-server
+    route:
+      app:
+        hostnames:
+          - hass.${SECRET_DOMAIN}
+        parentRefs:
+          - name: external
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: *app
+                port: *http
+      code: # split so it's not external, and we can ext-auth it as well
+        hostnames:
+          - hass-code.${SECRET_DOMAIN}
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: *app
+                port: *code
+        annotations:
     persistence:
       config:
         existingClaim: home-assistant

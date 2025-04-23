@@ -60,16 +60,17 @@ spec:
         ports:
           http:
             port: &port 8080
-    ingress:
+    route:
       app:
-        className: internal
-        hosts:
-          - host: "pdf.${SECRET_DOMAIN}"
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: http
+        hostnames: ["pdf.${SECRET_DOMAIN}"]
+        parentRefs:
+          - name: internal
+            namespace: kube-system
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: *app
+                port: *port
     persistence:
       config:
         enabled: true
