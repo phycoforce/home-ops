@@ -90,20 +90,9 @@ spec:
         serviceName: gatus
         endpoints:
           - port: http
-    ingress:
-      app:
-        className: external
-        hosts:
-          - host: status.${SECRET_DOMAIN}
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: http
     route:
       app:
         hostnames:
-          - "{{ .Release.Name }}.${SECRET_DOMAIN}"
           - status.${SECRET_DOMAIN}
         parentRefs:
           - name: external
