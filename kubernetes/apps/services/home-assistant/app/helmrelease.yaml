@@ -87,25 +87,6 @@ spec:
             port: &http 8123
           code-server:
             port: &code 12321
-    ingress:
-      app:
-        className: external
-        hosts:
-          - host: hass.${SECRET_DOMAIN}
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: http
-      code-server:
-        className: internal
-        hosts:
-          - host: hass-code.${SECRET_DOMAIN}
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: code-server
     route:
       app:
         hostnames:
