@@ -84,28 +84,33 @@ spec:
         #  lbipam.cilium.io/ips: 10.0.20.244
         ports:
           http:
-            port: 8123
+            port: &http 8123
           code-server:
-            port: 12321
-    ingress:
+            port: &code 12321
+    route:
       app:
-        className: external
-        hosts:
-          - host: hass.${SECRET_DOMAIN}
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: http
-      code-server:
-        className: internal
-        hosts:
-          - host: hass-code.${SECRET_DOMAIN}
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: code-server
+        hostnames:
+          - hass.${SECRET_DOMAIN}
+        parentRefs:
+          - name: external
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: *app
+                port: *http
+      code: # split so it's not external, and we can ext-auth it as well
+        hostnames:
+          - hass-code.${SECRET_DOMAIN}
+        parentRefs:
+          - name: internal
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: *app
+                port: *code
+        annotations:
     persistence:
       config:
         existingClaim: home-assistant

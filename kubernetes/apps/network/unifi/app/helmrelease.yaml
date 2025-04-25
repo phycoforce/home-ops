@@ -56,7 +56,7 @@ spec:
         loadBalancerIP: 10.0.20.243
         ports:
           http:
-            port: 8443
+            port: &port 8443
             protocol: HTTPS
           controller:
             enabled: true
@@ -86,23 +86,17 @@ spec:
             enabled: true
             port: 10001
             protocol: UDP
-    ingress:
+    route:
       app:
-        enabled: true
-        className: internal
-        annotations:
-          cert-manager.io/cluster-issuer: "letsencrypt-production"
-          nginx.ingress.kubernetes.io/backend-protocol: "HTTPS"
-        hosts:
-          - host: &host "{{ .Release.Name }}.${SECRET_DOMAIN}"
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: http
-        tls:
-          - hosts:
-              - *host
+        hostnames: ["{{ .Release.Name }}.${SECRET_DOMAIN}"]
+        parentRefs:
+          - name: internal
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - name: *app
+                port: *port
     persistence:
       config:
         enabled: true

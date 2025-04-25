@@ -92,7 +92,7 @@ spec:
       - --managed-record-types=TXT
       - --managed-record-types=SRV
     policy: sync
-    sources: ["ingress", "service"]
+    sources: ["gateway-httproute", "service"]
     registry: txt
     txtOwnerId: default
     txtPrefix: k8s.

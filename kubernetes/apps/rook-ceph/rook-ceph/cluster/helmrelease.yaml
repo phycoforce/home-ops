@@ -153,9 +153,3 @@ spec:
     # ceph fs fail ceph-filesystem && ceph fs rm ceph-filesystem --yes-i-really-mean-it
     cephFileSystems: []
     cephObjectStores: []
-    ingress:
-      dashboard:
-        ingressClassName: internal
-        host:
-          name: "rook.${SECRET_DOMAIN}"
-          path: /
