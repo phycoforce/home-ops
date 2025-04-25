@@ -40,6 +40,7 @@ spec:
               LIDARR__AUTH__REQUIRED: DisabledForLocalAddresses
               LIDARR__APP__THEME: dark
               TZ: Europe/London
+              LIDARR__SERVER__PORT: &port 80
             #envFrom:
             #  - secretRef:
             #      name: lidarr
@@ -54,7 +55,7 @@ spec:
                 spec:
                   httpGet:
                     path: /ping
-                    port: &port 8686
+                    port: *port
                   initialDelaySeconds: 0
                   periodSeconds: 10
                   timeoutSeconds: 1
