@@ -9,7 +9,7 @@ spec:
   blocks:
     - # Controller VIP: 10.0.20.250
       start: 10.0.20.201
-      stop: 10.0.20.249
+      stop: 10.0.20.251
 ---
 # yaml-language-server: $schema=https://datreeio.github.io/CRDs-catalog/cilium.io/ciliuml2announcementpolicy_v2alpha1.json
 apiVersion: cilium.io/v2alpha1
@@ -77,3 +77,23 @@ spec:
           peerAddress: 10.0.20.1
           peerConfigRef:
             name: cilium-bgp-peer-config-ipv4
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/master/service-v1.json
+apiVersion: v1
+kind: Service
+metadata:
+  name: kube-api
+  annotations:
+    lbipam.cilium.io/ips: 10.0.20.250
+spec:
+  type: LoadBalancer
+  internalTrafficPolicy: Cluster
+  externalTrafficPolicy: Cluster # Cilium's L2 announce doesn't support Local, since it announces on a different node than the pod is running on https://github.com/cilium/cilium/issues/27800
+  selector:
+    k8s-app: kube-apiserver
+    tier: control-plane
+  ports:
+    - name: https
+      port: 6443
+      protocol: TCP
+      targetPort: 6443
