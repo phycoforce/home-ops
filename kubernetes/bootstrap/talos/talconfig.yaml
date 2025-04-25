@@ -120,6 +120,7 @@ nodes:
           ip: "10.0.20.250"
 # Global patches
 patches:
+  - "@./patches/global/machine-features.yaml"
   - "@./patches/global/machine-files.yaml"
   - "@./patches/global/machine-kubelet.yaml"
   - "@./patches/global/machine-network.yaml"
