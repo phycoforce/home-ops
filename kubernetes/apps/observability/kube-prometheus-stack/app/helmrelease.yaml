@@ -5,7 +5,7 @@ kind: OCIRepository
 metadata:
   name: kube-prometheus-stack
 spec:
-  interval: 1h
+  interval: 5m
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
     operation: copy
@@ -25,11 +25,10 @@ spec:
     name: kube-prometheus-stack
   install:
     remediation:
-      retries: 3
+      retries: -1
   upgrade:
     cleanupOnFail: true
     remediation:
-      strategy: rollback
       retries: 3
   values:
     crds:
@@ -45,11 +44,14 @@ spec:
           hostnames: ["alertmanager.${SECRET_DOMAIN}"]
           parentRefs:
             - name: internal
-              namespace: network
+              namespace: kube-system
               sectionName: https
       alertmanagerSpec:
-        useExistingSecret: true
-        configSecret: alertmanager-secret
+        alertmanagerConfiguration:
+          name: alertmanager
+          global:
+            resolveTimeout: 5m
+        externalUrl: https://alertmanager.${SECRET_DOMAIN}
         storage:
           volumeClaimTemplate:
             spec:
@@ -57,20 +59,10 @@ spec:
               resources:
                 requests:
                   storage: 1Gi
-    kubeApiServer:
-      serviceMonitor:
-        selector:
-          k8s-app: kube-apiserver
-    kubeScheduler:
-      service:
-        selector:
-          k8s-app: kube-scheduler
-    kubeControllerManager: &kubeControllerManager
-      service:
-        selector:
-          k8s-app: kube-controller-manager
     kubeEtcd:
-      <<: *kubeControllerManager # etcd runs on control plane nodes
+      service:
+        selector:
+          component: kube-apiserver # etcd runs on control plane nodes
     kubeProxy:
       enabled: false
     prometheus:
@@ -80,10 +72,9 @@ spec:
           hostnames: ["prometheus.${SECRET_DOMAIN}"]
           parentRefs:
             - name: internal
-              namespace: network
+              namespace: kube-system
               sectionName: https
       prometheusSpec:
-        scrapeInterval: 1m # Must match interval in Grafana Helm chart
         podMonitorSelectorNilUsesHelmValues: false
         probeSelectorNilUsesHelmValues: false
         ruleSelectorNilUsesHelmValues: false
@@ -92,16 +83,14 @@ spec:
         enableAdminAPI: true
         walCompression: true
         enableFeatures:
-          - auto-gomemlimit
           - memory-snapshot-on-shutdown
-          - new-service-discovery-manager
         retention: 14d
         retentionSize: 50GB
         resources:
           requests:
             cpu: 100m
           limits:
-            memory: 1500Mi
+            memory: 2000Mi
         storageSpec:
           volumeClaimTemplate:
             spec:
@@ -146,7 +135,7 @@ spec:
               - alert: DockerhubRateLimitRisk
                 annotations:
                   summary: Kubernetes cluster Dockerhub rate limit risk
-                expr: count(time() - container_last_seen{image=~"(docker.io).*",container!=""} < 30) > 100
+                expr: count(time() - container_last_seen{image=~"(docker.io).*",container!=""} < 30) > 25
                 labels:
                   severity: critical
       oom-rules:
