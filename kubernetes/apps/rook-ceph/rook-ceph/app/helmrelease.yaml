@@ -76,10 +76,10 @@ spec:
         - name : csi-rbdplugin
           resource:
             requests:
-              memory: 48Mi
+              memory: 128Mi
               cpu: 15m
             limits:
-              memory: 96Mi
+              memory: 1Gi
               cpu: 200m
         - name : liveness-prometheus
           resource:
