@@ -26,7 +26,7 @@ spec:
           app:
             image:
                 repository: ghcr.io/girlbossceo/conduwuit
-                tag: main-00f7745ec4ebcea5f892376c5de5db1299f71696-debug
+                tag: main-d8311a5ff672fdc4729d956af5e3af8646b0670d-debug
             env:
               - name: CONDUWUIT_SERVER_NAME
                 value: ${SECRET_DOMAIN}
