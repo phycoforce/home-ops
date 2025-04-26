@@ -6,9 +6,8 @@ namespace: observability
 components:
   - ../../components/common
 resources:
-  #- ./prometheus-operator-crds/ks.yaml
   - ./gatus/ks.yaml
-  - ./kube-prometheus-stack/ks.yaml
+  #- ./kube-prometheus-stack/ks.yaml
   - ./loki/ks.yaml
   - ./promtail/ks.yaml
   - ./blackbox-exporter/ks.yaml
