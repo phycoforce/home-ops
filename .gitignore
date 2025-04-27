@@ -9,6 +9,7 @@ talosconfig
 *.agekey
 *.pub
 *.key
+onepassword.env
 # Private
 .private
 .bin
