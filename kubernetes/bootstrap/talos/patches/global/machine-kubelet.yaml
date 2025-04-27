@@ -1,7 +1,5 @@
 machine:
   kubelet:
-    extraArgs:
-      feature-gates: MutatingAdmissionPolicy=true
     extraMounts:
       - destination: /var/openebs/local
         type: bind
@@ -13,3 +11,5 @@ machine:
     nodeIP:
       validSubnets:
         - 10.0.20.0/24
+    extraConfig:
+      serializeImagePulls: false
