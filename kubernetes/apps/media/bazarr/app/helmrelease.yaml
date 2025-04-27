@@ -11,11 +11,10 @@ spec:
     name: app-template
   install:
     remediation:
-      retries: 3
+      retries: -1
   upgrade:
     cleanupOnFail: true
     remediation:
-      strategy: rollback
       retries: 3
   values:
     controllers:
@@ -53,7 +52,7 @@ spec:
               requests:
                 cpu: 10m
               limits:
-                memory: 500Mi
+                memory: 1Gi
           subcleaner:
             image:
               repository: registry.k8s.io/git-sync/git-sync
@@ -62,7 +61,7 @@ spec:
               GITSYNC_REPO: https://github.com/KBlixt/subcleaner
               GITSYNC_REF: master
               GITSYNC_PERIOD: 24h
-              GITSYNC_ROOT: /add-ons
+              GITSYNC_ROOT: /subcleaner
             resources:
               requests:
                 cpu: 10m
@@ -76,7 +75,6 @@ spec:
         runAsGroup: 1001
         fsGroup: 1001
         fsGroupChangePolicy: OnRootMismatch
-        seccompProfile: { type: RuntimeDefault }
     service:
       app:
         controller: bazarr
@@ -88,22 +86,20 @@ spec:
         hostnames: ["{{ .Release.Name }}.${SECRET_DOMAIN}"]
         parentRefs:
           - name: internal
-            namespace: network
+            namespace: kube-system
             sectionName: https
         rules:
           - backendRefs:
               - name: *app
                 port: *port
     persistence:
-      add-ons:
-        type: emptyDir
-      cache:
+      config:
+        existingClaim: bazarr
+      config-cache:
         type: emptyDir
         globalMounts:
           - path: /config/cache
-      config:
-        existingClaim: bazarr
-      log:
+      config-log:
         type: emptyDir
         globalMounts:
           - path: /config/log
@@ -118,6 +114,10 @@ spec:
         name: bazarr-scripts
         defaultMode: 0775
         globalMounts:
-          - readOnly: true
+          - path: /scripts/subcleaner.sh
+            subPath: subcleaner.sh
+            readOnly: true
+      subcleaner:
+        type: emptyDir
       tmp:
         type: emptyDir
