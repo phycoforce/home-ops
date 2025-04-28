@@ -13,3 +13,4 @@ resources:
   - ./unifi/ks.yaml
   - ./envoy-gateway/ks.yaml
   - ./gateway-api-crds/ks.yaml
+  #- ./i40-tune/ks.yaml
