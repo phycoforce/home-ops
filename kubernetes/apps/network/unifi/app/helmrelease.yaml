@@ -34,8 +34,8 @@ spec:
         containers:
           app:
             image:
-              repository: jacobalberty/unifi
-              tag: v9.1.120@sha256:150af8f7bd96f597e7441f4598bd82435c2ee73b03b833179d30e6e2666be12b
+              repository: ghcr.io/jacobalberty/unifi-docker
+              tag: v9.1.120@sha256:150af8f7bd96f597e7441f4598bd82435c2ee73b03b833179d30e6e2666be12s
               pullPolicy: IfNotPresent
             env:
               RUNAS_UID0: "false"
@@ -97,9 +97,27 @@ spec:
           - backendRefs:
               - name: *app
                 port: *port
+            timeouts:
+              request: 0s # websocket, never time out
+              backendRequest: 0s # websocket, never time out
     persistence:
       config:
         enabled: true
         existingClaim: *app
         globalMounts:
           - path: /unifi
+      cert:
+        type: secret
+        name: '${SECRET_DOMAIN/./-}-unifi'
+        advancedMounts:
+          unifi:
+            app:
+              - path: /unifi/cert/cert.pem
+                subPath: tls.crt
+                readOnly: true
+              - path: /unifi/cert/privkey.pem
+                subPath: tls.key
+                readOnly: true
+              - path: /unifi/data/keystore
+                subPath: keystore.jks
+                readOnly: false
