@@ -85,7 +85,7 @@ spec:
           initialDelaySeconds: 10
           timeoutSeconds: 5
     extraArgs:
-      - --ingress-class=internal
+      - --gateway-name=internal
       - --managed-record-types=A
       - --managed-record-types=AAAA
       - --managed-record-types=CNAME
