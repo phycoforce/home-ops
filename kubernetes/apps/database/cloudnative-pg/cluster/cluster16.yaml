@@ -41,7 +41,7 @@ spec:
         compression: bzip2
         maxParallel: 4
       destinationPath: s3://cloudnative-pg/
-      endpointURL: http://minio.storage.svc.cluster.local:9000
+      endpointURL: http://aionios.internal:9000
       serverName: &currentCluster postgres-008
       s3Credentials:
         accessKeyId:
