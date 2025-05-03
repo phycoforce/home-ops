@@ -53,7 +53,7 @@ spec:
     triggerLoopOnEvent: true
     policy: sync
     sources: ["crd", "gateway-httproute"]
-    txtPrefix: k8s.
+    txtSuffix: .k8s
     txtOwnerId: default
     domainFilters: ["${SECRET_DOMAIN}"]
     serviceMonitor:
