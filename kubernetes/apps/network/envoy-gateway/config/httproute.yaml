@@ -11,7 +11,7 @@ spec:
     - name: internal
       namespace: network
       sectionName: http
-    - name: internal
+    - name: external-root
       namespace: network
       sectionName: http-root
     - name: external
