@@ -34,7 +34,7 @@ spec:
         containers:
           app:
             image:
-              repository: jacobalberty/unifi
+              repository: ghcr.io/jacobalberty/unifi-docker
               tag: v9.1.120@sha256:150af8f7bd96f597e7441f4598bd82435c2ee73b03b833179d30e6e2666be12b
               pullPolicy: IfNotPresent
             env:
@@ -55,21 +55,13 @@ spec:
         externalTrafficPolicy: Local
         loadBalancerIP: 10.0.20.243
         ports:
-          http:
+          https:
             port: &port 8443
             protocol: HTTPS
           controller:
             enabled: true
             port: 8080
             protocol: TCP
-          portal-http:
-            enabled: false
-            port: 8880
-            protocol: HTTP
-          portal-https:
-            enabled: false
-            port: 8843
-            protocol: HTTPS
           speedtest:
             enabled: true
             port: 6789
