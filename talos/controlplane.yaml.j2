@@ -22,9 +22,12 @@ machine:
       validSubnets: ["10.0.20.0/24"]
     disableManifestsDirectory: true
   network:
+    hostname:
     interfaces:
-        vip:
-          ip: 10.0.20.250
+    nameservers:
+      - 10.0.20.1
+    disableSearchDomain: true
+  install:
   files:
     - # Spegel
       op: create
@@ -42,6 +45,11 @@ machine:
         nconnect=16
         nodiratime=True
         noatime=True
+  time:
+    disabled: false
+    servers:
+      - 162.159.200.1
+      - 162.159.200.123
   sysctls:
     fs.inotify.max_user_watches: 1048576   # Watchdog
     fs.inotify.max_user_instances: 8192    # Watchdog
@@ -93,8 +101,6 @@ cluster:
     dnsDomain: cluster.local
     podSubnets: ["10.69.0.0/16"]
     serviceSubnets: ["10.96.0.0/16"]
-  coreDNS:
-    disabled: true
   token: op://kubernetes/talos/CLUSTER_TOKEN
   secretboxEncryptionSecret: op://kubernetes/talos/CLUSTER_SECRETBOXENCRYPTIONSECRET
   ca:
@@ -146,6 +152,12 @@ cluster:
                   - maxSkew: 1
                     topologyKey: kubernetes.io/hostname
                     whenUnsatisfiable: ScheduleAnyway
+  discovery:
+    enabled: true
+    registries:
+      kubernetes:
+        disabled: true
+      service: {}
   etcd:
     ca:
       crt: op://kubernetes/talos/CLUSTER_ETCD_CA_CRT
@@ -153,4 +165,6 @@ cluster:
     extraArgs:
       listen-metrics-urls: http://0.0.0.0:2381
     advertisedSubnets: ["10.0.20.0/24"]
+  coreDNS:
+    disabled: true
   allowSchedulingOnControlPlanes: true

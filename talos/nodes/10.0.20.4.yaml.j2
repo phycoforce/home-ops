@@ -1,41 +1,40 @@
 machine:
   network:
-    hostname: ontos
+    hostname: pneuma
     interfaces:
       - interface: bond0
         addresses:
-          - 10.0.20.3/24
+          - 10.0.20.4/24
         routes:
           - network: 0.0.0.0/0
             gateway: 10.0.20.1
         bond:
           interfaces: []
           deviceSelectors:
-            - hardwareAddr: 7c:83:34:bf:1a:*
-              driver: igc
-          mode: 802.3ad
-          xmitHashPolicy: layer3+4
-          lacpRate: fast
-          miimon: 100
-          updelay: 200
-          downdelay: 200
+            - hardwareAddr: f8:f2:1e:79:e1:10
+              driver: i40e
+          mode: active-backup
         vlans:
           - addresses:
-              - 10.0.40.3/24
+              - 10.0.40.4/24
             routes: []
             dhcp: false
             vlanId: 40
             mtu: 1500
           - addresses:
-              - 192.168.0.3/24
+              - 192.168.0.4/24
             routes: []
             dhcp: false
             vlanId: 99
             mtu: 1500
         mtu: 9000
         dhcp: false
+        vip:
+          ip: 10.0.20.250
   disks:
-    - device: /dev/disk/by-id/nvme-PCIe_SSD_7FBC07390DD900364855
+    - device: /dev/disk/by-id/nvme-CT500P3SSD8_2421E8B20561
   install:
     image: factory.talos.dev/installer/fbf320d018098de798d7ba89b16dcb9c5114ccf4386126854d9984a64d297567:{{ ENV.TALOS_VERSION }}
     wipe: false
+  nodeLabels:
+    feature.node.kubernetes.io/custom-i40e: "true"
