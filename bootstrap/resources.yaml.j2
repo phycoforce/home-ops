@@ -21,24 +21,3 @@ metadata:
   namespace: flux-system
 stringData:
   age.agekey: op://kubernetes/sops/SOPS_PRIVATE_KEY
----
-apiVersion: v1
-kind: Secret
-metadata:
-  name: wabbit-life-production-tls
-  namespace: network
-  annotations:
-    cert-manager.io/alt-names: '*.wabbit.life,wabbit.life'
-    cert-manager.io/certificate-name: wabbit-life-production
-    cert-manager.io/common-name: op://kubernetes/cluster_secrets/SECRET_DOMAIN
-    cert-manager.io/ip-sans: ""
-    cert-manager.io/issuer-group: ""
-    cert-manager.io/issuer-kind: ClusterIssuer
-    cert-manager.io/issuer-name: letsencrypt-production
-    cert-manager.io/uri-sans: ""
-  labels:
-    controller.cert-manager.io/fao: "true"
-type: kubernetes.io/tls
-data:
-  tls.crt: op://kubernetes/lets-encrypt-tls/tls.crt
-  tls.key: op://kubernetes/lets-encrypt-tls/tls.key
