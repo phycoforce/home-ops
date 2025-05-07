@@ -36,8 +36,6 @@ machine:
         dhcp: false
         vip:
           ip: 10.0.20.250
-  disks:
-    - device: /dev/disk/by-id/nvme-PCIe_SSD_7FBC07390DD900364855
   install:
-    image: factory.talos.dev/installer/fbf320d018098de798d7ba89b16dcb9c5114ccf4386126854d9984a64d297567:{{ ENV.TALOS_VERSION }}
+    disk: /dev/disk/by-id/nvme-PCIe_SSD_7FBC07390DD900364855
     wipe: false

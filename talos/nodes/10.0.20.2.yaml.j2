@@ -28,7 +28,6 @@ machine:
           ip: 10.0.20.250
   install:
     disk: /dev/disk/by-id/nvme-CT500P3SSD8_2332E86B87F2
-    image: factory.talos.dev/installer/fbf320d018098de798d7ba89b16dcb9c5114ccf4386126854d9984a64d297567:{{ ENV.TALOS_VERSION }}
     wipe: false
   nodeLabels:
     feature.node.kubernetes.io/custom-i40e: "true"
