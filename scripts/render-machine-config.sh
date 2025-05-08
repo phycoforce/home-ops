@@ -39,7 +39,7 @@ function main() {
         log error "Failed to authenticate with 1Password CLI"
     fi
 
-    # Upload schematic.yaml to Talos Factory
+        # Upload schematic.yaml to Talos Factory
     local schematic_file="${ROOT_DIR}/talos/schematic.yaml"
     if [[ -f "${schematic_file}" ]]; then
         TALOS_SCHEMATIC=$(curl --silent -X POST --data-binary @"${schematic_file}" https://factory.talos.dev/schematics \
@@ -47,7 +47,7 @@ function main() {
         export TALOS_SCHEMATIC
         #log info "TALOS_SCHEMATIC ID: ${TALOS_SCHEMATIC}"
     else
-        log warn "No schematic.yaml found at ${schematic_file}; skipping TALOS_SCHEMATIC export"
+        log error "No schematic.yaml found at ${schematic_file}; skipping TALOS_SCHEMATIC export"
     fi
 
     local base patch machine_config
