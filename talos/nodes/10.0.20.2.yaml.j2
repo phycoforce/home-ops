@@ -29,5 +29,17 @@ machine:
           ip: 10.0.20.250
   install:
     disk: /dev/disk/by-id/nvme-CT500P3SSD8_2332E86B87F2
-  nodeLabels:
-    feature.node.kubernetes.io/custom-i40e: "true"
+---
+apiVersion: v1alpha1
+kind: EthernetConfig
+name: enp1s0f0np0
+rings:
+  rx: 8160
+  tx: 8160
+---
+apiVersion: v1alpha1
+kind: EthernetConfig
+name: enp1s0f0np1
+rings:
+  rx: 8160
+  tx: 8160

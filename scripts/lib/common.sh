@@ -105,6 +105,24 @@ function check_cli() {
 
     log debug "Deps are installed" "deps=${deps[*]}"
 }
+# Upload schematic.yaml to Talos Factory and return the ID
+function upload_schematic() {
+    local schematic_file="${ROOT_DIR}/talos/schematic.yaml"
+
+    if [[ ! -f "${schematic_file}" ]]; then
+        log error "Required schematic.yaml not found" "path=${schematic_file}"
+    fi
+
+    local schematic_id
+    schematic_id=$(curl --silent -X POST --data-binary @"${schematic_file}" https://factory.talos.dev/schematics \
+        | jq --raw-output '.id')
+
+    if [[ -z "${schematic_id}" || "${schematic_id}" == "null" ]]; then
+        log error "Failed to upload schematic or invalid response from Talos Factory"
+    fi
+
+    export TALOS_SCHEMATIC="${schematic_id}"
+}
 
 # Render a template using minijinja and inject secrets using op
 function render_template() {
