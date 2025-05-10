@@ -1,0 +1,45 @@
+machine:
+  type: controlplane
+  network:
+    hostname: logos
+    interfaces:
+      - interface: bond0
+        addresses: ["10.0.20.2/24"]
+        routes: [{ network: 0.0.0.0/0, gateway: 10.0.20.1 }]
+        bond:
+          interfaces: []
+          deviceSelectors:
+            - hardwareAddr: f8:f2:1e:79:e5:60
+              driver: i40e
+          mode: active-backup
+        vlans:
+          - addresses: ["10.0.40.2/24"]
+            routes: []
+            dhcp: false
+            vlanId: 40
+            mtu: 1500
+          - addresses: ["192.168.0.5/24"]
+            routes: []
+            dhcp: false
+            vlanId: 99
+            mtu: 1500
+        mtu: 9000
+        dhcp: false
+        vip:
+          ip: 10.0.20.250
+  install:
+    disk: /dev/disk/by-id/nvme-CT500P3SSD8_2332E86B87F2
+---
+apiVersion: v1alpha1
+kind: EthernetConfig
+name: enp1s0f0np0
+rings:
+  rx: 8160
+  tx: 8160
+---
+apiVersion: v1alpha1
+kind: EthernetConfig
+name: enp1s0f0np1
+rings:
+  rx: 8160
+  tx: 8160

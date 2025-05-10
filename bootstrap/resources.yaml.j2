@@ -1,3 +1,10 @@
+{% for namespace in ["security", "flux-system", "network"] %}
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: {{ namespace }}
+{% endfor %}
 ---
 apiVersion: v1
 kind: Secret
@@ -6,3 +13,62 @@ metadata:
   namespace: security
 stringData:
   token: op://kubernetes/1password/OP_CONNECT_TOKEN
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: sops-age
+  namespace: flux-system
+stringData:
+  age.agekey: op://kubernetes/sops/SOPS_PRIVATE_KEY
+---git
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cloudflare-tunnel-id-secret
+  namespace: network
+stringData:
+  CLOUDFLARE_TUNNEL_ID: op://kubernetes/cloudflare/CLOUDFLARE_TUNNEL_ID
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: op://kubernetes/lets-encrypt-tls/name
+  namespace: network
+  annotations:
+    cert-manager.io/alt-names: op://kubernetes/lets-encrypt-tls/alt-names
+    cert-manager.io/certificate-name: op://kubernetes/lets-encrypt-tls/certificate-name
+    cert-manager.io/common-name: op://kubernetes/cluster_secrets/SECRET_DOMAIN
+    cert-manager.io/ip-sans: ""
+    cert-manager.io/issuer-group: ""
+    cert-manager.io/issuer-kind: ClusterIssuer
+    cert-manager.io/issuer-name: letsencrypt-production
+    cert-manager.io/uri-sans: ""
+  labels:
+    controller.cert-manager.io/fao: "true"
+type: kubernetes.io/tls
+data:
+  tls.crt: op://kubernetes/lets-encrypt-tls/tls.crt
+  tls.key: op://kubernetes/lets-encrypt-tls/tls.key
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: op://kubernetes/lets-encrypt-unifi/name
+  namespace: network
+  annotations:
+    cert-manager.io/alt-names: op://kubernetes/lets-encrypt-unifi/common-name
+    cert-manager.io/certificate-name: op://kubernetes/lets-encrypt-unifi/name
+    cert-manager.io/common-name: op://kubernetes/lets-encrypt-unifi/common-name
+    cert-manager.io/ip-sans: ""
+    cert-manager.io/issuer-group: ""
+    cert-manager.io/issuer-kind: ClusterIssuer
+    cert-manager.io/issuer-name: letsencrypt-production
+    cert-manager.io/uri-sans: ""
+  labels:
+    controller.cert-manager.io/fao: "true"
+type: kubernetes.io/tls
+data:
+  keystore.jks: op://kubernetes/lets-encrypt-unifi/keystore.jks
+  tls.crt: op://kubernetes/lets-encrypt-unifi/tls.crt
+  tls.key: op://kubernetes/lets-encrypt-unifi/tls.key

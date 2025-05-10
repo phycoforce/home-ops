@@ -10,6 +10,7 @@ talosconfig
 *.pub
 *.key
 onepassword.env
+talosconfig
 # Private
 .private
 .bin
