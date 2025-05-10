@@ -17,6 +17,7 @@ spec:
     alpnProtocols:
       - h2
       - http/1.1
+  http3: {}
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/envoyproxy/gateway/refs/heads/main/charts/gateway-helm/crds/generated/gateway.envoyproxy.io_clienttrafficpolicies.yaml
 apiVersion: gateway.envoyproxy.io/v1alpha1
@@ -36,6 +37,7 @@ spec:
     alpnProtocols:
       - h2
       - http/1.1
+  http3: {}
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/envoyproxy/gateway/refs/heads/main/charts/gateway-helm/crds/generated/gateway.envoyproxy.io_clienttrafficpolicies.yaml
 apiVersion: gateway.envoyproxy.io/v1alpha1
@@ -55,3 +57,4 @@ spec:
     alpnProtocols:
       - h2
       - http/1.1
+  http3: {}
