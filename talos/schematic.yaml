@@ -14,4 +14,4 @@ customization:
   systemExtensions:
     officialExtensions:
       - siderolabs/i915
-      - siderolabs/intel-ucodeß
+      - siderolabs/intel-ucode

@@ -39,7 +39,7 @@ function apply_talos_config() {
         local node_file="${ROOT_DIR}/talos/nodes/${node}.yaml.j2"
 
         local machine_type
-        machine_type=$(yq '.machine.type' "${node_file}")
+        machine_type=$(yq 'select(documentIndex == 0) | .machine.type' "${node_file}")
 
         log debug "Applying Talos node configuration" "node=${node}" "machine_type=${machine_type}"
 

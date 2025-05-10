@@ -21,14 +21,12 @@ machine:
       validSubnets: ["10.0.20.0/24"]
     disableManifestsDirectory: true
   network:
-    hostname:
-    interfaces:
     nameservers:
       - 10.0.20.1
     disableSearchDomain: true
   install:
     image: factory.talos.dev/metal-installer/{{ ENV.TALOS_SCHEMATIC }}:{{ ENV.TALOS_VERSION }}
-    wipe: false
+    wipe: true
   files:
     - # Spegel
       op: create
@@ -48,9 +46,7 @@ machine:
         noatime=True
   time:
     disabled: false
-    servers:
-      - 162.159.200.1
-      - 162.159.200.123
+    servers: ["time.cloudflare.com"]
   sysctls:
     fs.inotify.max_user_watches: 1048576   # Watchdog
     fs.inotify.max_user_instances: 8192    # Watchdog
