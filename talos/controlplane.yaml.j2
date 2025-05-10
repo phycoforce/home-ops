@@ -28,6 +28,7 @@ machine:
     disableSearchDomain: true
   install:
     image: factory.talos.dev/metal-installer/{{ ENV.TALOS_SCHEMATIC }}:{{ ENV.TALOS_VERSION }}
+    wipe: false
   files:
     - # Spegel
       op: create
