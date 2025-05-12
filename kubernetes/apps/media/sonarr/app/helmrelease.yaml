@@ -87,6 +87,10 @@ spec:
     persistence:
       config:
         existingClaim: sonarr
+      config-cache:
+        existingClaim: sonarr-cache
+        globalMounts:
+          - path: /config/MediaCover
       media:
         type: nfs
         server: aionios.internal
@@ -95,14 +99,3 @@ spec:
           - path: /data
       tmp:
          type: emptyDir
-      scripts:
-        type: configMap
-        name: sonarr-configmap
-        defaultMode: 0775
-        globalMounts:
-          - path: /scripts/pushover-notify.sh
-            subPath: pushover-notify.sh
-            readOnly: true
-          - path: /scripts/tba-refresher.sh
-            subPath: tba-refresher.sh
-            readOnly: true
