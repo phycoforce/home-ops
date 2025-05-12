@@ -6,9 +6,6 @@ resources:
   - ./helmrelease.yaml
   - ./externalsecret.yaml
 configMapGenerator:
-  - name: radarr-configmap
-    files:
-      - pushover-notify.sh=./resources/pushover-notify.sh
   - name: radarr-loki-rules
     files:
       - radarr.yaml=./lokirule.yaml
