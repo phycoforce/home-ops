@@ -31,6 +31,7 @@ spec:
             env:
               WEBHOOK__PORT: &port 80
               TZ: Europe/London
+              SECRET_DOMAIN: ${SECRET_DOMAIN}
             envFrom:
               - secretRef:
                   name: webhook-secret
