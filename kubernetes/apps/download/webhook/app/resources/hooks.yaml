@@ -1,11 +1,11 @@
 ---
-#- id: jellyseerr-pushover
-#  execute-command: /config/jellyseerr-pushover.sh
-#  command-working-directory: /config
-#  pass-arguments-to-command:
-#    - source: string
-#      name: '{{ getenv "JELLYSEERR_PUSHOVER_URL" }}'
-#    - source: entire-payload
+- id: jellyseerr-pushover
+  execute-command: /config/jellyseerr-pushover.sh
+  command-working-directory: /config
+  pass-arguments-to-command:
+    - source: string
+      name: '{{ getenv "JELLYSEERR_PUSHOVER_URL" }}'
+    - source: entire-payload
 
 - id: radarr-pushover
   execute-command: /config/radarr-pushover.sh
