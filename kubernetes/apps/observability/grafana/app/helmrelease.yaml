@@ -35,6 +35,8 @@ spec:
       type: Recreate
     admin:
       existingSecret: grafana-secret
+    envFromSecrets:
+      - name: grafana-secret
     env:
       GF_DATE_FORMATS_USE_BROWSER_LOCALE: true
       GF_EXPLORE_ENABLED: true
@@ -84,11 +86,11 @@ spec:
           - name: TeslaMate
             type: postgres
             access: proxy
-            url: postgres16-ro.database.svc.cluster.local:5432
+            url: postgres16-ro.database.svc.cluster.local
             database: teslamate
             user: teslamate
             secureJsonData:
-              password: "$TESLAMATE_POSTGRES_PASSWORD"
+              password: $TESLAMATE_POSTGRES_PASSWORD
             basicAuth: false
             withCredentials: false
             jsonData:
