@@ -34,7 +34,7 @@ spec:
     deploymentStrategy:
       type: Recreate
     admin:
-      existingSecret: grafana-secret
+      existingSecret: grafana-admin
     envFromSecrets:
       - name: grafana-secret
     env:
@@ -88,7 +88,7 @@ spec:
             access: proxy
             url: postgres16-ro.database.svc.cluster.local
             database: teslamate
-            user: teslamate
+            user: $TESLAMATE_POSTGRES_USER
             secureJsonData:
               password: $TESLAMATE_POSTGRES_PASSWORD
             basicAuth: false
