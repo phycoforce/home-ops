@@ -49,7 +49,6 @@ spec:
               GATUS_CONFIG_PATH: /config
               GATUS_DELAY_START_SECONDS: 5
               WEB_PORT: &port 80
-              SECRET_DOMAIN: ${SECRET_DOMAIN}
             probes:
               liveness: &probes
                 enabled: true
@@ -72,6 +71,8 @@ spec:
                 cpu: 100m
               limits:
                 memory: 256Mi
+        serviceAccount:
+          identifier: gatus
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
@@ -103,8 +104,7 @@ spec:
               - identifier: app
                 port: *port
     serviceAccount:
-      create: true
-      name: gatus
+      gatus: {}
     persistence:
       config:
         existingClaim: gatus
