@@ -1,8 +1,9 @@
 ---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app multus
+  name: multus
 spec:
   interval: 1h
   chartRef:
@@ -10,11 +11,10 @@ spec:
     name: app-template
   install:
     remediation:
-      retries: 3
+      retries: -1
   upgrade:
     cleanupOnFail: true
     remediation:
-      strategy: rollback
       retries: 3
   values:
     controllers:
@@ -42,6 +42,8 @@ spec:
                 memory: 32Mi
             securityContext:
               privileged: true
+        serviceAccount:
+          identifier: multus
     defaultPodOptions:
       hostNetwork: true
     persistence:
@@ -56,5 +58,4 @@ spec:
         globalMounts:
           - path: /host/opt/cni/bin
     serviceAccount:
-      create: true
-      name: *app
+      multus: {}

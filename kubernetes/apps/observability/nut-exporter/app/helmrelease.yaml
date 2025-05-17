@@ -1,9 +1,9 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app nut-exporter
+  name: nut-exporter
 spec:
   interval: 1h
   chartRef:
@@ -11,7 +11,7 @@ spec:
     name: app-template
   install:
     remediation:
-      retries: 3
+      retries: -1
   upgrade:
     cleanupOnFail: true
     remediation:
@@ -66,16 +66,16 @@ spec:
           whenUnsatisfiable: DoNotSchedule
           labelSelector:
             matchLabels:
-              app.kubernetes.io/name: *app
+              app.kubernetes.io/name: nut-exporter
     service:
       app:
-        controller: *app
+        controller: nut-exporter
         ports:
           http:
             port: 9199
     serviceMonitor:
       app:
-        serviceName: *app
+        serviceName: nut-exporter
         endpoints:
           - port: http
             scheme: http

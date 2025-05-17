@@ -1,16 +1,14 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app calibre-downloader
+  name: calibre-downloader
 spec:
   interval: 1h
   chartRef:
     kind: OCIRepository
     name: app-template
-  driftDetection:
-    mode: warn
   install:
     remediation:
       retries: -1
@@ -20,7 +18,7 @@ spec:
       retries: 3
   values:
     controllers:
-      *app :
+      calibre-downloader:
         containers:
           app:
             image:
@@ -78,7 +76,7 @@ spec:
             sectionName: https
         rules:
           - backendRefs:
-              - name: *app
+              - identifier: app
                 port: *port
 
     persistence:
