@@ -74,6 +74,8 @@ spec:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
+        serviceAccount:
+          identifier: dragonfly-operator
     service:
       app:
         controller: dragonfly-operator
@@ -92,5 +94,4 @@ spec:
             interval: 1m
             scrapeTimeout: 10s
     serviceAccount:
-      create: true
-      name: dragonfly-operator
+      dragonfly-operator: {}
