@@ -63,7 +63,7 @@ spec:
         fsGroupChangePolicy: 'OnRootMismatch'
     service:
       app:
-        controller: *app
+        controller: calibre-downloader
         ports:
           http:
             port: *port
