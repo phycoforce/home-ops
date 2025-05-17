@@ -61,19 +61,12 @@ spec:
                 enabled: false
             securityContext:
               allowPrivilegeEscalation: false
-              # readOnlyRootFilesystem: false
-              # capabilities: { drop: ["ALL"] }
             resources:
               requests:
                 cpu: 10m
               limits:
                 memory: 128Mi
     defaultPodOptions:
-      # securityContext:
-      #   runAsNonRoot: true
-      #   runAsUser: 65534
-      #   runAsGroup: 65534
-      #   seccompProfile: { type: RuntimeDefault }
       topologySpreadConstraints:
         - maxSkew: 1
           topologyKey: kubernetes.io/hostname
@@ -91,28 +84,17 @@ spec:
             enabled: true
             port: *ldapPort
             protocol: TCP
-    ingress:
-      main:
-        enabled: true
-        className: internal
-        hosts:
-          - host: &host lldap.${SECRET_DOMAIN}
-            paths:
-              - path: /
-                service:
-                  identifier: app
-                  port: http
-        tls:
-          - hosts: [*host]
-    #serviceMonitor:
-    #  app:
-    #    serviceName: *app
-    #    endpoints:
-    #      - port: http
-    #        scheme: http
-    #        path: /metrics
-    #        interval: 1m
-    #        scrapeTimeout: 10s
+    route:
+      app:
+        hostnames: ["{{ .Release.Name }}.${SECRET_DOMAIN}"]
+        parentRefs:
+          - name: internal
+            namespace: network
+            sectionName: https
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *port
     persistence:
       data:
         type: emptyDir
