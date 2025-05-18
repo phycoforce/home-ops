@@ -38,7 +38,7 @@ spec:
               WEBSOCKET_REDIS_URL: redis://dragonfly.database.svc.cluster.local.:6379/5
             resources:
               requests:
-                cpu: 500m
+                cpu: 10m
               limits:
                 memory: 2Gi
     service:
