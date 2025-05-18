@@ -10,3 +10,4 @@ resources:
   - ./home-assistant/ks.yaml
   - ./stirling-pdf/ks.yaml
   - ./searxng/ks.yaml
+  - ./open-webui/ks.yaml
