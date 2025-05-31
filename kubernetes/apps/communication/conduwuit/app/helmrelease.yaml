@@ -25,8 +25,8 @@ spec:
         containers:
           app:
             image:
-                repository: ghcr.io/girlbossceo/conduwuit
-                tag: main-d8311a5ff672fdc4729d956af5e3af8646b0670d-debug
+                repository: ghcr.io/matrix-construct/tuwunel
+                tag: main-release-all-x86_64-linux-gnu@sha256:1fc381723672b049dbf11dead96c87bdbb118176780636d8aa6a78f471c251e9
             env:
               - name: CONDUWUIT_SERVER_NAME
                 value: ${SECRET_DOMAIN}
