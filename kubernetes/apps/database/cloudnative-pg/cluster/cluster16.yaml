@@ -42,7 +42,7 @@ spec:
         maxParallel: 4
       destinationPath: s3://cloudnative-pg/
       endpointURL: http://aionios.internal:9000
-      serverName: &currentCluster postgres-009
+      serverName: &currentCluster postgres-010
       s3Credentials:
         accessKeyId:
           name: cloudnative-pg-secret
@@ -52,7 +52,7 @@ spec:
           key: AWS_SECRET_ACCESS_KEY
   bootstrap:
     recovery:
-      source: &previousCluster postgres-008
+      source: &previousCluster postgres-009
   externalClusters:
     - name: *previousCluster
       barmanObjectStore:
