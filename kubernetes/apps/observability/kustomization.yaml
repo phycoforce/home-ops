@@ -15,4 +15,4 @@ resources:
   - ./nut-exporter/ks.yaml
   - ./smartctl-exporter/ks.yaml
   - ./teslamate/ks.yaml
-  #- ./silence-operator/ks.yaml
+  - ./silence-operator/ks.yaml
