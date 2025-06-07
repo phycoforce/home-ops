@@ -16,3 +16,4 @@ resources:
   - ./smartctl-exporter/ks.yaml
   - ./teslamate/ks.yaml
   - ./silence-operator/ks.yaml
+  - ./keda/ks.yaml

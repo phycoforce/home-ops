@@ -11,6 +11,7 @@ spec:
       app.kubernetes.io/name: *app
   components:
     - ../../../../components/gatus/guarded
+    - ../../../../components/keda/nfs-scaler
   interval: 1h
   retryInterval: 2m
   path: ./kubernetes/apps/download/calibre-downloader/app
