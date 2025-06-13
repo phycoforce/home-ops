@@ -84,7 +84,6 @@ machine:
       - name: nbd
       - name: thunderbolt
       - name: thunderbolt_net
-  kubelet:
   nodeLabels:
     intel.feature.node.kubernetes.io/gpu: "true"
     topology.kubernetes.io/region: origin
@@ -171,14 +170,14 @@ cluster:
 ---
 apiVersion: v1alpha1
 kind: EthernetConfig
-name: enp1s0f0np0
+name: enp2s0f0np0
 rings:
   rx: 8160
   tx: 8160
 ---
 apiVersion: v1alpha1
 kind: EthernetConfig
-name: enp1s0f1np1
+name: enp2s0f1np1
 rings:
   rx: 8160
   tx: 8160
