@@ -4,22 +4,14 @@ machine:
     hostname: ontos
     interfaces:
       - interface: bond0
-        addresses:
-          - 10.0.20.3/24
-        routes:
-          - network: 0.0.0.0/0
-            gateway: 10.0.20.1
+        addresses: ["10.0.20.3/24"]
+        routes: [{ network: 0.0.0.0/0, gateway: 10.0.20.1 }]
         bond:
           interfaces: []
           deviceSelectors:
-            - hardwareAddr: 7c:83:34:bf:1a:*
-              driver: igc
-          mode: 802.3ad
-          xmitHashPolicy: layer3+4
-          lacpRate: fast
-          miimon: 100
-          updelay: 200
-          downdelay: 200
+            - hardwareAddr: 58:47:ca:7f:03:3d
+              driver: i40e
+          mode: active-backup
         vlans:
           - addresses:
               - 10.0.40.3/24
@@ -37,6 +29,31 @@ machine:
         dhcp: false
         vip:
           ip: 10.0.20.250
+      - # 2.5G ignore for WoL/vPro
+        deviceSelector:
+          hardwareAddr: 58:47:ca:7f:03:3f
+          driver: igc
+        ignore: true
+      - # pneuma
+        deviceSelector:
+          busPath: 0-1.0
+        dhcp: false
+        mtu: 65520
+        addresses:
+          - 169.254.255.23/32
+        routes:
+          - network: 169.254.255.24/32
+            metric: 2048
+      - # logos
+        deviceSelector:
+          busPath: 1-1.0
+        dhcp: false
+        mtu: 65520
+        addresses:
+          - 169.254.255.23/32
+        routes:
+          - network: 169.254.255.22/32
+            metric: 2048
   install:
     diskSelector:
-      serial: "7FBC07390DD900364855"
+      serial: "S435NA0N502095"

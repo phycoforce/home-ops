@@ -12,7 +12,7 @@ machine:
         bond:
           interfaces: []
           deviceSelectors:
-            - hardwareAddr: f8:f2:1e:79:e1:10
+            - hardwareAddr: 58:47:ca:7f:09:71
               driver: i40e
           mode: active-backup
         vlans:
@@ -32,20 +32,31 @@ machine:
         dhcp: false
         vip:
           ip: 10.0.20.250
+      - # 2.5G ignore for WoL/vPro
+        deviceSelector:
+          hardwareAddr: 58:47:ca:7f:09:73
+          driver: igc
+        ignore: true
+      - # ontos
+        deviceSelector:
+          busPath: 0-1.0
+        dhcp: false
+        mtu: 65520
+        addresses:
+          - 169.254.255.24/32
+        routes:
+          - network: 169.254.255.23/32
+            metric: 2048
+      - # logos
+        deviceSelector:
+          busPath: 1-1.0
+        dhcp: false
+        mtu: 65520
+        addresses:
+          - 169.254.255.24/32
+        routes:
+          - network: 169.254.255.22/32
+            metric: 2048
   install:
     diskSelector:
-      serial: "2421E8B20561"
----
-apiVersion: v1alpha1
-kind: EthernetConfig
-name: enp1s0f0np0
-rings:
-  rx: 8160
-  tx: 8160
----
-apiVersion: v1alpha1
-kind: EthernetConfig
-name: enp1s0f1np1
-rings:
-  rx: 8160
-  tx: 8160
+      serial: "S435NC0R782584"
