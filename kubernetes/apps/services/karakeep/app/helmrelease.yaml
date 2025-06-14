@@ -140,6 +140,7 @@ spec:
       app:
         forceRename: karakeep
         primary: true
+        controller: karakeep
         ports:
           http:
             port: &httpPort 3000
