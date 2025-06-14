@@ -24,7 +24,7 @@ spec:
       value: CephNodeDiskspaceWarning
       isRegex: false
     - name: device
-      value: /dev/sd.*
+      value: /dev/nvme.*
       isRegex: true
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.giantswarm.io/silence_v1alpha1.json
@@ -39,6 +39,17 @@ spec:
       isRegex: false
     - name: instance
       value: aionios.internal:9100
+      isRegex: false
+---
+# yaml-language-server: $schema=https://kube-schemas.pages.dev/monitoring.giantswarm.io/silence_v1alpha1.json
+apiVersion: monitoring.giantswarm.io/v1alpha1
+kind: Silence
+metadata:
+  name: ceph-node-network-packet-errors
+spec:
+  matchers:
+    - name: alertname
+      value: CephNodeNetworkPacketErrors
       isRegex: false
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.giantswarm.io/silence_v1alpha1.json
