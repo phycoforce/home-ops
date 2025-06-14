@@ -34,26 +34,6 @@ machine:
           hardwareAddr: 58:47:ca:7f:03:3f
           driver: igc
         ignore: true
-      - # pneuma
-        deviceSelector:
-          busPath: 0-1.0
-        dhcp: false
-        mtu: 65520
-        addresses:
-          - 169.254.255.23/32
-        routes:
-          - network: 169.254.255.24/32
-            metric: 2048
-      - # logos
-        deviceSelector:
-          busPath: 1-1.0
-        dhcp: false
-        mtu: 65520
-        addresses:
-          - 169.254.255.23/32
-        routes:
-          - network: 169.254.255.22/32
-            metric: 2048
   install:
     diskSelector:
       serial: "S435NA0N502095"
