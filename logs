@@ -1,0 +1,45 @@
+node: ontos
+metadata:
+    namespace: network
+    type: LinkStatuses.net.talos.dev
+    id: enx02643dad47e7
+    version: 3
+    owner: network.LinkStatusController
+    phase: running
+    created: 2025-06-14T10:00:29Z
+    updated: 2025-06-14T10:00:30Z
+spec:
+    index: 14
+    type: ether
+    linkIndex: 0
+    flags: UP,BROADCAST,RUNNING,MULTICAST,LOWER_UP
+    hardwareAddr: 02:64:3d:ad:47:e7
+    permanentAddr: 02:64:3d:ad:47:e7
+    broadcastAddr: ff:ff:ff:ff:ff:ff
+    mtu: 1500
+    queueDisc: fq
+    operationalState: up
+    kind: ""
+    slaveKind: ""
+    busPath: 0-1.0
+    driver: thunderbolt-net
+    driverVersion: 6.12.31-talos
+    linkState: false
+    port: Other
+    duplex: Unknown
+
+
+
+ontos:
+1-1 pneuma
+0-1 logos
+
+pneuma:
+
+1-1 ontos
+0-1 logos
+
+logos:
+
+1-1 pneuma
+0-1 ontos
