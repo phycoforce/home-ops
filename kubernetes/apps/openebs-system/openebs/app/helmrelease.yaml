@@ -43,6 +43,12 @@ spec:
       replicated:
         mayastor:
           enabled: false
+    loki:
+      enabled: false
+    alloy:
+      enabled: false
+    minio:
+      enabled: false
     openebs-crds:
       csi:
         volumeSnapshots:
