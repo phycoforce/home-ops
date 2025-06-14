@@ -27,12 +27,28 @@ machine:
         dhcp: false
         vip:
           ip: 10.0.20.250
-      - # 2.5G ignore for WoL/vPro
-        deviceSelector:
+      - deviceSelector:
           hardwareAddr: 58:47:ca:7f:09:77
           driver: igc
         ignore: true
+      - deviceSelector:
+          busPath: 0-1.0 # ontos
+        dhcp: false
+        mtu: 65520
+        addresses:
+          - 169.254.255.22/32
+        routes:
+          - network: 169.254.255.23/32
+            metric: 2048
+      - deviceSelector:
+          busPath: 1-1.0 # pneuma
+        dhcp: false
+        mtu: 65520
+        addresses:
+          - 169.254.255.22/32
+        routes:
+          - network: 169.254.255.24/32
+            metric: 2048
   install:
     diskSelector:
       serial: "S435NC0R801928"
-

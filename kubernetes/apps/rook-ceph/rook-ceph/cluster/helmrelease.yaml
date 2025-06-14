@@ -66,14 +66,15 @@ spec:
             enabled: true
       network:
         provider: host
+        addressRanges:
+          public: ["10.0.20.0/24"]
+          cluster: ["169.254.255.0/24"]
         connections:
           requireMsgr2: true
       storage:
         useAllNodes: true
         useAllDevices: false
         devicePathFilter: /dev/disk/by-id/nvme-SAMSUNG_MZQL21T9HCJR-.*
-        config:
-          osdsPerDevice: "1"
     cephBlockPools:
       - name: ceph-blockpool
         spec:

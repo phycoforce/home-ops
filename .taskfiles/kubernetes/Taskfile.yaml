@@ -2,7 +2,22 @@
 # yaml-language-server: $schema=https://taskfile.dev/schema.json
 version: '3'
 
+vars:
+  KUBERNETES_RESOURCES_DIR: "{{.ROOT_DIR}}/.taskfiles/kubernetes/resources"
+
 tasks:
+
+  privileged:
+    desc: Run a privileged pod
+    cmd: |
+      echo "Using envsubst: $(which envsubst)"
+      kubectl run privileged-{{.node}} -i --rm --image=null \
+        --overrides="$(yq {{.KUBERNETES_RESOURCES_DIR}}/privileged-pod.tmpl.yaml -o=json | envsubst)"
+    env:
+      node: "{{.node}}"
+    preconditions:
+      - which envsubst
+      - test -f {{.KUBERNETES_RESOURCES_DIR}}/privileged-pod.tmpl.yaml
 
   reconcile:
     desc: Force Flux to pull in changes from your Git repository

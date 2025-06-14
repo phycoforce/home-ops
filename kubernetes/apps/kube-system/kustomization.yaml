@@ -13,3 +13,4 @@ resources:
   - ./spegel/ks.yaml
   - ./intel-device-plugin-operator/ks.yaml
   - ./descheduler/ks.yaml
+  - ./irqbalance/ks.yaml
