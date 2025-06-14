@@ -78,14 +78,19 @@ spec:
                 memory: 1500Mi
     service:
       app:
-        controller: slskd
+        forceRename: *app
+        primary: true
         ports:
           http:
             port: *port
-          soulseek:
+      soulseek:
+        type: LoadBalancer
+        annotations:
+          lbipam.cilium.io/ips: 10.0.20.210, ::ffff:10.0.20.210
+        ports:
+          soulseek-tcp:
             port: *soulseekPort
             protocol: TCP
-            targetPort: *soulseekPort
     route:
       app:
         hostnames: ["{{ .Release.Name }}.${SECRET_DOMAIN}"]

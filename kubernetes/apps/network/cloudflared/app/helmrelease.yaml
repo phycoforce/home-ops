@@ -67,13 +67,11 @@ spec:
         seccompProfile: { type: RuntimeDefault }
     service:
       app:
-        controller: cloudflared
         ports:
           http:
             port: *port
     serviceMonitor:
       app:
-        serviceName: cloudflared
         endpoints:
           - port: http
             scheme: http

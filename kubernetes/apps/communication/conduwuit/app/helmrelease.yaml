@@ -84,7 +84,6 @@ spec:
 
     service:
       main:
-        controller: conduwuit
         ports:
           http:
             port: &port 80

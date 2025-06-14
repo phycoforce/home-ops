@@ -76,7 +76,6 @@ spec:
                 memory: 2Gi
     service:
       app:
-        controller: paperless
         ports:
           http:
             port: &port 8000
@@ -87,10 +86,6 @@ spec:
           - name: internal
             namespace: network
             sectionName: https
-        rules:
-          - backendRefs:
-              - identifier: app
-                port: *port
     persistence:
       paperless:
         enabled: true

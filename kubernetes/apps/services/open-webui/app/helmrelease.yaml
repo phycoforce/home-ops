@@ -43,7 +43,6 @@ spec:
                 memory: 2Gi
     service:
       app:
-        controller: open-webui
         ports:
           http:
             port: &port 8080
@@ -54,10 +53,6 @@ spec:
           - name: external
             namespace: network
             sectionName: https
-        rules:
-          - backendRefs:
-              - identifier: app
-                port: *port
     persistence:
       config:
         enabled: true

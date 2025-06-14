@@ -63,7 +63,6 @@ spec:
         fsGroupChangePolicy: 'OnRootMismatch'
     service:
       app:
-        controller: calibre-downloader
         ports:
           http:
             port: *port
@@ -74,11 +73,6 @@ spec:
           - name: internal
             namespace: network
             sectionName: https
-        rules:
-          - backendRefs:
-              - identifier: app
-                port: *port
-
     persistence:
       # chromium needs the XDG_CONFIG_HOME created
       config:

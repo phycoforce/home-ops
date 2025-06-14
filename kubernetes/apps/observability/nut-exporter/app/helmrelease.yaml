@@ -69,13 +69,11 @@ spec:
               app.kubernetes.io/name: nut-exporter
     service:
       app:
-        controller: nut-exporter
         ports:
           http:
             port: 9199
     serviceMonitor:
       app:
-        serviceName: nut-exporter
         endpoints:
           - port: http
             scheme: http

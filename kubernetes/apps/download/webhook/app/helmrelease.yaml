@@ -53,7 +53,6 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
     service:
       app:
-        controller: webhook
         ports:
           http:
             port: *port
@@ -64,10 +63,6 @@ spec:
           - name: internal
             namespace: network
             sectionName: https
-        rules:
-          - backendRefs:
-              - identifier: app
-                port: *port
     persistence:
       config:
         type: configMap

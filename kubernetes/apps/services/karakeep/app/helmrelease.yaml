@@ -136,12 +136,10 @@ spec:
                 cpu: 10m
               limits:
                 memory: 4Gi
-
     service:
       app:
         forceRename: karakeep
         primary: true
-        controller: karakeep
         ports:
           http:
             port: &httpPort 3000
@@ -155,7 +153,6 @@ spec:
         ports:
           http:
             port: 7700
-
     persistence:
       data:
         existingClaim: karakeep
@@ -168,7 +165,6 @@ spec:
             app:
               - path: /meili_data
                 subPath: meilisearch
-
     route:
       app:
         hostnames:
@@ -177,7 +173,3 @@ spec:
           - name: internal
             namespace: network
             sectionName: https
-        rules:
-          - backendRefs:
-              - identifier: app
-                port: *httpPort

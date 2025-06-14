@@ -43,7 +43,6 @@ spec:
                   name: teslamate-secret
     service:
       app:
-        controller: teslamate
         ports:
           http:
             port: &port 4000
@@ -54,7 +53,3 @@ spec:
           - name: internal
             namespace: network
             sectionName: https
-        rules:
-          - backendRefs:
-              - identifier: app
-                port: *port

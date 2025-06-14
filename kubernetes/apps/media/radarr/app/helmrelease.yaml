@@ -69,7 +69,6 @@ spec:
                 memory: 500Mi
     service:
       app:
-        controller: radarr
         ports:
           http:
             port: *port
@@ -80,10 +79,6 @@ spec:
           - name: internal
             namespace: network
             sectionName: https
-        rules:
-          - backendRefs:
-              - identifier: app
-                port: *port
     persistence:
       config:
         existingClaim: radarr

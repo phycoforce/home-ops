@@ -55,7 +55,6 @@ spec:
                 memory: 500Mi
     service:
       app:
-        controller: vaultwarden
         ports:
           http:
             port: &port 80
@@ -69,10 +68,6 @@ spec:
           - name: external
             namespace: network
             sectionName: https
-        rules:
-          - backendRefs:
-              - identifier: app
-                port: *port
     persistence:
       config:
         existingClaim: vaultwarden

@@ -86,7 +86,6 @@ spec:
             port: 8080
     serviceMonitor:
       app:
-        serviceName: dragonfly-operator
         endpoints:
           - port: metrics
             scheme: http

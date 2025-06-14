@@ -48,7 +48,6 @@ spec:
                 memory: 512Mi
     service:
       app:
-        controller: calibre-web-automated
         ports:
           http:
             port: &port 8083
@@ -59,10 +58,6 @@ spec:
           - name: internal
             namespace: network
             sectionName: https
-        rules:
-          - backendRefs:
-              - identifier: app
-                port: *port
     persistence:
       data:
         existingClaim: calibre-web-automated
