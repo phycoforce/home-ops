@@ -12,7 +12,7 @@ instance:
     - notification-controller
   sync:
     kind: GitRepository
-    url: https://github.com/tajinder400/home-ops.git
+    url: https://github.com/phycoforce/home-ops.git
     ref: refs/heads/main
     path: kubernetes/flux/cluster
     interval: 1h
