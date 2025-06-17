@@ -28,6 +28,7 @@ machine:
         dhcp: true
         mtu: 9000
         vlans:
+          - { vlanId: 20, dhcp: false, mtu: 9000 }
           - { vlanId: 40, dhcp: false, mtu: 9000 }
           - { vlanId: 99, dhcp: false, mtu: 9000 }
         vip:

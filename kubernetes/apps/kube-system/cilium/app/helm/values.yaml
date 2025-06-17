@@ -32,6 +32,7 @@ hubble:
   enabled: false
 ipam:
   mode: kubernetes
+devices: bond+
 enableIPv4BIGTCP: true
 ipv4NativeRoutingCIDR: "10.69.0.0/16"
 k8sServiceHost: 127.0.0.1
