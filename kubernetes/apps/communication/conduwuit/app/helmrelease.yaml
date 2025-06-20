@@ -26,7 +26,7 @@ spec:
           app:
             image:
                 repository: ghcr.io/matrix-construct/tuwunel
-                tag: v1.0.0-release-all-x86_64-linux-gnu@sha256:2a39d4ca442c3c24bc57b648c70f3d2c76dbd9fec3c5de3b5e3ead40ae374c1a
+                tag: v1.1.0-release-all-x86_64-linux-gnu@sha256:0ffaa9bd91bb6819a7fbc57b9be79e86925a80cf63a106f35926bbe48b29d55e
             env:
               - name: CONDUWUIT_SERVER_NAME
                 value: ${SECRET_DOMAIN}
