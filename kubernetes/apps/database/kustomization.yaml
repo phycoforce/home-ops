@@ -6,5 +6,5 @@ components:
   - ../../components/common
 resources:
   # Flux-Kustomizations
-  - ./cloudnative-pg/ks.yaml
+  #- ./cloudnative-pg/ks.yaml
   - ./dragonfly/ks.yaml
