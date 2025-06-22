@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: conduwuit
+  name: tuwunel
 spec:
   interval: 1h
   chartRef:
@@ -62,7 +62,7 @@ spec:
                 value: "5"
             envFrom:
               - secretRef:
-                  name: conduwuit-secret
+                  name: tuwunel-secret
             resources:
               requests:
                 memory: 512Mi
@@ -131,7 +131,7 @@ spec:
                 port: *port
     persistence:
       data:
-        existingClaim: conduwuit
+        existingClaim: tuwunel
         advancedMounts:
           conduwuit:
             app:

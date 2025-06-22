@@ -3,7 +3,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app conduwuit
+  name: &app tuwunel
   namespace: &namespace communication
 spec:
   commonMetadata:
@@ -17,7 +17,7 @@ spec:
     - name: volsync
       namespace: volsync-system
   interval: 1h
-  path: ./kubernetes/apps/communication/conduwuit/app
+  path: ./kubernetes/apps/communication/tuwunel/app
   postBuild:
     substitute:
       APP: *app

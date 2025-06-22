@@ -6,4 +6,4 @@ namespace: communication
 components:
   - ../../components/common
 resources:
-  #- ./conduwuit/ks.yaml
+  - ./tuwunel/ks.yaml
