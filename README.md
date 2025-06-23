@@ -86,7 +86,7 @@ The alternative solution to these two problems would be to host a Kubernetes clu
 
 ## 🌐 DNS
 
-In my cluster there are two instances of [ExternalDNS](https://github.com/kubernetes-sigs/external-dns) running. One for syncing private DNS records to my `UDM-SE` using [ExternalDNS webhook provider for Mikrotik](https://github.com/mirceanton/external-dns-provider-mikrotik), while another instance syncs public DNS to `Cloudflare`. This setup is managed by creating ingresses with two specific classes: `internal` for private DNS and `external` for public DNS. The `external-dns` instances then syncs the DNS records to their respective platforms accordingly.
+In my cluster there are two instances of [ExternalDNS](https://github.com/kubernetes-sigs/external-dns) running. One for syncing private DNS records to my `RB5009` using [ExternalDNS webhook provider for Mikrotik](https://github.com/mirceanton/external-dns-provider-mikrotik), while another instance syncs public DNS to `Cloudflare`. This setup is managed by creating ingresses with two specific classes: `internal` for private DNS and `external` for public DNS. The `external-dns` instances then syncs the DNS records to their respective platforms accordingly.
 
 ---
 
