@@ -12,6 +12,9 @@ spec:
   components:
     - ../../../../components/gatus/guarded
     - ../../../../components/keda/nfs-scaler
+  dependsOn:
+    - name: keda
+      namespace: observability
   interval: 1h
   retryInterval: 2m
   path: ./kubernetes/apps/download/calibre-downloader/app

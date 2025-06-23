@@ -14,6 +14,8 @@ spec:
     - ../../../../components/gatus/external
     - ../../../../components/keda/nfs-scaler
   dependsOn:
+    - name: keda
+      namespace: observability
     - name: rook-ceph-cluster
       namespace: rook-ceph
     - name: intel-device-plugin-operator

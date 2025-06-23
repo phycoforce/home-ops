@@ -15,8 +15,6 @@ spec:
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
-    - name: external-secrets
-      namespace: security
   interval: 1h
   path: ./kubernetes/apps/security/vaultwarden/app
   postBuild:

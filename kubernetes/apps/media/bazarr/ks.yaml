@@ -14,10 +14,10 @@ spec:
     - ../../../../components/gatus/guarded
     - ../../../../components/keda/nfs-scaler
   dependsOn:
+    - name: keda
+      namespace: observability
     - name: rook-ceph-cluster
       namespace: rook-ceph
-    - name: external-secrets
-      namespace: security
   interval: 1h
   path: ./kubernetes/apps/media/bazarr/app
   postBuild:
