@@ -1,3 +1,4 @@
+---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -18,30 +19,44 @@ spec:
   values:
     controllers:
       it-tools:
+        replicas: 1
+        strategy: RollingUpdate
         annotations:
           reloader.stakater.com/auto: "true"
+        pod:
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            fsGroupChangePolicy: "OnRootMismatch"
         containers:
           app:
             image:
-              repository: ghcr.io/corentinth/it-tools
-              tag: 2023.12.21-5ed3693
-            env:
-              TZ: Europe/London
-            probes:
-              liveness:
-                enabled: false
-              readiness:
-                enabled: false
+              repository: ghcr.io/home-operations/it-tools
+              tag: 2024.10.22@sha256:7f26ae8d7a4a58b8d70b685cba5cbaa54d7df876d9f8bae702207f45b06d9b7c
             resources:
               requests:
-                cpu: 100m
+                cpu: 5m
+                memory: 32Mi
               limits:
-                memory: 500Mi
+                memory: 256Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+              readOnlyRootFilesystem: true
     service:
       app:
         ports:
           http:
-            port: &port 80
+            port: 8080
+    persistence:
+      tmpfs:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+            subPath: tmp
     route:
       app:
         hostnames: ["{{ .Release.Name }}.${SECRET_DOMAIN}"]
