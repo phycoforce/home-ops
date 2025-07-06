@@ -7,6 +7,6 @@ components:
   - ../../components/common
 resources:
   - ./sabnzbd/ks.yaml
-  #- ./slskd/ks.yaml
+  - ./slskd/ks.yaml
   - ./calibre-downloader/ks.yaml
   - ./webhook/ks.yaml
