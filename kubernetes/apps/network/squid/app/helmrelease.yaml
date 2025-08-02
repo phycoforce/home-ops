@@ -55,7 +55,6 @@ spec:
     persistence:
       data:
         existingClaim: squid
-        # TODO: If setting up Plex for the first time, you'll want to add the globalMounts section
         globalMounts:
           - path: /var/spool/squid
       config-file:
@@ -65,3 +64,11 @@ spec:
           - path: /etc/squid/squid.conf
             subPath: squid.conf
             readOnly: true
+      logs:
+        type: emptyDir
+        globalMounts:
+          - path: /var/log/squid
+      run-dir:
+        type: emptyDir
+        globalMounts:
+          - path: /var/run
