@@ -4,6 +4,7 @@ kind: Kustomization
 resources:
   - ./helmrelease.yaml
   - ./externalsecret.yaml
+  - ./pvc.yaml
 configMapGenerator:
   - name: squid-configmap
     files:

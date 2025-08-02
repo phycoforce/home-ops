@@ -54,7 +54,8 @@ spec:
             port: 3128
     persistence:
       data:
-        type: emptyDir
+        existingClaim: squid
+        # TODO: If setting up Plex for the first time, you'll want to add the globalMounts section
         globalMounts:
           - path: /var/spool/squid
       config-file:
