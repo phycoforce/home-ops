@@ -27,6 +27,10 @@ spec:
             env:
               TAUTULLI__PORT: &port 80
               TZ: Europe/London
+              TAUTULLI_HTTP_BASE_URL: https://tautulli.${SECRET_DOMAIN}
+            envFrom:
+              - secretRef:
+                  name: "{{ .Release.Name }}-secret"
             probes:
               liveness: &probes
                 enabled: true
