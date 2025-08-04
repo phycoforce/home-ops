@@ -1,9 +1,8 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: stirling-pdf
+  name: &app stirling-pdf
 spec:
   interval: 1h
   chartRef:
@@ -18,7 +17,7 @@ spec:
       retries: 3
   values:
     controllers:
-      app:
+      stirling-pdf:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
@@ -28,9 +27,9 @@ spec:
               tag: 1.1.1@sha256:12de648818f4ec139dacad50acb90c302c6077986f70cf09708c8c38d041c285
             env:
               TZ: Europe/London
-              DOCKER_ENABLE_SECURITY: "false"
-              SECURITY_ENABLE_LOGIN: "false"
-              INSTALL_BOOK_AND_ADVANCED_HTML_OPS: "true"
+              DOCKER_ENABLE_SECURITY: false
+              SYSTEM_ENABLEANALYTICS: false
+              INSTALL_BOOK_AND_ADVANCED_HTML_OPS: true
             probes:
               liveness: &probe
                 enabled: true
@@ -46,6 +45,12 @@ spec:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
               capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 10m
+                memory: 50Mi
+              limits:
+                memory: 1000Mi
     defaultPodOptions:
       securityContext:
         runAsNonRoot: true
@@ -55,9 +60,13 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
     service:
       app:
+        annotations:
+          teleport.dev/name: *app
+        labels:
+          teleport: enabled
         ports:
           http:
-            port: &port 8080
+            port: 8080
     route:
       app:
         hostnames: ["pdf.${SECRET_DOMAIN}"]
@@ -67,18 +76,19 @@ spec:
             sectionName: https
     persistence:
       config:
-        enabled: true
-        existingClaim: stirling-pdf
+        existingClaim: *app
         globalMounts:
           - path: /configs
-      logs:
-        enabled: true
+      tmpfs:
         type: emptyDir
-      tmp:
-        enabled: true
-        type: emptyDir
-      tessdata:
-        enabled: true
-        type: emptyDir
-        globalMounts:
-          - path: /usr/share/tessdata
+        advancedMounts:
+          stirling-pdf:
+            app:
+              - path: /logs
+                subPath: logs
+              - path: /pipeline
+                subPath: pipeline
+              - path: /usr/share/tessdata
+                subPath: tessdata
+              - path: /tmp
+                subPath: tmp
