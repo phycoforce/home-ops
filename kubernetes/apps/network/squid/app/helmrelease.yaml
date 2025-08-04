@@ -26,7 +26,7 @@ spec:
           app:
             image:
               repository: docker.io/ubuntu/squid
-              tag: 4.10-20.04_beta1@sha256:df4a60ef617add9e86fec9061df03bd5627325596f96b39a199f83aad81f4152
+              tag: 4.10-20.04_beta@sha256:df4a60ef617add9e86fec9061df03bd5627325596f96b39a199f83aad81f4152
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
