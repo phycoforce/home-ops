@@ -5,4 +5,4 @@ kind: Kustomization
 resources:
   - ./helmrelease.yaml
   - ./pvc-cache.yaml
-  - ./externalsecrert.yaml
+  - ./externalsecret.yaml
