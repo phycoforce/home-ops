@@ -21,7 +21,6 @@ spec:
       squid:
         annotations:
           reloader.stakater.com/auto: "true"
-        replicas: 2
         containers:
           app:
             image:
@@ -55,7 +54,7 @@ spec:
             port: 3128
     persistence:
       data:
-        type: emptyDir
+        existingClaim: squid
         globalMounts:
           - path: /var/spool/squid
       config-file:
