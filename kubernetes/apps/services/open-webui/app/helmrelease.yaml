@@ -35,7 +35,7 @@ spec:
               SEARXNG_QUERY_URL: http://searxng:8080/search?q=<query>
               ENABLE_WEBSOCKET_SUPPORT: "true"
               WEBSOCKET_MANAGER: "redis"
-              WEBSOCKET_REDIS_URL: redis://dragonfly.database.svc.cluster.local.:6379/5
+              WEBSOCKET_REDIS_URL: redis://dragonfly.database.svc.cluster.local:6379/5
             resources:
               requests:
                 cpu: 10m
