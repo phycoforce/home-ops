@@ -37,6 +37,16 @@ spec:
       createPrometheusRules: true
     toolbox:
       enabled: true
+    route:
+      dashboard:
+        host:
+          name: rook.${SECRET_DOMAIN}
+          path: /
+          pathType: PathPrefix
+        parentRefs:
+          - name: internal
+            namespace: network
+            sectionName: https
     cephClusterSpec:
       cephConfig:
         global:
@@ -77,6 +87,8 @@ spec:
         useAllNodes: true
         useAllDevices: false
         devicePathFilter: /dev/disk/by-id/nvme-SAMSUNG_MZQL21T9HCJR-.*
+        config:
+          osdsPerDevice: "1"
     cephBlockPools:
       - name: ceph-blockpool
         spec:
