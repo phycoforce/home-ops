@@ -37,3 +37,8 @@ metadata:
   namespace: network
 stringData:
   CLOUDFLARE_TUNNEL_ID: op://kubernetes/cloudflare/CLOUDFLARE_TUNNEL_ID
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: observability
