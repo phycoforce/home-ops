@@ -14,3 +14,4 @@ resources:
   - ./intel-device-plugin-operator/ks.yaml
   - ./descheduler/ks.yaml
   - ./irqbalance/ks.yaml
+  - ./certificates/ks.yaml
