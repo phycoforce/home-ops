@@ -82,7 +82,7 @@ tasks:
         sh: talosctl config info --output json | jq --join-output '[.nodes[]] | join(",")'
     preconditions:
       - talosctl config info
-      - talosctl --talosconfig {{.TALOS_DIR}}/talosconfig --nodes {{.NODES}} get machineconfig
+      - talosctl --nodes {{.NODES}} get machineconfig
       - which jq talosctl
 
   generate-kubeconfig:
