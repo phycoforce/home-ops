@@ -9,7 +9,7 @@ tasks:
   apply-node:
     desc: Apply Talos config to a node [NODE=required] [MODE=auto]
     cmd: |-
-      minijinja-cli {{.TALOS_DIR}}/machineconfig.yaml.j2 | op inject \
+      minijinja-cli --define "machinetype={{.MACHINE_TYPE}}" {{.TALOS_DIR}}/machineconfig.yaml.j2 | op inject \
         | talosctl --nodes {{.NODE}} apply-config \
           --mode {{.MODE}} \
           --config-patch @{{.TALOS_DIR}}/{{.MACHINE_TYPE}}/{{.NODE}}.yaml \

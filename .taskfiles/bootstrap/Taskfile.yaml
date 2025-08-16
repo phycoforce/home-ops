@@ -40,7 +40,7 @@ tasks:
       CONTEXT:
         sh: talosctl config info --output json | jq --raw-output '.context'
     preconditions:
-      - op whoami
+      - op whoami --format=json
       - test -f {{.BOOTSTRAP_DIR}}/helmfile.yaml
       - test -f {{.BOOTSTRAP_DIR}}/resources.yaml.tpl
       - talosctl config info

@@ -35,7 +35,6 @@ machine:
         [plugins."io.containerd.cri.v1.runtime"]
           device_ownership_from_security_context = true
     - op: overwrite
-    - op: overwrite
       path: /etc/nfsmount.conf
       permissions: 0o644
       content: |
@@ -46,7 +45,7 @@ machine:
         nodiratime=True
         noatime=True
   install:
-    image: factory.talos.dev/metal-installer/ca63fd3e424eed035f388c537f6a0bd5b0804df29a83f27883b7bfe8083cdc2b::v1.10.6
+    image: factory.talos.dev/metal-installer/17830454a450614e49fe16ba2e84ae7a50df18199faa3612bdf8a023c55dcef6:v1.10.6
   kernel:
     modules:
       - name: nbd
@@ -55,6 +54,8 @@ machine:
   kubelet:
     image: ghcr.io/siderolabs/kubelet:v1.33.4
     extraConfig:
+      featureGates:
+        ImageVolume: true
       serializeImagePulls: false
     extraMounts:
       - destination: /var/openebs/local
@@ -67,6 +68,8 @@ machine:
     disableManifestsDirectory: true
   network:
     interfaces:
+      - deviceSelector: { busPath: 0000:58:00.0 } # Intel IPMI
+        ignore: true
       - interface: bond0
         bond:
           deviceSelectors: [{ hardwareAddr: "58:47:ca:7f:*", driver: i40e }]
@@ -179,17 +182,4 @@ cluster:
   serviceAccount:
     key: op://kubernetes/talos/CLUSTER_SERVICEACCOUNT_KEY
   {% endif %}
----
-apiVersion: v1alpha1
-kind: EthernetConfig
-name: enp2s0f0np0
-rings:
-  rx: 8160
-  tx: 8160
----
-apiVersion: v1alpha1
-kind: EthernetConfig
-name: enp2s0f1np1
-rings:
-  rx: 8160
-  tx: 8160
+

@@ -2,8 +2,6 @@ machine:
   network:
     hostname: pneuma
     interfaces:
-      - deviceSelector: { busPath: 0000:58:00.0 } # Intel IPMI
-        ignore: true
       - deviceSelector:
           busPath: 0-1.0 # logos
         dhcp: false
@@ -25,3 +23,17 @@ machine:
   install:
     diskSelector:
       serial: "S435NC0R782584"
+---
+apiVersion: v1alpha1
+kind: EthernetConfig
+name: enp2s0f0np0
+rings:
+  rx: 8160
+  tx: 8160
+---
+apiVersion: v1alpha1
+kind: EthernetConfig
+name: enp2s0f1np1
+rings:
+  rx: 8160
+  tx: 8160
