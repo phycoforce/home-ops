@@ -10,7 +10,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   interval: 1h
-  path: ./kubernetes/apps/netowk/gateway-api-crds/app
+  path: ./kubernetes/apps/network/gateway-api-crds/app
   prune: true
   retryInterval: 2m
   sourceRef:
