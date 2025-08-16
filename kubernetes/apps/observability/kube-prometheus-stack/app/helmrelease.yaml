@@ -31,11 +31,6 @@ spec:
     remediation:
       retries: 3
   values:
-    crds:
-      enabled: true
-      upgradeJob:
-        enabled: true
-        forceConflicts: true
     cleanPrometheusOperatorObjectNames: true
     alertmanager:
       route:
@@ -78,7 +73,7 @@ spec:
         image:
           registry: docker.io
           repository: prompp/prompp
-          tag: 2.53.2-0.3.3
+          tag: 2.53.2-0.4.0
         securityContext:
           runAsNonRoot: true
           runAsUser: 64535

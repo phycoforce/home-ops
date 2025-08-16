@@ -12,6 +12,8 @@ spec:
   dependsOn:
     - name: gateway-api-crds
       namespace: network
+    - name: certificates-import
+      namespace: kube-system
   interval: 1h
   path: ./kubernetes/apps/network/envoy-gateway/app
   prune: true

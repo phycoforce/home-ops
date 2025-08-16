@@ -3,19 +3,18 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app system-upgrade-controller
-  namespace: &namespace system-upgrade
+  name: &app certificates-import
+  namespace: &namespace kube-system
 spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
-  healthChecks:
-    - apiVersion: helm.toolkit.fluxcd.io/v2
-      kind: HelmRelease
-      name: *app
-      namespace: *namespace
   interval: 1h
-  path: ./kubernetes/apps/system-upgrade/system-upgrade-controller/app
+  path: ./kubernetes/apps/kube-system/certificates/import
+  postBuild:
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
   prune: true
   retryInterval: 2m
   sourceRef:
@@ -24,22 +23,27 @@ spec:
     namespace: flux-system
   targetNamespace: *namespace
   timeout: 5m
+  wait: true
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app system-upgrade-controller-plans
-  namespace: &namespace system-upgrade
+  name: &app certificates-export
+  namespace: &namespace kube-system
 spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: system-upgrade-controller
-      namespace: system-upgrade
+    - name: certificates-import
+      namespace: kube-system
   interval: 1h
-  path: ./kubernetes/apps/system-upgrade/system-upgrade-controller/plans
+  path: ./kubernetes/apps/kube-system/certificates/export
+  postBuild:
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
   prune: true
   retryInterval: 2m
   sourceRef:

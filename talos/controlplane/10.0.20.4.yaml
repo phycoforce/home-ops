@@ -1,7 +1,6 @@
 machine:
-  type: controlplane
   network:
-    hostname: ontos
+    hostname: pneuma
     interfaces:
       - deviceSelector: { busPath: 0000:58:00.0 } # Intel IPMI
         ignore: true
@@ -10,19 +9,19 @@ machine:
         dhcp: false
         mtu: 65520
         addresses:
-          - 169.254.255.23/32
+          - 169.254.255.24/32
         routes:
           - network: 169.254.255.22/32
             metric: 2048
       - deviceSelector:
-          busPath: 1-1.0 # pneuma
+          busPath: 1-1.0 # ontos
         dhcp: false
         mtu: 65520
         addresses:
-          - 169.254.255.23/32
+          - 169.254.255.24/32
         routes:
-          - network: 169.254.255.24/32
+          - network: 169.254.255.23/32
             metric: 2048
   install:
     diskSelector:
-      serial: "S435NA0N502095"
+      serial: "S435NC0R782584"
