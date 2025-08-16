@@ -4,13 +4,13 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app certificates-import
-  namespace: &namespace kube-system
+  namespace: &namespace network
 spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   interval: 1h
-  path: ./kubernetes/apps/kube-system/certificates/import
+  path: ./kubernetes/apps/network/certificates/import
   postBuild:
     substituteFrom:
       - name: cluster-secrets
@@ -30,16 +30,16 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app certificates-export
-  namespace: &namespace kube-system
+  namespace: &namespace network
 spec:
   commonMetadata:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
     - name: certificates-import
-      namespace: kube-system
+      namespace: network
   interval: 1h
-  path: ./kubernetes/apps/kube-system/certificates/export
+  path: ./kubernetes/apps/network/certificates/export
   postBuild:
     substituteFrom:
       - name: cluster-secrets
