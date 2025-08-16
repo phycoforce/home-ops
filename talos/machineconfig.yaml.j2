@@ -8,7 +8,7 @@ machine:
     key: op://kubernetes/talos/MACHINE_CA_KEY
   certSANs: ["127.0.0.1", "10.0.20.250"]
   kubelet:
-    image: ghcr.io/siderolabs/kubelet:{{ ENV.KUBERNETES_VERSION }}
+    image: ghcr.io/siderolabs/kubelet:v1.33.4
     extraConfig:
       serializeImagePulls: false
     extraMounts:
@@ -36,7 +36,7 @@ machine:
       - 10.0.20.1
     disableSearchDomain: true
   install:
-    image: factory.talos.dev/metal-installer/{{ ENV.TALOS_SCHEMATIC }}:{{ ENV.TALOS_VERSION }}
+    image: factory.talos.dev/metal-installer/{{ ENV.TALOS_SCHEMATIC }}::v1.10.6
     wipe: true
   files:
     - # Spegel
@@ -128,7 +128,7 @@ cluster:
   serviceAccount:
     key: op://kubernetes/talos/CLUSTER_SERVICEACCOUNT_KEY
   apiServer:
-    image: registry.k8s.io/kube-apiserver:{{ ENV.KUBERNETES_VERSION }}
+    image: registry.k8s.io/kube-apiserver:v1.33.4
     extraArgs:
       enable-aggregator-routing: true
       feature-gates: MutatingAdmissionPolicy=true
@@ -141,14 +141,14 @@ cluster:
       rules:
         - level: Metadata
   controllerManager:
-    image: registry.k8s.io/kube-controller-manager:{{ ENV.KUBERNETES_VERSION }}
+    image: registry.k8s.io/kube-controller-manager:v1.33.4
     extraArgs:
       bind-address: 0.0.0.0
   proxy:
     disabled: true
-    image: registry.k8s.io/kube-proxy:{{ ENV.KUBERNETES_VERSION }}
+    image: registry.k8s.io/kube-proxy:v1.33.4
   scheduler:
-    image: registry.k8s.io/kube-scheduler:{{ ENV.KUBERNETES_VERSION }}
+    image: registry.k8s.io/kube-scheduler:v1.33.4
     extraArgs:
       bind-address: 0.0.0.0
     config:
