@@ -2,49 +2,7 @@
 # yaml-language-server: $schema=https://taskfile.dev/schema.json
 version: '3'
 
-vars:
-  KUBERNETES_RESOURCES_DIR: "{{.ROOT_DIR}}/.taskfiles/kubernetes/resources"
-
 tasks:
-
-  privileged:
-    desc: Run a privileged pod
-    cmd: |
-      echo "Using envsubst: $(which envsubst)"
-      kubectl run privileged-{{.node}} -i --rm --image=null \
-        --overrides="$(yq {{.KUBERNETES_RESOURCES_DIR}}/privileged-pod.tmpl.yaml -o=json | envsubst)"
-    env:
-      node: "{{.node}}"
-    preconditions:
-      - which envsubst
-      - test -f {{.KUBERNETES_RESOURCES_DIR}}/privileged-pod.tmpl.yaml
-
-  reconcile:
-    desc: Force Flux to pull in changes from your Git repository
-    cmd: flux --namespace flux-system reconcile kustomization flux-system --with-source
-    preconditions:
-      - test -f {{.KUBECONFIG}}
-      - which flux
-
-  resources:
-    desc: Gather common resources in your cluster, useful when asking for support
-    cmds:
-      - for: { var: RESOURCE }
-        cmd: kubectl get {{.ITEM}} {{.CLI_ARGS | default "-A"}}
-    vars:
-      RESOURCE: >-
-        nodes
-        gitrepositories
-        kustomizations
-        helmrepositories
-        helmreleases
-        certificates
-        certificaterequests
-        ingresses
-        pods
-    preconditions:
-      - test -f {{.KUBECONFIG}}
-      - which kubectl
 
   browse-pvc:
     desc: Mount a PVC to an temp container [NS=default] [CLAIM=required]
@@ -90,3 +48,15 @@ tasks:
         cmd: kubectl delete pods --all-namespaces --field-selector status.phase={{.ITEM.PHASE}} --ignore-not-found=true
     preconditions:
       - which kubectl
+
+  # https://docs.github.com/en/enterprise-cloud@latest/actions/hosting-your-own-runners/managing-self-hosted-runners-with-actions-runner-controller/deploying-runner-scale-sets-with-actions-runner-controller#upgrading-arc
+  upgrade-arc:
+    desc: Upgrade the ARC
+    cmds:
+      - helm -n actions-runner-system uninstall home-ops-runner
+      - helm -n actions-runner-system uninstall actions-runner-controller
+      - sleep 5
+      - flux -n actions-runner-system reconcile hr actions-runner-controller
+      - flux -n actions-runner-system reconcile hr home-ops-runner
+    preconditions:
+      - which flux helm
