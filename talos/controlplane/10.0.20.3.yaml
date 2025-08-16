@@ -1,5 +1,4 @@
 machine:
-  type: controlplane
   network:
     hostname: ontos
     interfaces:
