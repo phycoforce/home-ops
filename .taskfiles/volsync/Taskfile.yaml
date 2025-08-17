@@ -12,28 +12,6 @@ vars:
 
 tasks:
 
-  list:
-    desc: List snapshots for an applicationn[NS=default] [APP=required]
-    summary: |
-      Args:
-        NS: Namespace the PVC is in (default: default)
-        APP: Application to list snapshots for (required)
-    cmds:
-      - minijinja-cli --env {{.VOLSYNC_RESOURCES_DIR}}/list.yaml.j2 | kubectl apply -f -
-      - kubectl -n {{.NS}} wait job/list-{{.APP}} --for condition=complete --timeout=1m
-      - kubectl -n {{.NS}} logs job/list-{{.APP}} --container list
-      - kubectl -n {{.NS}} delete job list-{{.APP}}
-    vars:
-      NS: '{{.NS | default "default"}}'
-      APP: '{{.APP}}'
-    env:
-      NS: '{{.NS}}'
-      APP: '{{.APP}}'
-    requires:
-      vars: [APP]
-    preconditions:
-      - test -f {{.VOLSYNC_RESOURCES_DIR}}/list.yaml.j2
-
   state-*:
     desc: Suspend or resume Volsync
     cmds:
@@ -45,17 +23,6 @@ tasks:
     preconditions:
       - '[[ "{{.STATE}}" == "suspend" || "{{.STATE}}" == "resume" ]]'
       - which flux kubectl
-
-  unlock:
-    desc: Unlock all restic source repos
-    cmds:
-      - for: { var: SOURCES, split: "\n" }
-        cmd: kubectl --namespace {{splitList "," .ITEM | first}} patch --field-manager=flux-client-side-apply replicationsources {{splitList "," .ITEM | last}} --type merge --patch "{\"spec\":{\"restic\":{\"unlock\":\"{{now | unixEpoch}}\"}}}"
-    vars:
-      SOURCES:
-        sh: kubectl get replicationsources --all-namespaces --no-headers --output=jsonpath='{range .items[*]}{.metadata.namespace},{.metadata.name}{"\n"}{end}'
-    preconditions:
-      - which kubectl
 
   snapshot:
     desc: Snapshot an app [NS=default] [APP=required]
@@ -78,7 +45,7 @@ tasks:
       # Suspend
       - flux --namespace {{.NS}} suspend kustomization {{.APP}}
       - flux --namespace {{.NS}} suspend helmrelease {{.APP}}
-      - kubectl --namespace {{.NS}} scale {{.CONTROLLER}}/{{.APP}} --replicas 0
+      - kubectl --namespace {{.NS}} patch scaledobject {{.APP}} --type=merge -p '{"metadata":{"annotations":{"autoscaling.keda.sh/paused-replicas":"0","autoscaling.keda.sh/paused":"true"}}}' || kubectl --namespace {{.NS}} scale {{.CONTROLLER}}/{{.APP}} --replicas 0
       - kubectl --namespace {{.NS}} wait pod --for=delete --selector="app.kubernetes.io/name={{.APP}}" --timeout=5m
       # Restore
       - minijinja-cli {{.VOLSYNC_RESOURCES_DIR}}/replicationdestination.yaml.j2 | kubectl apply --server-side --filename -
@@ -88,6 +55,7 @@ tasks:
       # Resume
       - flux --namespace {{.NS}} resume kustomization {{.APP}}
       - flux --namespace {{.NS}} resume helmrelease {{.APP}}
+      - flux --namespace {{.NS}} reconcile kustomization {{.APP}} --with-source
       - flux --namespace {{.NS}} reconcile helmrelease {{.APP}} --force
       - kubectl --namespace {{.NS}} wait pod --for=condition=ready --selector="app.kubernetes.io/name={{.APP}}" --timeout=5m
     vars:
@@ -101,34 +69,15 @@ tasks:
       CLAIM:
         sh: kubectl --namespace {{.NS}} get replicationsources/{{.APP}} --output=jsonpath='{.spec.sourcePVC}'
       ACCESS_MODES:
-        sh: kubectl --namespace {{.NS}} get replicationsources/{{.APP}} --output=jsonpath='{.spec.restic.accessModes}'
+        sh: kubectl --namespace {{.NS}} get replicationsources/{{.APP}} --output=jsonpath='{.spec.kopia.accessModes}'
       STORAGE_CLASS_NAME:
-        sh: kubectl --namespace {{.NS}} get replicationsources/{{.APP}} --output=jsonpath='{.spec.restic.storageClassName}'
+        sh: kubectl --namespace {{.NS}} get replicationsources/{{.APP}} --output=jsonpath='{.spec.kopia.storageClassName}'
       PUID:
-        sh: kubectl --namespace {{.NS}} get replicationsources/{{.APP}} --output=jsonpath='{.spec.restic.moverSecurityContext.runAsUser}'
+        sh: kubectl --namespace {{.NS}} get replicationsources/{{.APP}} --output=jsonpath='{.spec.kopia.moverSecurityContext.runAsUser}'
       PGID:
-        sh: kubectl --namespace {{.NS}} get replicationsources/{{.APP}} --output=jsonpath='{.spec.restic.moverSecurityContext.runAsGroup}'
+        sh: kubectl --namespace {{.NS}} get replicationsources/{{.APP}} --output=jsonpath='{.spec.kopia.moverSecurityContext.runAsGroup}'
     requires:
       vars: [APP, PREVIOUS]
     preconditions:
       - test -f {{.VOLSYNC_RESOURCES_DIR}}/replicationdestination.yaml.j2
       - which flux kubectl minijinja-cli
-
-  unlock-local:
-    desc: Unlock a restic source repo from local machine [NS=default] [APP=required]
-    cmds:
-      - minijinja-cli {{.VOLSYNC_RESOURCES_DIR}}/unlock.yaml.j2 | kubectl apply --server-side --filename -
-      - until kubectl --namespace {{.NS}} get job/volsync-unlock-{{.APP}} &>/dev/null; do sleep 5; done
-      - kubectl --namespace {{.NS}} wait job/volsync-unlock-{{.APP}} --for condition=complete --timeout=5m
-      - stern --namespace {{.NS}} job/volsync-unlock-{{.APP}} --no-follow
-      - kubectl --namespace {{.NS}} delete job volsync-unlock-{{.APP}}
-    vars:
-      NS: '{{.NS | default "default"}}'
-    env:
-      NS: '{{.NS}}'
-      APP: '{{.APP}}'
-    requires:
-      vars: [APP]
-    preconditions:
-      - test -f {{.VOLSYNC_RESOURCES_DIR}}/unlock.yaml.j2
-      - which kubectl minijinja-cli stern
