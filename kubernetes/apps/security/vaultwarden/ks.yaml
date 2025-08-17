@@ -20,8 +20,7 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      VOLSYNC_CAPACITY: 100Mi
-      VOLSYNC_CACHE_CAPACITY: 500Mi
+      VOLSYNC_CAPACITY: 500Mi
       GATUS_SUBDOMAIN: bitwarden
     substituteFrom:
       - name: cluster-secrets
