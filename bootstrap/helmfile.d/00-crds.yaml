@@ -2,12 +2,12 @@
 # yaml-language-server: $schema=https://json.schemastore.org/helmfile
 
 helmDefaults:
-  args: ['--include-crds']
+  args: ['--include-crds', '--no-hooks']
   postRenderer: bash
   postRendererArgs: ['-c', "yq ea --exit-status 'select(.kind == \"CustomResourceDefinition\")' -"]
 
 releases:
-  - name: cloudflare-dns
+  - name: external-dns
     namespace: network
     chart: oci://ghcr.io/home-operations/charts-mirror/external-dns
     version: 1.18.0
