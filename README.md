@@ -20,7 +20,7 @@ _... managed with Flux, Renovate, and GitHub Actions_ <img src="https://fonts.gs
 ## Overview
 
 This is a monorepository is for my home kubernetes clusters.
-I try to adhere to Infrastructure as Code (IaC) and GitOps practices using tools like [Terraform](https://www.terraform.io/), [Kubernetes](https://kubernetes.io/), [Flux](https://github.com/fluxcd/flux2), [Renovate](https://github.com/renovatebot/renovate), and [GitHub Actions](https://github.com/features/actions).
+I try to adhere to Infrastructure as Code (IaC) and GitOps practices using tools like,  [Kubernetes](https://kubernetes.io/), [Flux](https://github.com/fluxcd/flux2), [Renovate](https://github.com/renovatebot/renovate), and [GitHub Actions](https://github.com/features/actions).
 
 The purpose here is to learn k8s, while practicing Gitops.
 
@@ -80,7 +80,7 @@ The alternative solution to these two problems would be to host a Kubernetes clu
 | [Cloudflare](https://www.cloudflare.com/)   | Domain, DNS, WAF and R2 bucket (S3 Compatible endpoint)           | ~$30/yr       |
 | [GitHub](https://github.com/)               | Hosting this repository and continuous integration/deployments    | Free          |
 | [Healthchecks.io](https://healthchecks.io/) | Monitoring internet connectivity and external facing applications | Free          |
-|                                             |                                                                   | Total: ~$3/mo |
+|                                             |                                                                   | Total: ~$9/mo |
 
 ---
 
