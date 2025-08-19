@@ -12,3 +12,4 @@ resources:
   - ./open-webui/ks.yaml
   - ./karakeep/ks.yaml
   - ./n8n/ks.yaml
+  - ./privatebin/ks.yaml
