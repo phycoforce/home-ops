@@ -33,7 +33,7 @@ spec:
           app:
             image:
               repository: ghcr.io/privatebin/nginx-fpm-alpine
-              tag: 2.0.0-alpine3.22@sha256:e656e874f65dad937e5f6e98524b51f1dee9f77bb9177ca12d72e1af64ad4336
+              tag: 2.0.0-alpine3.22@sha256:67684f8b14430b59c493c4cc52ec3ccc378878108589ee4a9e860e7072da278d
             env:
               TZ: Europe/London
             resources:
