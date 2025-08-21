@@ -2,7 +2,20 @@
 # yaml-language-server: $schema=https://taskfile.dev/schema.json
 version: '3'
 
+vars:
+  KUBERNETES_RESOURCES_DIR: "{{.ROOT_DIR}}/.taskfiles/Kubernetes/resources"
+
 tasks:
+
+  privileged:
+    desc: Run a privileged pod
+    cmd: |
+      kubectl run privileged-{{.node}} -i --rm --image=null \
+        --overrides="$(yq {{.KUBERNETES_RESOURCES_DIR}}/privileged-pod.tmpl.yaml -o=json | envsubst)"
+    env:
+      node: "{{.node}}"
+    preconditions:
+      - test -f {{.KUBERNETES_RESOURCES_DIR}}/privileged-pod.tmpl.yaml
 
   browse-pvc:
     desc: Mount a PVC to an temp container [NS=default] [CLAIM=required]
