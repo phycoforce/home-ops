@@ -10,6 +10,6 @@ resources:
   - ./home-assistant/ks.yaml
   - ./searxng/ks.yaml
   - ./open-webui/ks.yaml
-  - ./karakeep/ks.yaml
+  #- ./karakeep/ks.yaml
   - ./n8n/ks.yaml
   - ./privatebin/ks.yaml
