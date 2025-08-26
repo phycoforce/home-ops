@@ -1,0 +1,18 @@
+---
+# yaml-language-server: $schema=https://taskfile.dev/schema.json
+version: '3'
+
+tasks:
+  reconcile-ks:
+    desc: Reconcile all Flux Kustomizations with their sources
+    cmds:
+      - |
+        flux get ks --no-header -A | awk '{print $1, $2}' \
+        | xargs -l bash -c 'flux reconcile ks -n $0 $1 --with-source'
+
+  reconcile-hr:
+    desc: Force reconcile all Flux HelmReleases
+    cmds:
+      - |
+        flux get hr --no-header -A | awk '{print $1, $2}' \
+        | xargs -l bash -c 'flux reconcile hr -n $0 $1 --force --reset'
