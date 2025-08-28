@@ -35,11 +35,9 @@ spec:
               repository: docker.io/quxfoo/wastebin
               tag: 3.3.0@sha256:b93714fe28ddf15848fa92c44ec666f7c66907f7495740d18b5eaa07cfd8c0ae
             env:
-              TMPDIR: "/tmp"
               TZ: "Europe/London"
               WASTEBIN_ADDRESS_PORT: "0.0.0.0:8088"
               WASTEBIN_BASE_URL: "https://bin.${SECRET_DOMAIN}/"
-              WASTEBIN_DATABASE_PATH: "/data/state.db"
               WASTEBIN_MAX_BODY_SIZE: "5242880" # 5Mb
               WASTEBIN_PASTE_EXPIRATIONS: "10m"
               WASTEBIN_THEME: "onehalf"
@@ -73,16 +71,6 @@ spec:
         ports:
           http:
             port: *port
-    persistence:
-      data:
-        type: emptyDir
-        globalMounts:
-          - path: /data
-      tmpfs:
-        type: emptyDir
-        globalMounts:
-          - path: /tmp
-            subPath: tmp
     route:
       app:
         hostnames: ["bin.${SECRET_DOMAIN}"]
