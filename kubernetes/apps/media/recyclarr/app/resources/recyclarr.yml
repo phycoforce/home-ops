@@ -51,6 +51,7 @@ sonarr:
               - WEBRip-480p
           - name: DVD
           - name: SDTV
+      #Normal
       - name: WEB-1080p
         reset_unmatched_scores:
           enabled: true
@@ -149,6 +150,7 @@ radarr:
               - WEBRip-480p
           - name: DVD
           - name: SDTV
+      #Normal
       - name: HD Bluray + WEB
         reset_unmatched_scores:
           enabled: true
