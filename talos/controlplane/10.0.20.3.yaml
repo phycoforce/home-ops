@@ -1,39 +1,22 @@
 machine:
-  network:
-    hostname: ontos
-    interfaces:
-      - deviceSelector:
-          busPath: 0-1.0 # logos
-        dhcp: false
-        mtu: 65520
-        addresses:
-          - 169.254.255.23/32
-        routes:
-          - network: 169.254.255.22/32
-            metric: 2048
-      - deviceSelector:
-          busPath: 1-1.0 # pneuma
-        dhcp: false
-        mtu: 65520
-        addresses:
-          - 169.254.255.23/32
-        routes:
-          - network: 169.254.255.24/32
-            metric: 2048
   install:
     diskSelector:
       serial: "S435NA0N502095"
----
-apiVersion: v1alpha1
-kind: EthernetConfig
-name: enp2s0f0np0
-rings:
-  rx: 8160
-  tx: 8160
----
-apiVersion: v1alpha1
-kind: EthernetConfig
-name: enp2s0f1np1
-rings:
-  rx: 8160
-  tx: 8160
+  network:
+    hostname: ontos
+    interfaces:
+      - #logos
+        deviceSelector: { busPath: 0-1.0 }
+        dhcp: false
+        mtu: 65520
+        addresses: [169.254.255.23/32]
+        routes: [{ network: 169.254.255.22/32, metric: 2048 }]
+      - # pneuma
+        deviceSelector: { busPath: 1-1.0 }
+        dhcp: false
+        mtu: 65520
+        addresses: [169.254.255.23/32]
+        routes: [{ network: 169.254.255.24/32, metric: 2048 }]
+
+
+
