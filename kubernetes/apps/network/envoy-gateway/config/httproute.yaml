@@ -17,9 +17,6 @@ spec:
     - name: external
       namespace: network
       sectionName: http
-    - name: external-secondary
-      namespace: network
-      sectionName: http
   rules:
     - filters:
         - requestRedirect:
