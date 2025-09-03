@@ -53,8 +53,10 @@ spec:
     sources: ["crd", "gateway-httproute"]
     txtSuffix: .k8s
     txtOwnerId: default
-    domainFilters: ["${SECRET_DOMAIN}"]
+    domainFilters:
+      - ${SECRET_DOMAIN}
+      - ${SECRET_DOMAIN_2}
     serviceMonitor:
       enabled: true
     podAnnotations:
-      secret.reloader.stakater.com/reload: external-dns-secret
+      secret.reloader.stakater.com/reload: *secret

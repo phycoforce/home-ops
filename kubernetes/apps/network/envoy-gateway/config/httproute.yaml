@@ -17,6 +17,9 @@ spec:
     - name: external
       namespace: network
       sectionName: http
+    - name: external
+      namespace: network
+      sectionName: ${SECRET_DOMAIN_2}-http
   rules:
     - filters:
         - requestRedirect:
