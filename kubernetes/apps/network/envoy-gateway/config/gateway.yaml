@@ -55,7 +55,7 @@ metadata:
   labels:
     type: external
   annotations:
-    external-dns.alpha.kubernetes.io/target: &hostname external.${SECRET_DOMAIN}
+    external-dns.alpha.kubernetes.io/target: &hostname external.${SECRET_DOMAIN},external.${SECRET_DOMAIN_2}
 spec:
   gatewayClassName: envoy
   infrastructure:
@@ -80,7 +80,7 @@ spec:
       tls:
         certificateRefs:
           - kind: Secret
-            name: ${SECRET_DOMAIN_2/./-}-production-tls
+            name: ${SECRET_DOMAIN/./-}-production-tls
     - name: http-domain-2
       protocol: HTTP
       port: 80
