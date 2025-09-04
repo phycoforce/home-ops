@@ -93,7 +93,7 @@ spec:
         hostnames:
           - status.${SECRET_DOMAIN}
         parentRefs:
-          - name: external
+          - name: internal
             namespace: network
             sectionName: https
     rbac:
