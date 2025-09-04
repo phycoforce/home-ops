@@ -8,21 +8,20 @@ metadata:
     external-dns.alpha.kubernetes.io/controller: none
 spec:
   parentRefs:
-    - name: internal
+    - &gateway
       namespace: network
       sectionName: http
-    - name: external-root
-      namespace: network
-      sectionName: http-root
-    - name: external
-      namespace: network
-      sectionName: http
-    - name: external
-      namespace: network
+      name: internal
+    - <<: *gateway
+      name: external-root
+    - <<: *gateway
+      name: external
+    - <<: *gateway
+      name: external
       sectionName: ${SECRET_DOMAIN_2}-http
   rules:
     - filters:
-        - requestRedirect:
+        - type: RequestRedirect
+          requestRedirect:
             scheme: https
             statusCode: 301
-          type: RequestRedirect

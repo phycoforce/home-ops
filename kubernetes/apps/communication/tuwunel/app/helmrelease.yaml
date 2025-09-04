@@ -120,7 +120,7 @@ spec:
         parentRefs:
           - name: external-root
             namespace: network
-            sectionName: https-root
+            sectionName: https
         rules:
           - matches:
               - path:

@@ -27,5 +27,20 @@ spec:
             limits:
               cpu: 500m
               memory: 1Gi
+      envoyHpa:
+        minReplicas: 1
+        maxReplicas: 5
+        metrics:
+          - resource:
+              name: cpu
+              target:
+                averageUtilization: 60
+                type: Utilization
+            type: Resource
+        behavior:
+          scaleUp:
+            stabilizationWindowSeconds: 300
+          scaleDown:
+            stabilizationWindowSeconds: 300
       envoyService:
-        externalTrafficPolicy: Cluster # cilium l2 announce doesn't support externalTrafficPolicy: Local
+        externalTrafficPolicy: Cluster # Cilium's L2 announce doesn't support Local
