@@ -17,3 +17,4 @@ resources:
   - ./teslamate/ks.yaml
   - ./silence-operator/ks.yaml
   - ./keda/ks.yaml
+  - ./kromgo/ks.yaml
