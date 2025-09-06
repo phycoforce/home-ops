@@ -10,8 +10,6 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: gateway-api-crds
-      namespace: network
     - name: certificates-import
       namespace: network
   interval: 1h
