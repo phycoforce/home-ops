@@ -3,7 +3,7 @@
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: EnvoyProxy
 metadata:
-  name: internal-config
+  name: envoy-internal
 spec:
   #ipFamily: DualStack
   telemetry:
@@ -44,5 +44,3 @@ spec:
       envoyService:
         externalTrafficPolicy: Cluster # Cilium's L2 announce doesn't support Local
         name: envoy-gateway-internal
-        patch:
-          type: StrategicMerge

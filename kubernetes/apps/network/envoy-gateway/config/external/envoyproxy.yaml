@@ -3,7 +3,7 @@
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: EnvoyProxy
 metadata:
-  name: external-config
+  name: envoy-external
 spec:
   #ipFamily: DualStack
   telemetry:
