@@ -12,6 +12,5 @@ resources:
   - ./multus/ks.yaml
   - ./unifi/ks.yaml
   - ./envoy-gateway/ks.yaml
-  - ./gateway-api-crds/ks.yaml
   - ./squid/ks.yaml
   - ./certificates/ks.yaml
