@@ -49,8 +49,3 @@ spec:
           stabilizationWindowSeconds: 300
         scaleDown:
           stabilizationWindowSeconds: 300
-    deployment:
-      envoyGateway:
-        rbac:
-          cluster: true
-
