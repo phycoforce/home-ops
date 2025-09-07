@@ -5,13 +5,13 @@ originRequest:
 
 ingress:
   - hostname: "${SECRET_DOMAIN}"
-    service: https://envoy-network-external-root-e16fbbe4.network.svc.cluster.local
+    service: https://envoy-external-root.network.svc.cluster.local
     originRequest:
       originServerName: "${SECRET_DOMAIN}"
   - hostname: "*.${SECRET_DOMAIN}"
-    service: https://envoy-network-external-b1d9befd.network.svc.cluster.local
+    service: https://envoy-external.network.svc.cluster.local
   - hostname: "*.${SECRET_DOMAIN_2}"
-    service: https://envoy-network-external-b1d9befd.network.svc.cluster.local
+    service: https://envoy-external.network.svc.cluster.local
     originRequest:
       originServerName: "external.${SECRET_DOMAIN_2}"
   - service: http_status:404
