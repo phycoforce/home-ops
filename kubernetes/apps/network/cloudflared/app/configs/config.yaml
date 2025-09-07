@@ -5,7 +5,7 @@ originRequest:
 
 ingress:
   - hostname: "${SECRET_DOMAIN}"
-    service: https://envoy-external-root.network.svc.cluster.local
+    service: https://envoy-external.network.svc.cluster.local
     originRequest:
       originServerName: "${SECRET_DOMAIN}"
   - hostname: "*.${SECRET_DOMAIN}"

@@ -5,6 +5,5 @@ kind: Kustomization
 resources:
   - ./httproute.yaml
   - ./external
-  - ./external-root
   - ./internal
   - ./policy
