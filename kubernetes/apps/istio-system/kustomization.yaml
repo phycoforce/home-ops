@@ -2,13 +2,11 @@
 # yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
-namespace: network
+namespace: istio-system
 components:
   - ../../components/common
 resources:
-  - ./cloudflared/ks.yaml
-  - ./echo-server/ks.yaml
-  - ./external-dns/ks.yaml
-  - ./multus/ks.yaml
-  - ./unifi/ks.yaml
-  - ./squid/ks.yaml
+  - ./certificates/ks.yaml
+  - ./istio-base/ks.yaml
+  - ./istio-istiod/ks.yaml
+  - ./istio-gateway/ks.yaml
