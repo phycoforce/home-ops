@@ -44,5 +44,3 @@ spec:
       envoyService:
         externalTrafficPolicy: Cluster # Cilium's L2 announce doesn't support Local
         name: envoy-gateway-external
-        patch:
-          type: StrategicMerge
