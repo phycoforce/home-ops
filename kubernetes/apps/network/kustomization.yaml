@@ -12,3 +12,4 @@ resources:
   - ./multus/ks.yaml
   - ./unifi/ks.yaml
   - ./squid/ks.yaml
+  - ./gateway-api-crds
