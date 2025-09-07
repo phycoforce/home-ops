@@ -79,7 +79,7 @@ spec:
           - hass.${SECRET_DOMAIN}
         parentRefs:
           - name: external
-            namespace: network
+            namespace: istio-system
             sectionName: https
     service:
       app:

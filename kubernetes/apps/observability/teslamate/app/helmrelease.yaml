@@ -51,5 +51,5 @@ spec:
         hostnames: ["{{ .Release.Name }}.${SECRET_DOMAIN}"]
         parentRefs:
           - name: internal
-            namespace: network
+            namespace: istio-system
             sectionName: https

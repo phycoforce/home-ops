@@ -39,7 +39,7 @@ spec:
           hostnames: ["alertmanager.${SECRET_DOMAIN}"]
           parentRefs:
             - name: internal
-              namespace: network
+              namespace: istio-system
               sectionName: https
       alertmanagerSpec:
         alertmanagerConfiguration:
@@ -67,7 +67,7 @@ spec:
           hostnames: ["prometheus.${SECRET_DOMAIN}"]
           parentRefs:
             - name: internal
-              namespace: network
+              namespace: istio-system
               sectionName: https
       prometheusSpec:
         image:

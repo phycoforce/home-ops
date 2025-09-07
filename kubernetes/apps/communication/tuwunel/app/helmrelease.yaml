@@ -98,7 +98,7 @@ spec:
           - "matrix.${SECRET_DOMAIN}"
         parentRefs:
           - name: internal
-            namespace: network
+            namespace: istio-system
             sectionName: https
           - name: external
             namespace: network
@@ -119,7 +119,7 @@ spec:
           - "${SECRET_DOMAIN}"
         parentRefs:
           - name: external-root
-            namespace: network
+            namespace: istio-system
             sectionName: https
         rules:
           - matches:

@@ -9,7 +9,7 @@ spec:
     - blackbox-exporter.${SECRET_DOMAIN}
   parentRefs:
     - name: internal
-      namespace: network
+      namespace: istio-system
       sectionName: https
   rules:
     - backendRefs:

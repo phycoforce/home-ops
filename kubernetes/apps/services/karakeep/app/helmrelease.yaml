@@ -172,7 +172,7 @@ spec:
           - karakeep.${SECRET_DOMAIN}
         parentRefs:
           - name: external
-            namespace: network
+            namespace: istio-system
             sectionName: https
         rules:
           - backendRefs:

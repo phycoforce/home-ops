@@ -76,5 +76,5 @@ spec:
         hostnames: ["bin.${SECRET_DOMAIN}"]
         parentRefs:
           - name: external
-            namespace: network
+            namespace: istio-system
             sectionName: https

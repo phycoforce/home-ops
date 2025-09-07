@@ -71,7 +71,7 @@ spec:
         hostnames: ["{{ .Release.Name }}.${SECRET_DOMAIN}"]
         parentRefs:
           - name: internal
-            namespace: network
+            namespace: istio-system
             sectionName: https
     persistence:
       # chromium needs the XDG_CONFIG_HOME created

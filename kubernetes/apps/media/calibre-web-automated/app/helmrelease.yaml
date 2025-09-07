@@ -56,7 +56,7 @@ spec:
         hostnames: ["calibre.${SECRET_DOMAIN}"]
         parentRefs:
           - name: internal
-            namespace: network
+            namespace: istio-system
             sectionName: https
     persistence:
       data:

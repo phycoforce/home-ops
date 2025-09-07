@@ -71,7 +71,7 @@ spec:
           - "{{ .Release.Name }}.${SECRET_DOMAIN_2}"
         parentRefs:
           - name: external
-            namespace: network
+            namespace: istio-system
             sectionName: ${SECRET_DOMAIN_2}-https
         rules:
           - backendRefs:

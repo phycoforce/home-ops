@@ -78,7 +78,7 @@ spec:
           - *hostName
         parentRefs:
           - name: internal
-            namespace: network
+            namespace: istio-system
             sectionName: https
 
       webhooks:
@@ -86,7 +86,7 @@ spec:
           - n8n-webhook.${SECRET_DOMAIN}
         parentRefs:
           - name: external
-            namespace: network
+            namespace: istio-system
             sectionName: https
         rules:
           - matches:
