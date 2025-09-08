@@ -12,6 +12,18 @@ releases:
     chart: oci://ghcr.io/home-operations/charts-mirror/cilium
     version: 1.18.1
     values: ['./templates/values.yaml.gotmpl']
+    hooks:
+      - # Advertise Kube API VIP
+        events:
+          - 'postsync'
+        command: kubectl
+        args:
+          - apply
+          - --server-side
+          - --namespace=kube-system
+          - --field-manager=kustomize-controller
+          - --filename=../../kubernetes/apps/kube-system/cilium/app/networking.yaml
+        showlogs: true
 
   - name: coredns
     namespace: kube-system
