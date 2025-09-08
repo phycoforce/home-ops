@@ -33,6 +33,13 @@ spec:
     remediation:
       retries: 3
   values:
+    config:
+      envoyGateway:
+        provider:
+          type: Kubernetes
+          kubernetes:
+            deploy:
+              type: GatewayNamespace
     global:
       imageRegistry: mirror.gcr.io
     hpa:
