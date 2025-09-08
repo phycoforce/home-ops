@@ -41,8 +41,6 @@ spec:
             stabilizationWindowSeconds: 300
           scaleDown:
             stabilizationWindowSeconds: 300
-      envoyService:
-        externalTrafficPolicy: Cluster # Cilium's L2 announce doesn't support Local
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/gateway.networking.k8s.io/gatewayclass_v1.json
 apiVersion: gateway.networking.k8s.io/v1

@@ -7,3 +7,4 @@ resources:
   - ./external.yaml
   - ./internal.yaml
   - ./policies.yaml
+  - ./observability.yaml
