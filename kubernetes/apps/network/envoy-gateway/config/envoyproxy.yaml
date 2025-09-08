@@ -3,7 +3,7 @@
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: EnvoyProxy
 metadata:
-  name: envoy-internal
+  name: envoy
 spec:
   telemetry:
     metrics:
@@ -23,10 +23,8 @@ spec:
           image: mirror.gcr.io/envoyproxy/envoy:v1.35.3
           resources:
             requests:
-              cpu: 150m
-              memory: 640Mi
+              cpu: 100m
             limits:
-              cpu: 500m
               memory: 1Gi
       envoyHpa:
         minReplicas: 1
@@ -45,4 +43,16 @@ spec:
             stabilizationWindowSeconds: 300
       envoyService:
         externalTrafficPolicy: Cluster # Cilium's L2 announce doesn't support Local
-        name: envoy-internal
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/gateway.networking.k8s.io/gatewayclass_v1.json
+apiVersion: gateway.networking.k8s.io/v1
+kind: GatewayClass
+metadata:
+  name: envoy
+spec:
+  controllerName: gateway.envoyproxy.io/gatewayclass-controller
+  parametersRef:
+    group: gateway.envoyproxy.io
+    kind: EnvoyProxy
+    name: envoy
+    namespace: network
