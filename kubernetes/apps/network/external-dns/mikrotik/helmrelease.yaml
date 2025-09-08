@@ -83,7 +83,7 @@ spec:
           initialDelaySeconds: 10
           timeoutSeconds: 5
     extraArgs:
-      - --gateway-name=internal
+      - --gateway-name=envoy-internal
       - --managed-record-types=A
       - --managed-record-types=AAAA
       - --managed-record-types=CNAME
