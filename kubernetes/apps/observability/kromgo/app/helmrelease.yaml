@@ -70,7 +70,7 @@ spec:
         hostnames:
           - "{{ .Release.Name }}.${SECRET_DOMAIN_2}"
         parentRefs:
-          - name: external
+          - name: envoy-external
             namespace: network
             sectionName: https
         rules:

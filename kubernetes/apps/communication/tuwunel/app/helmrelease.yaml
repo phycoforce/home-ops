@@ -97,10 +97,10 @@ spec:
         hostnames:
           - "matrix.${SECRET_DOMAIN}"
         parentRefs:
-          - name: internal
+          - name: envoy-internal
             namespace: network
             sectionName: https
-          - name: external
+          - name: envoy-external
             namespace: network
             sectionName: https
         rules:
@@ -118,7 +118,7 @@ spec:
         hostnames:
           - "${SECRET_DOMAIN}"
         parentRefs:
-          - name: external
+          - name: envoy-external
             namespace: network
             sectionName: https
         rules:

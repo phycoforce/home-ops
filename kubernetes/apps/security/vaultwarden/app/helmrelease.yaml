@@ -65,7 +65,7 @@ spec:
       app:
         hostnames: ["bitwarden.${SECRET_DOMAIN}"]
         parentRefs:
-          - name: external
+          - name: envoy-external
             namespace: network
             sectionName: https
     persistence:
