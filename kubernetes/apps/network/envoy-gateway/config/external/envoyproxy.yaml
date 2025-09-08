@@ -5,12 +5,13 @@ kind: EnvoyProxy
 metadata:
   name: envoy-external
 spec:
-  #ipFamily: DualStack
   telemetry:
     metrics:
-      prometheus: {}
+      prometheus:
+        compression:
+          type: Gzip
   shutdown:
-    drainTimeout: 300s
+    drainTimeout: 180s
   logging:
     level:
       default: info
