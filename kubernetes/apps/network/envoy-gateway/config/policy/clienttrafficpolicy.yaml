@@ -3,17 +3,31 @@
 apiVersion: gateway.envoyproxy.io/v1alpha1
 kind: ClientTrafficPolicy
 metadata:
-  name: client
+  name: envoy-internal
 spec:
   targetRefs:
-    - &target
-      group: gateway.networking.k8s.io
+    - group: gateway.networking.k8s.io
       kind: Gateway
-      name: internal
-    - <<: *target
-      name: external
-    - <<: *target
-      name: external-root
+      name: envoy-internal
+  clientIPDetection:
+    xForwardedFor:
+      numTrustedHops: 1
+  tls:
+    minVersion: '1.2'
+    alpnProtocols:
+      - h2
+      - http/1.1
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/envoyproxy/gateway/refs/heads/main/charts/gateway-helm/crds/generated/gateway.envoyproxy.io_clienttrafficpolicies.yaml
+apiVersion: gateway.envoyproxy.io/v1alpha1
+kind: ClientTrafficPolicy
+metadata:
+  name: envoy-external
+spec:
+  targetRefs:
+    - group: gateway.networking.k8s.io
+      kind: Gateway
+      name: envoy-external
   clientIPDetection:
     xForwardedFor:
       numTrustedHops: 1
