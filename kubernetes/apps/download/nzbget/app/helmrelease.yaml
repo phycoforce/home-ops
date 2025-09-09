@@ -75,7 +75,7 @@ spec:
       media:
         type: nfs
         server: aionios.internal
-        path: /mnt/mechonis/media_data
+        path: /mnt/mechonis/media
         globalMounts:
           - path: /media/Downloads/nzbget
             subPath: Downloads/nzbget
