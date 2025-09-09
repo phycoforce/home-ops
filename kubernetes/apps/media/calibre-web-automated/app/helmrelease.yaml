@@ -75,4 +75,4 @@ spec:
           - path: /calibre-library
             subPath: library/books
           - path: /cwa-book-ingest
-            subPath: Download/books
+            subPath: Downloads/books
