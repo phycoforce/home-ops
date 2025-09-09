@@ -91,6 +91,6 @@ spec:
         server: aionios.internal
         path: /mnt/mechonis/media_data
         globalMounts:
-          - path: /data
+          - path: /media
       tmp:
          type: emptyDir
