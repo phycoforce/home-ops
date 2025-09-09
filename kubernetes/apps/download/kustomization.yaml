@@ -8,6 +8,6 @@ components:
 resources:
   #- ./sabnzbd/ks.yaml
   - ./slskd/ks.yaml
-  - ./calibre-downloader/ks.yaml
+  #- ./calibre-downloader/ks.yaml
   - ./webhook/ks.yaml
-  - ./nzbget/ks.yaml
+  #- ./nzbget/ks.yaml
