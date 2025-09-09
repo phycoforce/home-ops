@@ -10,3 +10,4 @@ resources:
   - ./slskd/ks.yaml
   - ./calibre-downloader/ks.yaml
   - ./webhook/ks.yaml
+  - ./nzbget/ks.yaml
