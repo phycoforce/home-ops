@@ -7,3 +7,4 @@ components:
 resources:
   - ./vaultwarden/ks.yaml
   - ./external-secrets/ks.yaml
+  - ./onepassword/ks.yaml
