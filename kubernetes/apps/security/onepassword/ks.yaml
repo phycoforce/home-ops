@@ -10,7 +10,7 @@ spec:
     labels:
       app.kubernetes.io/name: *app
   dependsOn:
-    - name: security
+    - name: external-secrets
       namespace: *namespace
   healthChecks:
     - apiVersion: helm.toolkit.fluxcd.io/v2
