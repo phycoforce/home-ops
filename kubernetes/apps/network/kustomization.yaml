@@ -14,4 +14,3 @@ resources:
   - ./envoy-gateway/ks.yaml
   - ./squid/ks.yaml
   - ./certificates/ks.yaml
-  - ./tailscale-operator/ks.yaml
