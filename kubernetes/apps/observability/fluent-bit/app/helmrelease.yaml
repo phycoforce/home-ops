@@ -3,37 +3,40 @@
 apiVersion: source.toolkit.fluxcd.io/v1
 kind: OCIRepository
 metadata:
-  name: promtail
+  name: fluent-bit
 spec:
-  interval: 5m
+  interval: 15m
   layerSelector:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
     operation: copy
   ref:
-    tag: 6.17.0
-  url: oci://ghcr.io/grafana/helm-charts/promtail
+    tag: 0.53.0
+  url: oci://ghcr.io/home-operations/charts-mirror/fluent-bit
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: promtail
+  name: grafana
 spec:
   interval: 1h
   chartRef:
     kind: OCIRepository
-    name: promtail
+    name: fluent-bit
   install:
     remediation:
-      retries: 3
+      retries: -1
   upgrade:
     cleanupOnFail: true
     remediation:
       retries: 3
   values:
-    fullnameOverride: promtail
     config:
-      clients:
-        - url: http://loki-headless.observability.svc.cluster.local:3100/loki/api/v1/push
-    serviceMonitor:
-      enabled: true
+      outputs: |
+        [OUTPUT]
+            name  loki
+            match *
+            host  loki-headless.observability.svc.cluster.local
+            port  3100
+            labels job=fluentbit
+            auto_kubernetes_labels off
+            remove_keys rook_io_operator_namespace
