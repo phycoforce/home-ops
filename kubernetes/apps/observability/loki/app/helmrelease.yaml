@@ -26,12 +26,11 @@ spec:
   install:
     crds: Skip
     remediation:
-      retries: 3
+      retries: -1
   upgrade:
     cleanupOnFail: true
     crds: Skip
     remediation:
-      strategy: rollback
       retries: 3
   values:
     deploymentMode: SingleBinary
@@ -39,8 +38,6 @@ spec:
       auth_enabled: false
       analytics:
         reporting_enabled: false
-      server:
-        log_level: info
       commonConfig:
         replication_factor: 1
       compactor:
@@ -51,6 +48,10 @@ spec:
         chunk_encoding: snappy
       limits_config:
         retention_period: 14d
+      server:
+        grpc_server_max_recv_msg_size: 10485760 # 10 MiB
+        grpc_server_max_send_msg_size: 10485760 # 10 MiB
+        log_level: info
       storage:
         type: filesystem
       schemaConfig:
@@ -96,6 +97,9 @@ spec:
       enabled: false
     sidecar:
       image:
-        repository: ghcr.io/kiwigrid/k8s-sidecar
+        repository: ghcr.io/home-operations/k8s-sidecar
+        tag: 1.30.10@sha256:dd3b1f0c4e6b4512b2deb50c58acf65fd0f0927120a59a95eec854d32a6c9ce3
+      enableUniqueFilenames: true
       rules:
         searchNamespace: ALL
+        folder: /rules/fake
