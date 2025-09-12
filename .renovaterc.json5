@@ -6,6 +6,7 @@
     "helpers:pinGitHubActionDigests",
     "github>phycoforce/home-ops//.renovate/allowedVersions.json5",
     "github>phycoforce/home-ops//.renovate/autoMerge.json5",
+    "github>phycoforce/home-ops//.renovate/changelogs.json5",
     "github>phycoforce/home-ops//.renovate/customManagers.json5",
     "github>phycoforce/home-ops//.renovate/grafanaDashboards.json5",
     "github>phycoforce/home-ops//.renovate/groups.json5",
