@@ -8,8 +8,8 @@ components:
 resources:
   - ./gatus/ks.yaml
   - ./kube-prometheus-stack/ks.yaml
-  - ./loki/ks.yaml
-  - ./alloy/ks.yaml
+  #- ./loki/ks.yaml
+  #- ./alloy/ks.yaml
   - ./blackbox-exporter/ks.yaml
   - ./grafana/ks.yaml
   - ./nut-exporter/ks.yaml
