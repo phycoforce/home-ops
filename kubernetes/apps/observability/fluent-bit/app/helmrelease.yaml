@@ -31,54 +31,66 @@ spec:
       retries: 3
   values:
     config:
-      ## https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/classic-mode/configuration-file
-      service: |
+      service: |-
         [SERVICE]
-          Daemon        Off
-          Flush         {{ .Values.flush }}
-          Log_Level     {{ .Values.logLevel }}
-          Parsers_File  /fluent-bit/etc/parsers.conf
-          Parsers_File  /fluent-bit/etc/conf/custom_parsers.conf
-          HTTP_Server   On
-          HTTP_Listen   0.0.0.0
-          HTTP_Port     {{ .Values.metricsPort }}
-          Health_Check  On
-
-      ## https://docs.fluentbit.io/manual/pipeline/inputs
-      inputs: |
+          Daemon Off
+          Flush {{ .Values.flush }}
+          Log_Level {{ .Values.logLevel }}
+          Parsers_File /fluent-bit/etc/parsers.conf
+          Parsers_File /fluent-bit/etc/conf/custom_parsers.conf
+          HTTP_Server On
+          HTTP_Listen 0.0.0.0
+          HTTP_Port {{ .Values.metricsPort }}
+          Health_Check On
+      inputs: |-
         [INPUT]
-          Name        tail
-          Alias       kubernetes
-          Path        /var/log/containers/*.log
-          Parser      containerd
-          Tag         kubernetes.*
-
-      ## https://docs.fluentbit.io/manual/pipeline/filters
-      filters: |
+          name tail
+          alias kubernetes
+          path /var/log/containers/*.log
+          parser containerd
+          tag kubernetes.*
+      filters: |-
         [FILTER]
-          Name                    kubernetes
-          Alias                   kubernetes
-          Match                   kubernetes.*
-          Buffer_Size             0
-          Merge_Log               On
-          Kube_Tag_Prefix         kubernetes.var.log.containers.
-          K8S-Logging.Parser      On
-          K8S-Logging.Exclude     On
-          Namespace_Labels        Off
-          Annotations             On
-
+          name kubernetes
+          alias kubernetes
+          match kubernetes.*
+          buffer_size 0
+          merge_log on
+          kube_tag_prefix kubernetes.var.log.containers.
+          k8s-logging.parser on
+          k8s-logging.exclude on
+          namespace_labels off
+          annotations on
         [FILTER]
-          Name    modify
-          Match   kubernetes.*
-          Add     source  home-cluster
-
-      ## https://docs.fluentbit.io/manual/pipeline/outputs
-      outputs: |
+          name modify
+          match kubernetes.*
+          add source home-ops
+        [FILTER]
+          name nest
+          match kubernetes.*
+          wildcard pod_name
+          operation lift
+          nested_under kubernetes
+          add_prefix k_
+        [FILTER]
+          name nest
+          match kubernetes.*
+          operation lift
+          nested_under k_labels
+          add_prefix k_labels_
+        [FILTER]
+          name modify
+          match kubernetes.*
+          rename k_labels_app.kubernetes.io/instance app
+          rename k_labels_app.kubernetes.io/name app
+          rename k_labels_app app
+          rename k_labels_k8s-app app
+          rename k_container_name app
+      outputs: |-
         [OUTPUT]
-          Name          loki
-          Match         kubernetes.*
-          Host          loki-headless.observability.svc.cluster.local
-          Port          3100
-          Uri           /loki/api/v1/push
-          Line_Format   json
-          Labels        job=fluent-bit,source=$source,namespace=$kubernetes['namespace_name'],pod=$kubernetes['pod_name'],container=$kubernetes['container_name'],host=$kubernetes['host']
+          Name loki
+          Match kubernetes.*
+          host loki-headless.monitoring.svc.cluster.local
+          port 3100
+          line_format json
+          labels job=fluent-bit, source=$source, namespace=$kubernetes_namespace_name
