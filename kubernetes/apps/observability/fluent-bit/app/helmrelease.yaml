@@ -30,13 +30,80 @@ spec:
     remediation:
       retries: 3
   values:
+    ## https://docs.fluentbit.io/manual/administration/configuring-fluent-bit/classic-mode/configuration-file
     config:
+      service: |
+        [SERVICE]
+          Daemon Off
+          Flush {{ .Values.flush }}
+          Log_Level {{ .Values.logLevel }}
+          Parsers_File /fluent-bit/etc/parsers.conf
+          Parsers_File /fluent-bit/etc/conf/custom_parsers.conf
+          HTTP_Server On
+          HTTP_Listen 0.0.0.0
+          HTTP_Port {{ .Values.metricsPort }}
+          Health_Check On
+
+      ## https://docs.fluentbit.io/manual/pipeline/inputs
+      inputs: |
+        [INPUT]
+          name tail
+          alias kubernetes
+          path /var/log/containers/*.log
+          parser containerd
+          tag kubernetes.*
+
+      ## https://docs.fluentbit.io/manual/pipeline/filters
+      filters: |
+        [FILTER]
+          name kubernetes
+          alias kubernetes
+          match kubernetes.*
+          buffer_size 0
+          merge_log on
+
+          kube_tag_prefix kubernetes.var.log.containers.
+          k8s-logging.parser on
+          k8s-logging.exclude on
+          namespace_labels off
+          annotations on
+
+        [FILTER]
+          name modify
+          match kubernetes.*
+          add source home-cluster
+
+        [FILTER]
+          name nest
+          match kubernetes.*
+          wildcard pod_name
+          operation lift
+          nested_under kubernetes
+          add_prefix k_
+
+        [FILTER]
+          name nest
+          match kubernetes.*
+          operation lift
+          nested_under k_labels
+          add_prefix k_labels_
+
+        [FILTER]
+          name modify
+          match kubernetes.*
+          rename k_labels_app.kubernetes.io/instance app
+          rename k_labels_app.kubernetes.io/name app
+          rename k_labels_app app
+          rename k_labels_k8s-app app
+          rename k_container_name app
+
+      ## https://docs.fluentbit.io/manual/pipeline/outputs
       outputs: |
         [OUTPUT]
-            name  loki
-            match *
-            host  loki-headless.observability.svc.cluster.local
-            port  3100
-            labels job=fluentbit
-            auto_kubernetes_labels off
-            remove_keys rook_io_operator_namespace
+          Name loki
+          Match kubernetes.*
+          host loki-headless.observability.svc.cluster.local
+          port 3100
+          uri /loki/api/v1/push
+          line_format json
+          labels job=fluent-bit,source=$source,namespace=$k_namespace_name,app=$app,pod=$k_pod_name,host=$k_host
