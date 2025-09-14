@@ -53,7 +53,7 @@ spec:
           path /var/log/containers/*.log
           parser containerd
           tag kubernetes.*
-          mem_buf_limit 5MB
+          mem_buf_limit 0
           skip_empty_lines on
           skip_long_lines on
 
