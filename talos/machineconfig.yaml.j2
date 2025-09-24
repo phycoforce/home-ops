@@ -138,7 +138,7 @@ cluster:
     image: registry.k8s.io/kube-apiserver:v1.34.1
     extraArgs:
       enable-aggregator-routing: true
-      feature-gates: MutatingAdmissionPolicy=true
+      feature-gates: ImageVolume=true,MutatingAdmissionPolicy=true
       runtime-config: admissionregistration.k8s.io/v1beta1=true
     certSANs: ["127.0.0.1", "10.0.20.250"]
     disablePodSecurityPolicy: true
@@ -192,4 +192,16 @@ name: enp2s0f1np1
 rings:
   rx: 8160
   tx: 8160
-
+---
+apiVersion: v1alpha1
+kind: UserVolumeConfig
+name: local-hostpath
+provisioning:
+  diskSelector:
+    match: disk.model == "Micron_7450_MTFDKBG960TFR" && !system_disk
+  minSize: 960GB
+---
+apiVersion: v1alpha1
+kind: WatchdogTimerConfig
+device: /dev/watchdog0
+timeout: 5m
