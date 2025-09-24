@@ -55,4 +55,4 @@ spec:
                 mountPath: "/repository"
               }
             }
-          ]s
+          ]
