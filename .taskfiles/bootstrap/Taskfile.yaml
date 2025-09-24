@@ -3,15 +3,6 @@
 version: '3'
 
 tasks:
-  talos:
-    cmds:
-      - task: kubernetes
-      - task: apps
-    preconditions:
-      - op whoami --format=json
-      - test -f {{.BOOTSTRAP_DIR}}/resources.yaml.tpl
-      - which kubectl op
-
   kubernetes:
     desc: Bootstrap Talos
     cmds:
