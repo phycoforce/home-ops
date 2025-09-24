@@ -200,3 +200,8 @@ provisioning:
   diskSelector:
     match: disk.model == "Micron_7450_MTFDKBG960TFR" && !system_disk
   minSize: 960GB
+---
+apiVersion: v1alpha1
+kind: WatchdogTimerConfig
+device: /dev/watchdog0
+timeout: 5m
