@@ -15,7 +15,7 @@ spec:
     - name: rook-ceph-cluster
       namespace: rook-ceph
     - name: intel-device-plugin-gpu
-      namespace: kube-tools
+      namespace: kube-system
   interval: 1h
   path: ./kubernetes/apps/llm/ollama/app
   postBuild:
