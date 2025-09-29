@@ -3,8 +3,8 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app searxng
-  namespace: &namespace services
+  name: &app ollama
+  namespace: &namespace llm
 spec:
   commonMetadata:
     labels:
@@ -12,15 +12,14 @@ spec:
   components:
     - ../../../../components/gatus/guarded
   dependsOn:
-    - name: dragonfly-cluster
-      namespace: database
-    - name: external-secrets
-      namespace: security
+    - name: intel-device-plugin-gpu
+      namespace: kube-system
   interval: 1h
-  path: ./kubernetes/apps/services/searxng/app
+  path: ./kubernetes/apps/llm/ollama/app
   postBuild:
     substitute:
       APP: *app
+      GATUS_SUBDOMAIN: llm
     substituteFrom:
       - name: cluster-secrets
         kind: Secret

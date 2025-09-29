@@ -4,7 +4,7 @@ apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: &app open-webui
-  namespace: &namespace services
+  namespace: &namespace llm
 spec:
   commonMetadata:
     labels:
@@ -20,7 +20,7 @@ spec:
     - name: rook-ceph-cluster
       namespace: rook-ceph
   interval: 1h
-  path: ./kubernetes/apps/services/open-webui/app
+  path: ./kubernetes/apps/llm/open-webui/app
   postBuild:
     substitute:
       APP: *app
