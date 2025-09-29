@@ -111,13 +111,14 @@ In my cluster there are two instances of [ExternalDNS](https://github.com/kubern
 
 ### Main Kubernetes Cluster
 
-| Name  | Device | CPU       | OS Disk    | Rook Disk  | RAM  | OS    | Purpose           |
-|-------|--------|-----------|------------|------------|------|-------|-------------------|
-| Logos | MS-01  | i9-13900H | 960GB NVMe | 1.92TB U.2 | 96GB | Talos | k8s control-plane |
-| Ontos | MS-01  | i9-13900H | 960GB NVMe | 1.92TB U.2 | 96GB | Talos | k8s control-plane |
-| Pneuma| MS-01  | i9-13900H | 960GB NVMe | 1.92TB U.2 | 96GB | Talos | k8s control-plane |
+| Name  | Device | CPU       | OS Disk    | Local Disk | Rook Disk  | RAM  | OS    | Purpose           |
+|-------|--------|-----------|------------|------------|------------|------|-------|-------------------|
+| Logos | MS-01  | i9-13900H | 960GB NVMe | 960GB NVMe | 1.92TB U.2 | 96GB | Talos | k8s control-plane |
+| Ontos | MS-01  | i9-13900H | 960GB NVMe | 960GB NVMe | 1.92TB U.2 | 96GB | Talos | k8s control-plane |
+| Pneuma| MS-01  | i9-13900H | 960GB NVMe | 960GB NVMe | 1.92TB U.2 | 96GB | Talos | k8s control-plane |
 
 OS Disk: m.2 Samsung PM983 960GB
+Local Disk: m.1 Micron 7450 Pro 960GB
 Rook Disk: u.2 Samsung PM9A3 1.92TB
 
 Total CPU: 60 Cores/60 Threads
