@@ -19,7 +19,6 @@ spec:
   postBuild:
     substitute:
       APP: *app
-      GATUS_SUBDOMAIN: llm
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
