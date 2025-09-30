@@ -14,7 +14,7 @@ spec:
       automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: false
-        runAsUser: 1004
+        runAsUser: 0
         runAsGroup: 1004
         fsGroup: 1004
         supplementalGroups: [65534]
