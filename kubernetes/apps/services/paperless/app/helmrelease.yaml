@@ -9,19 +9,12 @@ spec:
   chartRef:
     kind: OCIRepository
     name: app-template
-  install:
-    remediation:
-      retries: -1
-  upgrade:
-    cleanupOnFail: true
-    remediation:
-      retries: 3
   values:
     defaultPodOptions:
       automountServiceAccountToken: false
       securityContext:
         runAsNonRoot: false
-        runAsUser: 0
+        runAsUser: 1004
         runAsGroup: 1004
         fsGroup: 1004
         supplementalGroups: [65534]
