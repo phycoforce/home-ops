@@ -58,25 +58,13 @@ spec:
             namespace: network
             sectionName: https
     persistence:
-      models:
-        type: custom
-        volumeSpec:
-          ephemeral:
-            volumeClaimTemplate:
-              spec:
-                accessModes:
-                  - ReadWriteOnce
-                storageClassName: "openebs-hostpath"
-                resources:
-                  requests:
-                    storage: 50Gi
-        advancedMounts:
-          ollama:
-            app:
-              - path: /root/.ollama
-                subPath: .ollama
-              - path: *modelPath
-                subPath: models
+      ollama:
+        existingClaim: "{{ .Release.Name }}"
+        globalMounts:
+          - path: *modelPath
+            subPath: models
+          - path: /root/.ollama
+            subPath: config
       dev:
         type: hostPath
         hostPath: /dev/dri
