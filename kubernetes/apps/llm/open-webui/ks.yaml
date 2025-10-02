@@ -6,9 +6,6 @@ metadata:
   name: &app open-webui
   namespace: &namespace llm
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
   components:
     - ../../../../components/volsync
     - ../../../../components/gatus/external

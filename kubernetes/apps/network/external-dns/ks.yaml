@@ -6,9 +6,6 @@ metadata:
   name: &app external-dns-cloudflare
   namespace: &namespace network
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
   #dependsOn:
    # - name: longhorn
     #  namespace: longhorn-system
@@ -35,9 +32,6 @@ metadata:
   name: &app external-dns-mikrotik
   namespace: &namespace network
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
   dependsOn:
     - name: external-secrets
       namespace: security

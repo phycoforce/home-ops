@@ -6,9 +6,6 @@ metadata:
   name: &app karakeep
   namespace: &namespace services
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
   components:
     - ../../../../components/volsync
     - ../../../../components/gatus/external

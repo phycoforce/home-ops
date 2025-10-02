@@ -6,9 +6,6 @@ metadata:
   name: &app calibre-downloader
   namespace: &namespace download
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
   components:
     - ../../../../components/gatus/guarded
     - ../../../../components/keda/nfs-scaler

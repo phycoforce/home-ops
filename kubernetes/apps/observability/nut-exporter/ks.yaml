@@ -6,9 +6,6 @@ metadata:
   name: &app nut-exporter
   namespace: &namespace observability
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
   dependsOn:
     - name: external-secrets
       namespace: security
@@ -31,9 +28,6 @@ metadata:
   name: &app nut-exporter-dashboard
   namespace: &namespace observability
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
   interval: 1h
   path: ./kubernetes/apps/observability/nut-exporter/dashboard
   prune: true

@@ -6,9 +6,6 @@ metadata:
   name: &app squid-secrets
   namespace: &namespace network
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
   interval: 1h
   path: ./kubernetes/apps/network/squid/secrets
   postBuild:
@@ -31,9 +28,6 @@ metadata:
   name: &app squid
   namespace: &namespace network
 spec:
-  commonMetadata:
-    labels:
-      app.kubernetes.io/name: *app
   dependsOn:
     - name: squid-secrets
       namespace: network
