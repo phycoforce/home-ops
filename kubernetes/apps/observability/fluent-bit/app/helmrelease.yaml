@@ -44,7 +44,6 @@ spec:
           path /var/log/containers/*.log
           parser containerd
           tag kubernetes.*
-          mem_buf_limit 0
           skip_empty_lines on
           skip_long_lines on
 
@@ -84,6 +83,14 @@ spec:
           rename k_labels_app.kubernetes.io/name app
           rename k_labels_app app
           rename k_labels_k8s-app app
+
+      customParsers: |-
+        [PARSER]
+          name containerd
+          format regex
+          regex ^(?<time>[^ ]+) (?<stream>stdout|stderr) (?<logtag>[^ ]*) (?<log>.*)$
+          time_key time
+          time_format %Y-%m-%dT%H:%M:%S.%L%z
 
       outputs: |-
         [OUTPUT]
