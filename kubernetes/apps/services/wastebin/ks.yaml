@@ -11,6 +11,7 @@ spec:
   path: ./kubernetes/apps/services/wastebin/app
   postBuild:
     substitute:
+      APP: wastebin
       GATUS_SUBDOMAIN: bin
     substituteFrom:
       - name: cluster-secrets

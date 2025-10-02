@@ -11,6 +11,7 @@ spec:
   path: ./kubernetes/apps/observability/kromgo/app
   postBuild:
     substitute:
+      APP: kromgo
       GATUS_PATH: /talos_version
     substituteFrom:
       - name: cluster-secrets
