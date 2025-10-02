@@ -5,10 +5,10 @@ kind: HelmRelease
 metadata:
   name: ollama
 spec:
-  interval: 15m
   chartRef:
     kind: OCIRepository
     name: app-template
+  interval: 1h
   values:
     controllers:
       ollama:

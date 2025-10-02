@@ -3,8 +3,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app open-webui
-  namespace: &namespace llm
+  name: open-webui
 spec:
   components:
     - ../../../../components/volsync
@@ -12,26 +11,21 @@ spec:
   dependsOn:
     - name: dragonfly-cluster
       namespace: database
-    - name: external-secrets
-      namespace: security
     - name: rook-ceph-cluster
       namespace: rook-ceph
   interval: 1h
   path: ./kubernetes/apps/llm/open-webui/app
   postBuild:
     substitute:
-      APP: *app
+      APP: open-webui
       VOLSYNC_CAPACITY: 5Gi
       GATUS_SUBDOMAIN: llm
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
   prune: true
-  retryInterval: 2m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: *namespace
-  timeout: 5m
   wait: false
