@@ -10,6 +10,8 @@ spec:
   interval: 1h
   path: ./kubernetes/apps/observability/grafana/app
   postBuild:
+    substitute:
+      APP: grafana
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
