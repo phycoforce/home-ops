@@ -40,6 +40,9 @@ spec:
         spec:
           retryInterval: 2m
           timeout: 10m
+      target:
+        group: kustomize.toolkit.fluxcd.io
+        kind: Kustomization
     - # Add HelmRelease defaults to all Kustomizations
       patch: |-
         apiVersion: kustomize.toolkit.fluxcd.io/v1
