@@ -19,10 +19,10 @@ kind: HelmRelease
 metadata:
   name: &app mikrotik-dns
 spec:
-  interval: 1h
   chartRef:
     kind: OCIRepository
     name: mikrotik-dns
+  interval: 1h
   values:
     fullnameOverride: *app
     provider:

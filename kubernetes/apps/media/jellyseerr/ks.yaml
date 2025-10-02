@@ -3,13 +3,12 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app jellyseerr
-  namespace: &namespace media
+  name: jellyseerr
 spec:
   components:
     - ../../../../components/gatus/external
     - ../../../../components/volsync
-    - ../../../../components/keda/nfs-scaler
+    - ../../../../components/nfs-scaler
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
@@ -17,7 +16,7 @@ spec:
   path: ./kubernetes/apps/media/jellyseerr/app
   postBuild:
     substitute:
-      APP: *app
+      APP: jellyseerr
       GATUS_PATH: /api/v1/status
       GATUS_SUBDOMAIN: requests
       VOLSYNC_CAPACITY: 5Gi
@@ -25,11 +24,8 @@ spec:
       - name: cluster-secrets
         kind: Secret
   prune: true
-  retryInterval: 2m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: *namespace
-  timeout: 5m
   wait: false

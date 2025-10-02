@@ -3,31 +3,25 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app tuwunel
-  namespace: &namespace communication
+  name: tuwunel
 spec:
   components:
     - ../../../../components/volsync
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
-    - name: volsync
-      namespace: volsync-system
   interval: 1h
   path: ./kubernetes/apps/communication/tuwunel/app
   postBuild:
     substitute:
-      APP: *app
+      APP: tuwunel
       VOLSYNC_CAPACITY: 15Gi
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
   prune: true
-  retryInterval: 2m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: *namespace
-  timeout: 5m
   wait: false

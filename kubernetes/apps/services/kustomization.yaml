@@ -3,10 +3,22 @@ apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: services
 components:
-  - ../../components/common
+  - ../../components/namespace
 resources:
   - ./paperless/ks.yaml
   - ./it-tools/ks.yaml
   - ./home-assistant/ks.yaml
   - ./karakeep/ks.yaml
   - ./wastebin/ks.yaml
+replacements:
+  - source:
+      kind: Namespace
+      fieldPath: metadata.name
+    targets:
+      - select:
+          kind: Kustomization
+          group: kustomize.toolkit.fluxcd.io
+        fieldPaths:
+          - spec.targetNamespace
+        options:
+          create: true

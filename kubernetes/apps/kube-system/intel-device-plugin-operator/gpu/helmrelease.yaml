@@ -19,10 +19,10 @@ kind: HelmRelease
 metadata:
   name: intel-device-plugin-gpu
 spec:
-  interval: 1h
   chartRef:
     kind: OCIRepository
     name: intel-device-plugins-gpu
+  interval: 1h
   values:
     name: i915
     nodeFeatureRule: false

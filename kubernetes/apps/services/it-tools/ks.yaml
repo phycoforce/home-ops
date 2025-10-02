@@ -3,25 +3,19 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app it-tools
-  namespace: &namespace services
+  name: it-tools
 spec:
   components:
     - ../../../../components/gatus/external
   interval: 1h
   path: ./kubernetes/apps/services/it-tools/app
   postBuild:
-    substitute:
-      APP: *app
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
   prune: true
-  retryInterval: 2m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: *namespace
-  timeout: 5m
   wait: false

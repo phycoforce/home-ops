@@ -19,10 +19,10 @@ kind: HelmRelease
 metadata:
   name: reloader
 spec:
-  interval: 1h
   chartRef:
     kind: OCIRepository
     name: reloader
+  interval: 1h
   values:
     fullnameOverride: reloader
     reloader:

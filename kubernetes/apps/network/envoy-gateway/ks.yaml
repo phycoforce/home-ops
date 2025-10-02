@@ -3,12 +3,10 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app envoy-gateway
-  namespace: &namespace network
+  name: envoy-gateway
 spec:
   dependsOn:
     - name: certificates-import
-      namespace: network
   interval: 1h
   path: ./kubernetes/apps/network/envoy-gateway/app
   postBuild:
@@ -20,5 +18,3 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: *namespace
-  timeout: 15m
