@@ -29,7 +29,7 @@ spec:
   path: ./kubernetes/apps/network/squid/app
   postBuild:
     substitute:
-      APP: *app
+      APP: squid
     substituteFrom:
       - name: squid-secret
         kind: Secret
