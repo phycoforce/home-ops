@@ -3,8 +3,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app wastebin
-  namespace: &namespace services
+  name: wastebin
 spec:
   components:
     - ../../../../components/gatus/external
@@ -12,17 +11,13 @@ spec:
   path: ./kubernetes/apps/services/wastebin/app
   postBuild:
     substitute:
-      APP: *app
       GATUS_SUBDOMAIN: bin
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
   prune: true
-  retryInterval: 2m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: *namespace
-  timeout: 5m
   wait: false
