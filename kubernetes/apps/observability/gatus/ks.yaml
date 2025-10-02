@@ -3,8 +3,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app gatus
-  namespace: &namespace observability
+  name: gatus
 spec:
   dependsOn:
     - name: rook-ceph-cluster
@@ -13,17 +12,14 @@ spec:
   path: ./kubernetes/apps/observability/gatus/app
   postBuild:
     substitute:
-      APP: *app
+      APP: gatus
       GATUS_SUBDOMAIN: status
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
   prune: true
-  retryInterval: 2m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: *namespace
-  timeout: 5m
   wait: false
