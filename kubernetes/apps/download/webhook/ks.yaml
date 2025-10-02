@@ -3,8 +3,7 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: &app webhook
-  namespace: &namespace download
+  name: webhook
 spec:
   components:
     - ../../../../components/gatus/guarded
@@ -12,16 +11,13 @@ spec:
   path: ./kubernetes/apps/download/webhook/app
   postBuild:
     substitute:
-      APP: *app
+      APP: webhook
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
   prune: true
-  retryInterval: 2m
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: *namespace
-  timeout: 5m
   wait: false
