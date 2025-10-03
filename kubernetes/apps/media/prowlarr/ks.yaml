@@ -7,7 +7,6 @@ metadata:
 spec:
   components:
     - ../../../../components/volsync
-    - ../../../../components/gatus/guarded
     - ../../../../components/nfs-scaler
   dependsOn:
     - name: rook-ceph-cluster

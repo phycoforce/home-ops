@@ -6,7 +6,6 @@ metadata:
   name: nzbget
 spec:
   components:
-    - ../../../../components/gatus/guarded
     - ../../../../components/nfs-scaler
     - ../../../../components/volsync
   dependsOn:

@@ -6,7 +6,6 @@ metadata:
   name: slskd
 spec:
   components:
-    - ../../../../components/gatus/guarded
     - ../../../../components/nfs-scaler
   dependsOn:
     - name: rook-ceph-cluster
@@ -14,8 +13,6 @@ spec:
   interval: 1h
   path: ./kubernetes/apps/download/slskd/app
   postBuild:
-    substitute:
-      APP: slskd
     substituteFrom:
       - name: cluster-secrets
         kind: Secret

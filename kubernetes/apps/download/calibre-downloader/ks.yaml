@@ -6,13 +6,10 @@ metadata:
   name: calibre-downloader
 spec:
   components:
-    - ../../../../components/gatus/guarded
     - ../../../../components/nfs-scaler
   interval: 1h
   path: ./kubernetes/apps/download/calibre-downloader/app
   postBuild:
-    substitute:
-      APP: calibre-downloader
     substituteFrom:
       - name: cluster-secrets
         kind: Secret

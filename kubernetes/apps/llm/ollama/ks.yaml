@@ -5,16 +5,12 @@ kind: Kustomization
 metadata:
   name: ollama
 spec:
-  components:
-    - ../../../../components/gatus/guarded
   dependsOn:
     - name: intel-device-plugin-gpu
       namespace: kube-system
   interval: 1h
   path: ./kubernetes/apps/llm/ollama/app
   postBuild:
-    substitute:
-      APP: ollama
     substituteFrom:
       - name: cluster-secrets
         kind: Secret

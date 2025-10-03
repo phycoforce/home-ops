@@ -7,7 +7,6 @@ metadata:
 spec:
   components:
     - ../../../../components/volsync
-    - ../../../../components/gatus/guarded
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph

@@ -5,16 +5,12 @@ kind: Kustomization
 metadata:
   name: searxng
 spec:
-  components:
-    - ../../../../components/gatus/guarded
   dependsOn:
     - name: dragonfly-cluster
       namespace: database
   interval: 1h
   path: ./kubernetes/apps/llm/searxng/app
   postBuild:
-    substitute:
-      APP: searxng
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
