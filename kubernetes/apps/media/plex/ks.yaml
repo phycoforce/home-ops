@@ -7,7 +7,6 @@ metadata:
 spec:
   components:
     - ../../../../components/volsync
-    - ../../../../components/gatus/external
     - ../../../../components/nfs-scaler
   dependsOn:
     - name: rook-ceph-cluster
@@ -20,7 +19,6 @@ spec:
     substitute:
       APP: plex
       VOLSYNC_CAPACITY: 15Gi
-      GATUS_PATH: /web/index.html
     substituteFrom:
       - name: cluster-secrets
         kind: Secret

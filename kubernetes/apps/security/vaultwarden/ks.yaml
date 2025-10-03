@@ -7,7 +7,6 @@ metadata:
 spec:
   components:
     - ../../../../components/volsync
-    - ../../../../components/gatus/external
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
@@ -17,7 +16,6 @@ spec:
     substitute:
       APP: vaultwarden
       VOLSYNC_CAPACITY: 1Gi
-      GATUS_SUBDOMAIN: bitwarden
     substituteFrom:
       - name: cluster-secrets
         kind: Secret

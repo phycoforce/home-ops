@@ -7,7 +7,6 @@ metadata:
 spec:
   components:
     - ../../../../components/volsync
-    - ../../../../components/gatus/external
   dependsOn:
     - name: dragonfly-cluster
       namespace: database
@@ -19,7 +18,6 @@ spec:
     substitute:
       APP: open-webui
       VOLSYNC_CAPACITY: 5Gi
-      GATUS_SUBDOMAIN: llm
     substituteFrom:
       - name: cluster-secrets
         kind: Secret

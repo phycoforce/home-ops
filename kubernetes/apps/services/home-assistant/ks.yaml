@@ -7,17 +7,17 @@ metadata:
 spec:
   components:
     - ../../../../components/volsync
-    - ../../../../components/gatus/external
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
+    - name: multus-networks
+      namespace: network
   interval: 1h
   path: ./kubernetes/apps/services/home-assistant/app
   postBuild:
     substitute:
       APP: home-assistant
       VOLSYNC_CAPACITY: 5Gi
-      GATUS_SUBDOMAIN: hass
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
