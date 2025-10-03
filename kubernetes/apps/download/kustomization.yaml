@@ -5,20 +5,10 @@ kind: Kustomization
 namespace: download
 components:
   - ../../components/namespace
+replacements:
+  - path: ../../components/replacements/ks.yaml
 resources:
   - ./slskd/ks.yaml
   - ./calibre-downloader/ks.yaml
   - ./webhook/ks.yaml
   - ./nzbget/ks.yaml
-replacements:
-  - source:
-      kind: Namespace
-      fieldPath: metadata.name
-    targets:
-      - select:
-          kind: Kustomization
-          group: kustomize.toolkit.fluxcd.io
-        fieldPaths:
-          - spec.targetNamespace
-        options:
-          create: true
