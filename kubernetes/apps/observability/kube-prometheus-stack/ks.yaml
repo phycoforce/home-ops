@@ -5,17 +5,12 @@ kind: Kustomization
 metadata:
   name: kube-prometheus-stack
 spec:
-  components:
-    - ../../../../components/gatus/guarded
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
   interval: 1h
   path: ./kubernetes/apps/observability/kube-prometheus-stack/app
   postBuild:
-    substitute:
-      APP: kube-prometheus-stack
-      GATUS_SUBDOMAIN: prometheus
     substituteFrom:
       - name: cluster-secrets
         kind: Secret

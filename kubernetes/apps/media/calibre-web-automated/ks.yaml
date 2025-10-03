@@ -7,7 +7,6 @@ metadata:
 spec:
   components:
     - ../../../../components/volsync
-    - ../../../../components/gatus/guarded
     - ../../../../components/nfs-scaler
   dependsOn:
     - name: rook-ceph-cluster
@@ -18,7 +17,6 @@ spec:
     substitute:
       APP: calibre-web-automated
       VOLSYNC_CAPACITY: 5Gi
-      GATUS_SUBDOMAIN: calibre
     substituteFrom:
       - name: cluster-secrets
         kind: Secret

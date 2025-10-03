@@ -55,6 +55,10 @@ spec:
             port: 3012
     route:
       app:
+        annotations:
+          gatus.home-operations.com/enabled: "true"
+          gatus.home-operations.com/endpoint: |-
+            conditions: ["[STATUS] == 200"]
         hostnames: ["bitwarden.${SECRET_DOMAIN}"]
         parentRefs:
           - name: envoy-external

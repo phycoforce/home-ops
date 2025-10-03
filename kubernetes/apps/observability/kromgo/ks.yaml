@@ -5,14 +5,9 @@ kind: Kustomization
 metadata:
   name: kromgo
 spec:
-  components:
-    - ../../../../components/gatus/external-two
   interval: 1h
   path: ./kubernetes/apps/observability/kromgo/app
   postBuild:
-    substitute:
-      APP: kromgo
-      GATUS_PATH: /talos_version
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
