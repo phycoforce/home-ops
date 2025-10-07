@@ -11,7 +11,7 @@ spec:
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
-    - name: intel-device-plugin-operator
+    - name: intel-gpu-resource-driver
       namespace: kube-system
   interval: 1h
   path: ./kubernetes/apps/media/plex/app
