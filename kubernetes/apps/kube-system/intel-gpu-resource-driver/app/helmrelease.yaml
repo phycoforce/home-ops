@@ -24,8 +24,6 @@ spec:
     name: intel-gpu-resource-driver
   interval: 1h
   values:
-    image:
-      repository: ghcr.io/intel/intel-resource-drivers-for-kubernetes
     cdi:
       staticPath: /var/cdi/static
       dynamicPath: /var/cdi/dynamic
