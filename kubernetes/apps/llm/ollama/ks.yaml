@@ -5,12 +5,16 @@ kind: Kustomization
 metadata:
   name: ollama
 spec:
+  components:
+    - ../../../../components/gpu
   dependsOn:
     - name: intel-gpu-resource-driver
       namespace: kube-system
   interval: 1h
   path: ./kubernetes/apps/llm/ollama/app
   postBuild:
+    substitute:
+      APP: ollama
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
