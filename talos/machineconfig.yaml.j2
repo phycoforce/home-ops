@@ -33,6 +33,7 @@ machine:
         [plugins."io.containerd.cri.v1.images"]
           discard_unpacked_layers = false
         [plugins."io.containerd.cri.v1.runtime"]
+          cdi_spec_dirs = ["/var/cdi/static", "/var/cdi/dynamic"]
           device_ownership_from_security_context = true
     - op: overwrite
       path: /etc/nfsmount.conf
@@ -56,6 +57,7 @@ machine:
     extraConfig:
       featureGates:
         ImageVolume: true
+        ResourceHealthStatus: true
       serializeImagePulls: false
     extraMounts:
       - destination: /var/openebs/local
@@ -81,7 +83,7 @@ machine:
     nameservers: ["10.0.20.1"]
     disableSearchDomain: true
   nodeLabels:
-    intel.feature.node.kubernetes.io/gpu: "true"
+    node.kubernetes.io/gpu: "true"
     topology.kubernetes.io/region: origin
     topology.kubernetes.io/zone: {{ 'm' if machinetype == 'controlplane' else 'w' }}
   sysctls:
@@ -138,7 +140,7 @@ cluster:
     image: registry.k8s.io/kube-apiserver:v1.34.1
     extraArgs:
       enable-aggregator-routing: true
-      feature-gates: ImageVolume=true,MutatingAdmissionPolicy=true
+      feature-gates: ImageVolume=true,MutatingAdmissionPolicy=true,ResourceHealthStatus=true
       runtime-config: admissionregistration.k8s.io/v1beta1=true
     certSANs: ["127.0.0.1", "10.0.20.250"]
     disablePodSecurityPolicy: true

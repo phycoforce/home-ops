@@ -6,7 +6,7 @@ metadata:
   name: ollama
 spec:
   dependsOn:
-    - name: intel-device-plugin-gpu
+    - name: intel-gpu-resource-driver
       namespace: kube-system
   interval: 1h
   path: ./kubernetes/apps/llm/ollama/app
