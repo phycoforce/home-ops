@@ -13,6 +13,6 @@ resources:
   - ./metrics-server/ks.yaml
   - ./reloader/ks.yaml
   - ./spegel/ks.yaml
-  - ./intel-device-plugin-operator/ks.yaml
+  - ./intel-gpu-resource-driver/ks.yaml
   - ./descheduler/ks.yaml
   - ./irqbalance/ks.yaml
