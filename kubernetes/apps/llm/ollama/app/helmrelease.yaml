@@ -29,6 +29,7 @@ spec:
             securityContext:
               privileged: true
             env:
+              TZ: Europe/London
               OLLAMA_MODELS: &modelPath /models
               # ONEAPI_DEVICE_SELECTOR: level_zero:0
               # IPEX_LLM_NUM_CTX: 16384
