@@ -10,5 +10,5 @@ replacements:
 resources:
   - ./slskd/ks.yaml
   - ./calibre-downloader/ks.yaml
-  - ./webhook/ks.yaml
+  - ./notifier/ks.yaml
   - ./nzbget/ks.yaml
