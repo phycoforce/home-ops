@@ -5,12 +5,3 @@ kind: Kustomization
 resources:
   - ./helmrelease.yaml
   - ./pvc-cache.yaml
-configMapGenerator:
-  - name: plex-loki-rules
-    files:
-      - plex.yaml=./lokirule.yaml
-    options:
-      labels:
-        loki_rule: "true"
-generatorOptions:
-  disableNameSuffixHash: true
