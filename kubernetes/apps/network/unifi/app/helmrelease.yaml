@@ -27,7 +27,7 @@ spec:
           app:
             image:
               repository: ghcr.io/jacobalberty/unifi-docker
-              tag: v9.4.19@sha256:ef032346e2ebdcadaadeb27e38be55f97e6b5ed6cea333d5d82ae9b58ae4068b
+              tag: v9.5.21@sha256:34b772d7d7debde09ba1c3c63b739bc71774e6cffe07624f5d9ed3483edad938
               pullPolicy: IfNotPresent
             env:
               RUNAS_UID0: "false"
