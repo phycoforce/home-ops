@@ -13,7 +13,6 @@ spec:
     tag: 4.3.3
   url: oci://ghcr.io/home-operations/charts-mirror/openebs
 ---
----
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
@@ -24,17 +23,12 @@ spec:
     kind: OCIRepository
     name: openebs
   interval: 1h
-  install:
-    disableHooks: true
-    remediation:
-      retries: -1
-  upgrade:
-    cleanupOnFail: true
-    disableHooks: true
-    remediation:
-      retries: 3
   values:
+    preUpgradeHook:
+      enabled: false
     localpv-provisioner:
+      analytics:
+        enabled: false
       localpv:
         image:
           registry: quay.io/

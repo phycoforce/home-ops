@@ -6,3 +6,4 @@ resources:
   - ./helmrelease.yaml
   - ./mutatingadmissionpolicy.yaml
   - ./prometheusrule.yaml
+  - ./grafanadashboard.yaml

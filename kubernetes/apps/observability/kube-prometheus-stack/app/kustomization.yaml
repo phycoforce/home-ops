@@ -7,3 +7,4 @@ resources:
   - ./externalsecret.yaml
   - ./scrapeconfig.yaml
   - ./alertmanagerconfig.yaml
+  - ./grafanadashboard.yaml
