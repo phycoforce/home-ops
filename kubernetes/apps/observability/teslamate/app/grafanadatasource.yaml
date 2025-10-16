@@ -1,0 +1,44 @@
+---
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDatasource
+metadata:
+  name: teslamate-postgres
+spec:
+  instanceSelector:
+    matchLabels:
+      grafana.internal/instance: grafana
+  valuesFrom:
+    # Host & DB name
+    - targetPath: "datasource.url"
+      valueFrom:
+        secretKeyRef:
+          name: teslamate-secret
+          key: DATABASE_HOST
+    - targetPath: "datasource.database"
+      valueFrom:
+        secretKeyRef:
+          name: teslamate-secret
+          key: DATABASE_NAME
+    # Credentials
+    - targetPath: "datasource.user"
+      valueFrom:
+        secretKeyRef:
+          name: teslamate-secret
+          key: DATABASE_USER
+    - targetPath: "secureJsonData.password"
+      valueFrom:
+        secretKeyRef:
+          name: teslamate-secret
+          key: DATABASE_PASS
+  datasource:
+    name: TeslaMate
+    type: postgres
+    access: proxy
+    url: ""
+    database: ""
+    user: ""
+    jsonData:
+      postgresVersion: 1000
+      sslmode: disable
+    secureJsonData:
+      password: ""
