@@ -30,3 +30,5 @@ spec:
       podMonitorEnabled: false
       grafanaDashboard:
         create: true
+        annotations:
+          grafana_folder: database
