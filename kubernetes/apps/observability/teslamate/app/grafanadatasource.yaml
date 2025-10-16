@@ -9,19 +9,17 @@ spec:
     matchLabels:
       grafana.internal/instance: grafana
   valuesFrom:
-    # Host & DB name
-    - targetPath: "datasource.url"
+    - targetPath: "url"
       valueFrom:
         secretKeyRef:
           name: teslamate-secret
           key: DATABASE_HOST
-    - targetPath: "datasource.database"
+    - targetPath: "database"
       valueFrom:
         secretKeyRef:
           name: teslamate-secret
           key: DATABASE_NAME
-    # Credentials
-    - targetPath: "datasource.user"
+    - targetPath: "user"
       valueFrom:
         secretKeyRef:
           name: teslamate-secret
@@ -35,11 +33,6 @@ spec:
     name: TeslaMate
     type: postgres
     access: proxy
-    url: ""
-    database: ""
-    user: ""
     jsonData:
       postgresVersion: 1000
       sslmode: disable
-    secureJsonData:
-      password: ""
