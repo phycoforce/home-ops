@@ -32,6 +32,11 @@ releases:
     chart: oci://ghcr.io/prometheus-community/charts/kube-prometheus-stack
     version: 78.3.0
 
+  - name: grafana-operator
+    namespace: observability
+    chart: oci://ghcr.io/grafana/helm-charts/grafana-operator
+    version: v5.19.4
+
   - # TODO: Find a non-bitnami chart that includes NetworkAttachmentDefinition
     name: multus-cni
     namespace: network
