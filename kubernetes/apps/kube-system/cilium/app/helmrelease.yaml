@@ -38,6 +38,10 @@ spec:
       enabled: true
     cni:
       exclusive: false
+    dashboards:
+      enabled: true
+      annotations:
+        grafana_folder: kube-system
     cgroup:
       automount:
         enabled: false
@@ -45,12 +49,6 @@ spec:
     cluster:
       id: 1
       name: main
-    # NOTE: devices might need to be set if you have more than one active NIC on your hosts
-    # devices: eno+ eth+
-    dashboards:
-      enabled: true
-      annotations:
-        grafana_folder: kube-system
     endpointRoutes:
       enabled: true
     envoy:
@@ -73,16 +71,16 @@ spec:
       mode: "dsr"
     localRedirectPolicy: true
     operator:
-      replicas: 2
-      rollOutPods: true
+      dashboards:
+        enabled: true
+        annotations:
+          grafana_folder: kube-system
       prometheus:
         enabled: true
         serviceMonitor:
           enabled: true
-      dashboards:
-        enabled: true
-        annotations:
-        grafana_folder: kube-system
+      replicas: 2
+      rollOutPods: true
     pmtuDiscovery:
       enabled: true
     prometheus:
