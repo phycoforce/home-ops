@@ -49,6 +49,8 @@ spec:
     # devices: eno+ eth+
     dashboards:
       enabled: true
+      annotations:
+        grafana_folder: kube-system
     endpointRoutes:
       enabled: true
     envoy:
@@ -79,6 +81,8 @@ spec:
           enabled: true
       dashboards:
         enabled: true
+        annotations:
+        grafana_folder: kube-system
     pmtuDiscovery:
       enabled: true
     prometheus:
