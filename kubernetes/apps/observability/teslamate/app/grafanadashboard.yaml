@@ -1,3 +1,13 @@
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaFolder
+metadata:
+  name: teslamate
+spec:
+  instanceSelector:
+    matchLabels:
+      grafana.internal/instance: grafana
+  # If title is not defined, the value will be taken from metadata.name
+  title: custom title
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/grafana.integreatly.org/grafanadashboard_v1beta1.json
 apiVersion: grafana.integreatly.org/v1beta1
@@ -6,6 +16,7 @@ metadata:
   name: teslamate-battery-health
 spec:
   allowCrossNamespaceImport: true
+  folderRef: "teslamate"
   instanceSelector:
     matchLabels:
       grafana.internal/instance: grafana
@@ -21,6 +32,7 @@ metadata:
   name: teslamate-charge-level
 spec:
   allowCrossNamespaceImport: true
+  folderRef: "teslamate"
   instanceSelector:
     matchLabels:
       grafana.internal/instance: grafana
@@ -36,6 +48,7 @@ metadata:
   name: teslamate-charges
 spec:
   allowCrossNamespaceImport: true
+  folderRef: "teslamate"
   instanceSelector:
     matchLabels:
       grafana.internal/instance: grafana
@@ -51,6 +64,7 @@ metadata:
   name: teslamate-charging-stats
 spec:
   allowCrossNamespaceImport: true
+  folderRef: "teslamate"
   instanceSelector:
     matchLabels:
       grafana.internal/instance: grafana
@@ -66,6 +80,7 @@ metadata:
   name: teslamate-drive-stats
 spec:
   allowCrossNamespaceImport: true
+  folderRef: "teslamate"
   instanceSelector:
     matchLabels:
       grafana.internal/instance: grafana
@@ -81,6 +96,7 @@ metadata:
   name: teslamate-drives
 spec:
   allowCrossNamespaceImport: true
+  folderRef: "teslamate"
   instanceSelector:
     matchLabels:
       grafana.internal/instance: grafana
@@ -96,6 +112,7 @@ metadata:
   name: teslamate-efficiency
 spec:
   allowCrossNamespaceImport: true
+  folderRef: "teslamate"
   instanceSelector:
     matchLabels:
       grafana.internal/instance: grafana
@@ -111,6 +128,7 @@ metadata:
   name: teslamate-locations
 spec:
   allowCrossNamespaceImport: true
+  folderRef: "teslamate"
   instanceSelector:
     matchLabels:
       grafana.internal/instance: grafana
@@ -126,6 +144,7 @@ metadata:
   name: teslamate-milage
 spec:
   allowCrossNamespaceImport: true
+  folderRef: "teslamate"
   instanceSelector:
     matchLabels:
       grafana.internal/instance: grafana
@@ -141,6 +160,7 @@ metadata:
   name: teslamate-overview
 spec:
   allowCrossNamespaceImport: true
+  folderRef: "teslamate"
   instanceSelector:
     matchLabels:
       grafana.internal/instance: grafana
@@ -156,6 +176,7 @@ metadata:
   name: teslamate-projected-range
 spec:
   allowCrossNamespaceImport: true
+  folderRef: "teslamate"
   instanceSelector:
     matchLabels:
       grafana.internal/instance: grafana
@@ -171,6 +192,7 @@ metadata:
   name: teslamate-states
 spec:
   allowCrossNamespaceImport: true
+  folderRef: "teslamate"
   instanceSelector:
     matchLabels:
       grafana.internal/instance: grafana
@@ -186,6 +208,7 @@ metadata:
   name: teslamate-statistics
 spec:
   allowCrossNamespaceImport: true
+  folderRef: "teslamate"
   instanceSelector:
     matchLabels:
       grafana.internal/instance: grafana
@@ -201,6 +224,7 @@ metadata:
   name: teslamate-timeline
 spec:
   allowCrossNamespaceImport: true
+  folderRef: "teslamate"
   instanceSelector:
     matchLabels:
       grafana.internal/instance: grafana
@@ -216,6 +240,7 @@ metadata:
   name: teslamate-trip
 spec:
   allowCrossNamespaceImport: true
+  folderRef: "teslamate"
   instanceSelector:
     matchLabels:
       grafana.internal/instance: grafana
@@ -231,6 +256,7 @@ metadata:
   name: teslamate-updates
 spec:
   allowCrossNamespaceImport: true
+  folderRef: "teslamate"
   instanceSelector:
     matchLabels:
       grafana.internal/instance: grafana
@@ -246,6 +272,7 @@ metadata:
   name: teslamate-vampire-drain
 spec:
   allowCrossNamespaceImport: true
+  folderRef: "teslamate"
   instanceSelector:
     matchLabels:
       grafana.internal/instance: grafana
@@ -261,6 +288,7 @@ metadata:
   name: teslamate-visited
 spec:
   allowCrossNamespaceImport: true
+  folderRef: "teslamate"
   instanceSelector:
     matchLabels:
       grafana.internal/instance: grafana
