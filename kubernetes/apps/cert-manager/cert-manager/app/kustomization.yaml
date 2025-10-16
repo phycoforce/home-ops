@@ -7,3 +7,4 @@ resources:
   - ./clusterissuers.yaml
   - ./helmrelease.yaml
   - ./prometheusrule.yaml
+  - ./grafanadashboard.yaml
