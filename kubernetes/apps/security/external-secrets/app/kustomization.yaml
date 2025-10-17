@@ -5,3 +5,4 @@ kind: Kustomization
 resources:
   - ./helmrelease.yaml
   - ./pdb.yaml
+  - ./grafanadashboard.yaml
