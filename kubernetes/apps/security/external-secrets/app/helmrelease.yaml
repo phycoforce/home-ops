@@ -29,8 +29,6 @@ spec:
       enabled: true
     grafanaDashboard:
       enabled: true
-      annotations:
-        grafana_folder: security
     certController:
       serviceMonitor:
         enabled: true
