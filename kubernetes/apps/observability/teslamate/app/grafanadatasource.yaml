@@ -15,31 +15,32 @@ spec:
       valueFrom:
         secretKeyRef:
           name: teslamate-secret
-          key: ${DATABASE_HOST}
+          key: DATABASE_HOST
     - targetPath: "database"
       valueFrom:
         secretKeyRef:
           name: teslamate-secret
-          key: ${DATABASE_NAME}
+          key: DATABASE_NAME
     - targetPath: "user"
       valueFrom:
         secretKeyRef:
           name: teslamate-secret
-          key: ${DATABASE_USER}
+          key: DATABASE_USER
     - targetPath: "secureJsonData.password"
       valueFrom:
         secretKeyRef:
           name: teslamate-secret
-          key: ${DATABASE_PASS}
+          key: DATABASE_PASS
   datasource:
     name: TeslaMate
     type: postgres
     access: proxy
+    url: ${DATABASE_HOST}:5432
+    database: ${DATABASE_NAME}
+    user: ${DATABASE_USER}
     secureJsonData:
       password: ${DATABASE_PASS}
-      url: ${DATABASE_HOST}:5342
-      user: ${DATABASE_USER}
-      database: ${DATABASE_NAME}
     jsonData:
       postgresVersion: 1000
       sslmode: disable
+
