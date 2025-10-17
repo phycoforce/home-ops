@@ -1,5 +1,19 @@
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/source.toolkit.fluxcd.io/ocirepository_v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: multus
+spec:
+  interval: 15m
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
+  ref:
+    tag: 1.0.0
+  url: oci://ghcr.io/bjw-s-labs/helm/multus
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -7,77 +21,15 @@ metadata:
 spec:
   chartRef:
     kind: OCIRepository
-    name: app-template
+    name: multus
   interval: 1h
   values:
-    controllers:
-      multus:
-        type: daemonset
-        initContainers:
-          cni-plugins:
-            image:
-              repository: ghcr.io/home-operations/cni-plugins
-              tag: 1.8.0@sha256:ce64a071c3c0f2e8c4620d588e45e36010ab05f63c4dd484b568c39e9346beac
-        containers:
-          multus:
-            image:
-              repository: ghcr.io/k8snetworkplumbingwg/multus-cni
-              tag: v4.2.2@sha256:7591a27cd28eeafd6dfb197618b06dabd9446a7026164b9b21fee67adc925761
-            command:
-              - /thin_entrypoint
-            args:
-              - --cleanup-config-on-exit
-              - --multus-cni-conf-dir=/tmp
-            resources:
-              requests:
-                cpu: 10m
-              limits:
-                memory: 32Mi
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities: { add: ["NET_ADMIN"], drop: ["ALL"] }
-        serviceAccount:
-          identifier: multus
-    defaultPodOptions:
-      hostNetwork: true
-      priorityClassName: system-node-critical
-      tolerations:
-        - key: CriticalAddonsOnly
-          operator: Exists
-    persistence:
-      etc-cni-net-d:
-        type: hostPath
-        hostPath: /etc/cni/net.d
-        globalMounts:
-          - path: /host/etc/cni/net.d
-      opt-cni-bin:
-        type: hostPath
-        hostPath: /opt/cni/bin
-        globalMounts:
-          - path: /host/opt/cni/bin
-      tmp:
-        type: emptyDir
-    rbac:
-      roles:
-        multus:
-          type: ClusterRole
-          rules:
-            - apiGroups: ["k8s.cni.cncf.io"]
-              resources: ["*"]
-              verbs: ["*"]
-            - apiGroups: [""]
-              resources: ["pods", "pods/status"]
-              verbs: ["get", "update"]
-            - apiGroups: ["", "events.k8s.io"]
-              resources: ["events"]
-              verbs: ["create", "patch", "update"]
-      bindings:
-        multus:
-          type: ClusterRoleBinding
-          roleRef:
-            identifier: multus
-          subjects:
-            - identifier: multus
-    serviceAccount:
-      multus: {}
+    cni:
+      binPath: /opt/cni/bin
+      netPath: /etc/cni/net.d
+    multus:
+      resources:
+        requests:
+          cpu: 10m
+        limits:
+          memory: 32Mi
