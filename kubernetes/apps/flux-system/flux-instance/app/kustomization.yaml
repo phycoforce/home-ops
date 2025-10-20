@@ -8,3 +8,5 @@ resources:
   - ./httproute.yaml
   - ./receiver.yaml
   - ./prometheusrule.yaml
+  - ./grafanadashboard.yaml
+  - ./podmonitor.yaml
