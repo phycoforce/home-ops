@@ -38,7 +38,6 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network
-            sectionName: https
     cephClusterSpec:
       cephConfig:
         global:
