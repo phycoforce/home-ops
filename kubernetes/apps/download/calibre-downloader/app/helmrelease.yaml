@@ -65,7 +65,6 @@ spec:
         parentRefs:
           - name: envoy-internal
             namespace: network
-            sectionName: https
     persistence:
       # chromium needs the XDG_CONFIG_HOME created
       config:
