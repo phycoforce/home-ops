@@ -73,7 +73,7 @@ spec:
             namespace: network
     persistence:
       config:
-        existingClaim: jellyseerr
+        existingClaim: seerr
         globalMounts:
           - path: /app/config
       config-cache:
