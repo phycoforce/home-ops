@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: jellyseerr
+  name: seerr
 spec:
   chartRef:
     kind: OCIRepository
@@ -11,21 +11,21 @@ spec:
   interval: 1h
   values:
     controllers:
-      jellyseerr:
+      seerr:
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
           app:
             image:
-              repository: ghcr.io/fallenbagel/jellyseerr
-              tag: 2.7.3@sha256:9cc9e9ee6cd5cf5a23feb45c37742ba34cfd6314d81d259cddb373a97ac92cdd
+              repository: ghcr.io/seerr-team/seerr
+              tag: develop@sha256:faa17d5dd0adc4e0ec04f20a931579083a06abc495603f2fd21bd5b9d9e6a9e6
             env:
               TZ: Europe/London
               LOG_LEVEL: "info"
               PORT: &port 80
-            #envFrom:
-            #  - secretRef:
-            #      name: jellyseerr-secret
+            envFrom:
+              - secretRef:
+                  name: seerr-secret
             probes:
               liveness: &probes
                 enabled: true
@@ -77,7 +77,7 @@ spec:
         globalMounts:
           - path: /app/config
       config-cache:
-        existingClaim: jellyseerr-cache
+        existingClaim: seerr-cache
         globalMounts:
           - path: /app/config/cache
       config-logs:

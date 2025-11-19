@@ -17,4 +17,4 @@ resources:
   - ./tautulli/ks.yaml
   - ./recyclarr/ks.yaml
   - ./calibre-web-automated/ks.yaml
-  - ./jellyseerr/ks.yaml
+  - ./seerr/ks.yaml
