@@ -57,7 +57,7 @@ spec:
       mode: kubernetes
     devices: bond+
     enableIPv4BIGTCP: true
-    ipv4NativeRoutingCIDR: "10.69.0.0/16"
+    ipv4NativeRoutingCIDR: 10.69.0.0/16
     k8sServiceHost: 127.0.0.1
     k8sServicePort: 7445
     kubeProxyReplacement: true
@@ -66,8 +66,9 @@ spec:
       enabled: true
     loadBalancer:
       algorithm: maglev
-      mode: "dsr"
-    localRedirectPolicy: true
+      mode: dsr
+    localRedirectPolicies:
+      enabled: true
     operator:
       dashboards:
         enabled: true
@@ -106,3 +107,6 @@ spec:
           - NET_ADMIN
           - SYS_ADMIN
           - SYS_RESOURCE
+    socketLB:
+      enabled: true
+      hostNamespaceOnly: true
