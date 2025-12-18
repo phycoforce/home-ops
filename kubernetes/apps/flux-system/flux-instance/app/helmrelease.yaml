@@ -13,7 +13,7 @@ spec:
     tag: 0.37.0
   url: oci://ghcr.io/controlplaneio-fluxcd/charts/flux-instance
 ---
-# yaml-language-server: $schema=https://raw.githubusercontent.com/fluxcd-community/flux2-schemas/main/helmrelease-helm-v2.json
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/helm.toolkit.fluxcd.io/helmrelease_v2.json
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
@@ -37,7 +37,7 @@ spec:
         - notification-controller
       sync:
         kind: GitRepository
-        url: https://github.com/phycoforce/home-ops.git
+        url: https://github.com/phycoforce/home-ops
         ref: refs/heads/main
         path: kubernetes/flux/cluster
         interval: 1h
