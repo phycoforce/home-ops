@@ -3,7 +3,6 @@ machine:
     diskSelector:
       serial: "S435NA0N502095"
   network:
-    hostname: ontos
     interfaces:
       - #logos
         deviceSelector: { busPath: 0-1.0 }
@@ -17,3 +16,7 @@ machine:
         mtu: 65520
         addresses: [169.254.255.23/32]
         routes: [{ network: 169.254.255.24/32, metric: 2048 }]
+---
+apiVersion: v1alpha1
+kind: HostnameConfig
+hostname: ontos

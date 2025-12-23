@@ -10,7 +10,6 @@ machine:
     {% endif %}
   features:
     rbac: true
-    stableHostname: true
     {% if machinetype == 'controlplane' %}
     kubernetesTalosAPIAccess:
       enabled: true
