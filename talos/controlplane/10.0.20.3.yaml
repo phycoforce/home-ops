@@ -2,21 +2,43 @@ machine:
   install:
     diskSelector:
       serial: "S435NA0N502095"
-  network:
-    interfaces:
-      - #logos
-        deviceSelector: { busPath: 0-1.0 }
-        dhcp: false
-        mtu: 65520
-        addresses: [169.254.255.23/32]
-        routes: [{ network: 169.254.255.22/32, metric: 2048 }]
-      - # pneuma
-        deviceSelector: { busPath: 1-1.0 }
-        dhcp: false
-        mtu: 65520
-        addresses: [169.254.255.23/32]
-        routes: [{ network: 169.254.255.24/32, metric: 2048 }]
 ---
 apiVersion: v1alpha1
 kind: HostnameConfig
 hostname: ontos
+---
+## logos
+apiVersion: v1alpha1
+kind: LinkAliasConfig
+name: ontos-logos
+selector:
+  match: link.bus_path == "0-1.0"
+---
+apiVersion: v1alpha1
+kind: LinkConfig
+name: ontos-logos
+up: true
+mtu: 65520
+addresses:
+  - address: 169.254.255.23/32
+routes:
+  - destination: 169.254.255.22/32
+    metric: 2048
+---
+## Pneuma
+apiVersion: v1alpha1
+kind: LinkAliasConfig
+name: ontos-pneuma
+selector:
+  match: link.bus_path == "1-1.0"
+---
+apiVersion: v1alpha1
+kind: LinkConfig
+name: ontos-pneuma
+up: true
+mtu: 65520
+addresses:
+  - address: 169.254.255.23/32
+routes:
+  - destination: 169.254.255.24/32
+    metric: 2048
