@@ -16,25 +16,37 @@ tasks:
       - talosctl --nodes {{.RANDOM_CONTROLLER}} get machineconfig
       - which yq talosctl
 
+
   apps:
     desc: Bootstrap Kubernetes Apps
+    prompt: Bootstrap Kubernetes Apps ...?
     cmds:
       - kubectl config set-cluster {{.CONTEXT}} --server https://{{.RANDOM_CONTROLLER}}:6443
-      - defer: talosctl kubeconfig --nodes {{.RANDOM_CONTROLLER}} --force-context-name main --force {{.KUBECONFIG}}
+      - defer: talosctl kubeconfig --nodes {{.RANDOM_CONTROLLER}} --force {{.KUBERNETES_DIR}}
       - until kubectl wait nodes --for=condition=Ready=False --all --timeout=10m; do sleep 5; done
-      - op inject --in-file {{.BOOTSTRAP_DIR}}/resources.yaml.tpl | op inject | kubectl apply --server-side --filename -
-      - helmfile --file {{.BOOTSTRAP_DIR}}/helmfile.d/00-crds.yaml template  | kubectl apply --server-side --filename -
-      - helmfile --file {{.BOOTSTRAP_DIR}}/helmfile.d/01-apps.yaml sync --hide-notes
+      - op inject --in-file {{.BOOTSTRAP_DIR}}/resources.yaml.tpl| kubectl apply --server-side --filename -
+      - task: helmfile
     vars:
-      RANDOM_CONTROLLER:
-        sh: talosctl config info --output yaml | yq --exit-status '.endpoints[0]'
       CONTEXT:
         sh: talosctl config info --output json | jq --raw-output '.context'
+      RANDOM_CONTROLLER:
+        sh: talosctl config info --output json | jq --raw-output '.endpoints[]' | shuf -n 1
     preconditions:
       - op whoami --format=json
-      - test -f {{.BOOTSTRAP_DIR}}/helmfile.d/00-crds.yaml
-      - test -f {{.BOOTSTRAP_DIR}}/helmfile.d/01-apps.yaml
-      - test -f {{.BOOTSTRAP_DIR}}/resources.yaml.tpl
       - talosctl config info
       - talosctl --nodes {{.RANDOM_CONTROLLER}} get machineconfig
-      - which yq kubectl talosctl op
+      - test -f {{.BOOTSTRAP_DIR}}/resources.yaml.tpl
+      - which jq kubectl op talosctl
+
+  helmfile:
+    internal: true
+    cmds:
+      - |
+        helmfile --file {{.BOOTSTRAP_DIR}}/helmfile.d/00-crds.yaml template --quiet \
+          | yq ea -e 'select(.kind == "CustomResourceDefinition")' \
+          | kubectl apply --server-side --field-manager bootstrap --force-conflicts --filename -
+      - helmfile --file {{.BOOTSTRAP_DIR}}/helmfile.d/01-apps.yaml sync --hide-notes
+    preconditions:
+      - test -f {{.BOOTSTRAP_DIR}}/helmfile.d/00-crds.yaml
+      - test -f {{.BOOTSTRAP_DIR}}/helmfile.d/01-apps.yaml
+      - which helmfile kubectl yq
