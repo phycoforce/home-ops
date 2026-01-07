@@ -38,7 +38,7 @@ machine:
       permissions: 0o644
       content: |
         [ NFSMount_Global_Options ]
-        nfsvers=4.1
+        nfsvers=4.2
         hard=True
         nconnect=16
         nodiratime=True
@@ -193,7 +193,6 @@ name: bond0
 links:
   - enp2s0f1np1
 bondMode: active-backup
-miimon: 100
 mtu: 9000
 ---
 apiVersion: v1alpha1
