@@ -186,18 +186,12 @@ name: enp89s0
 up: true
 addresses: []
 ---
-apiVersion: v1alpha1
-kind: LinkAliasConfig
-name: net0
-selector:
-  match: link.driver == "i40e" && mac(link.permanent_addr).startsWith("58:47:ca:7f:")
----
 ## 10G
 apiVersion: v1alpha1
 kind: BondConfig
 name: bond0
 links:
-  - net0
+  - enp2s0f1np1
 bondMode: active-backup
 miimon: 100
 mtu: 9000
