@@ -72,11 +72,7 @@ spec:
             namespace: network
     persistence:
       config:
-        existingClaim: sonarr
-      config-cache:
-        existingClaim: sonarr-cache
-        globalMounts:
-          - path: /config/MediaCover
+        existingClaim: "{{ .Release.Name }}"
       media:
         type: nfs
         server: aionios.internal

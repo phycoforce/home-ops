@@ -73,11 +73,7 @@ spec:
             namespace: network
     persistence:
       config:
-        existingClaim: radarr
-      config-cache:
-        existingClaim: radarr-cache
-        globalMounts:
-          - path: /config/MediaCover
+        existingClaim: "{{ .Release.Name }}"
       media:
         type: nfs
         server: aionios.internal
