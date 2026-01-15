@@ -71,6 +71,6 @@ spec:
             namespace: network
     persistence:
       config:
-        existingClaim: prowlarr
+        existingClaim: "{{ .Release.Name }}"
       tmp:
         type: emptyDir

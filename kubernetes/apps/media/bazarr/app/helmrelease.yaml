@@ -66,14 +66,6 @@ spec:
     persistence:
       config:
         existingClaim: "{{ .Release.Name }}"
-      config-cache:
-        type: emptyDir
-        globalMounts:
-          - path: /config/cache
-      config-log:
-        type: emptyDir
-        globalMounts:
-          - path: /config/log
       media:
         type: nfs
         server: aionios.internal

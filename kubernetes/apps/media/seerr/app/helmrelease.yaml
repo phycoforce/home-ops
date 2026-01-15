@@ -73,16 +73,8 @@ spec:
             namespace: network
     persistence:
       config:
-        existingClaim: seerr
+        existingClaim: "{{ .Release.Name }}"
         globalMounts:
           - path: /app/config
-      config-cache:
-        existingClaim: seerr-cache
-        globalMounts:
-          - path: /app/config/cache
-      config-logs:
-        type: emptyDir
-        globalMounts:
-          - path: /app/config/logs
       tmp:
         type: emptyDir
