@@ -55,10 +55,6 @@ spec:
         existingClaim: calibre-web-automated
         globalMounts:
           - path: /config
-      data-cache:
-        existingClaim: calibre-web-automated-cache
-        globalMounts:
-          - path: /cache
       media:
         type: nfs
         server: aionios.internal
