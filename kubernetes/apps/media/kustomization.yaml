@@ -18,3 +18,4 @@ resources:
   - ./recyclarr/ks.yaml
   - ./calibre-web-automated/ks.yaml
   - ./seerr/ks.yaml
+  - ./agregarr/ks.yaml
