@@ -10,6 +10,10 @@ spec:
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
+  privateKey:
+    algorithm: ECDSA
+    size: 384
+    rotationPolicy: Always
   secretName: "${SECRET_DOMAIN/./-}-production-tls"
   usages:
     - digital signature
@@ -26,6 +30,10 @@ spec:
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
+  privateKey:
+    algorithm: ECDSA
+    size: 384
+    rotationPolicy: Always
   secretName: '${SECRET_DOMAIN/./-}-unifi'
   usages:
     - digital signature
@@ -46,6 +54,10 @@ spec:
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
+  privateKey:
+    algorithm: ECDSA
+    size: 384
+    rotationPolicy: Always
   secretName: "${SECRET_DOMAIN_2/./-}-production-tls"
   usages:
     - digital signature
