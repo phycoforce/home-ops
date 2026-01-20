@@ -20,13 +20,15 @@ kind: Certificate
 metadata:
   name: '${SECRET_DOMAIN/./-}-unifi'
 spec:
-  secretName: '${SECRET_DOMAIN/./-}-unifi'
+  dnsNames:
+    - 'unifi.${SECRET_DOMAIN}'
+  duration: 160h
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
-  commonName: 'unifi.${SECRET_DOMAIN}'
-  dnsNames:
-    - 'unifi.${SECRET_DOMAIN}'
+  secretName: '${SECRET_DOMAIN/./-}-unifi'
+  usages:
+    - digital signature
   keystores:
     jks:
       create: true
@@ -39,9 +41,11 @@ kind: Certificate
 metadata:
   name: "${SECRET_DOMAIN_2/./-}-production"
 spec:
-  secretName: "${SECRET_DOMAIN_2/./-}-production-tls"
+  dnsNames: ["${SECRET_DOMAIN_2}", "*.${SECRET_DOMAIN_2}"]
+  duration: 160h
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
-  commonName: "${SECRET_DOMAIN_2}"
-  dnsNames: ["${SECRET_DOMAIN_2}", "*.${SECRET_DOMAIN_2}"]
+  secretName: "${SECRET_DOMAIN_2/./-}-production-tls"
+  usages:
+    - digital signature
