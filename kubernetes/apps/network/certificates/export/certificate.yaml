@@ -5,12 +5,18 @@ kind: Certificate
 metadata:
   name: "${SECRET_DOMAIN/./-}-production"
 spec:
-  secretName: "${SECRET_DOMAIN/./-}-production-tls"
+  dnsNames: ["${SECRET_DOMAIN}", "*.${SECRET_DOMAIN}"]
+  duration: 160h
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
-  commonName: "${SECRET_DOMAIN}"
-  dnsNames: ["${SECRET_DOMAIN}", "*.${SECRET_DOMAIN}"]
+  privateKey:
+    algorithm: ECDSA
+    size: 384
+    rotationPolicy: Always
+  secretName: "${SECRET_DOMAIN/./-}-production-tls"
+  usages:
+    - digital signature
 ---
 # yaml-language-server: $schema=https://schemas.tholinka.dev/cert-manager.io/certificate_v1.json
 apiVersion: cert-manager.io/v1
@@ -18,13 +24,19 @@ kind: Certificate
 metadata:
   name: '${SECRET_DOMAIN/./-}-unifi'
 spec:
-  secretName: '${SECRET_DOMAIN/./-}-unifi'
+  dnsNames:
+    - 'unifi.${SECRET_DOMAIN}'
+  duration: 160h
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
-  commonName: 'unifi.${SECRET_DOMAIN}'
-  dnsNames:
-    - 'unifi.${SECRET_DOMAIN}'
+  privateKey:
+    algorithm: ECDSA
+    size: 384
+    rotationPolicy: Always
+  secretName: '${SECRET_DOMAIN/./-}-unifi'
+  usages:
+    - digital signature
   keystores:
     jks:
       create: true
@@ -37,9 +49,15 @@ kind: Certificate
 metadata:
   name: "${SECRET_DOMAIN_2/./-}-production"
 spec:
-  secretName: "${SECRET_DOMAIN_2/./-}-production-tls"
+  dnsNames: ["${SECRET_DOMAIN_2}", "*.${SECRET_DOMAIN_2}"]
+  duration: 160h
   issuerRef:
     name: letsencrypt-production
     kind: ClusterIssuer
-  commonName: "${SECRET_DOMAIN_2}"
-  dnsNames: ["${SECRET_DOMAIN_2}", "*.${SECRET_DOMAIN_2}"]
+  privateKey:
+    algorithm: ECDSA
+    size: 384
+    rotationPolicy: Always
+  secretName: "${SECRET_DOMAIN_2/./-}-production-tls"
+  usages:
+    - digital signature
