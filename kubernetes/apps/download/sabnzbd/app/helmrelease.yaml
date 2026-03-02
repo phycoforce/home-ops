@@ -22,7 +22,7 @@ spec:
             env:
               SABNZBD__PORT: &port 80
               SABNZBD__HOST_WHITELIST_ENTRIES: >-
-                {{ .Release.Name }}.${SECRET_DOMAIN},
+                {{ .Release.Name }}.${SECRET_DOMAIN}
               TZ: Europe/London
             probes:
               liveness: &probes
