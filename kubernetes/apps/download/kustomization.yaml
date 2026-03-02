@@ -12,3 +12,4 @@ resources:
   - ./calibre-downloader/ks.yaml
   - ./notifier/ks.yaml
   - ./nzbget/ks.yaml
+  - ./sabnzbd/ks.yaml
