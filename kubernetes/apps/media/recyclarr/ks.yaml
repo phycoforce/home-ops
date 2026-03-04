@@ -16,9 +16,6 @@ spec:
     substitute:
       APP: recyclarr
       VOLSYNC_CAPACITY: 1Gi
-    substituteFrom:
-      - name: cluster-secrets
-        kind: Secret
   prune: true
   sourceRef:
     kind: GitRepository
