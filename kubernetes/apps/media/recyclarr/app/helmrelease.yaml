@@ -14,7 +14,7 @@ spec:
       recyclarr:
         type: cronjob
         cronjob:
-          schedule: "@daily"
+          schedule: 0 0 * * *
           backoffLimit: 0
           concurrencyPolicy: Forbid
           successfulJobsHistory: 1
@@ -27,10 +27,12 @@ spec:
               tag: 8.3.2@sha256:55afe316d3e4e4e3b9120cef7c79436b1b5311f6a18d4ef4b7653e720499c90a
             env:
               TZ: Europe/London
+              RECYCLARR_DATA_DIR: /tmp
             envFrom:
               - secretRef:
-                  name: recyclarr-secret
-            args: ["sync"]
+                  name: "{{ .Release.Name }}-secret"
+            args:
+              - sync
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
@@ -60,7 +62,5 @@ spec:
           - path: /config/recyclarr.yml
             subPath: recyclarr.yml
             readOnly: true
-      config-logs:
+      tmp:
         type: emptyDir
-        globalMounts:
-          - path: /config/logs
