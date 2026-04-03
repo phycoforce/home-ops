@@ -13,6 +13,14 @@ releases:
     version: 1.19.2
     values: ['./templates/values.yaml.gotmpl']
     hooks:
+      - # Wait for Cilium CRDs to be available
+        command: bash
+        args:
+          - -c
+          - until kubectl get crd ciliumloadbalancerippools.cilium.io ciliumbgpadvertisements.cilium.io ciliumbgppeerconfigs.cilium.io ciliumbgpclusterconfigs.cilium.io &>/dev/null; do sleep 5; done
+        events:
+          - postsync
+        showlogs: true
       - # Advertise Kube API VIP
         events:
           - 'postsync'
@@ -60,6 +68,11 @@ releases:
     values: ['./templates/values.yaml.gotmpl']
     needs: ['security/external-secrets']
     hooks:
+      - # Wait for ExternalSecrets CRDs to be available
+        command: bash
+        args:
+          - -c
+          - until kubectl get crd clustersecretstores.external-secrets.io &>/dev/null; do sleep 5; done
       - # Apply 1Password Connect Store
         events: ['postsync']
         command: kubectl
@@ -67,7 +80,6 @@ releases:
           - apply
           - --server-side
           - --field-manager=kustomize-controller
-          - --kustomize
           - --filename=../../kubernetes/apps/security/onepassword-connect/app/clustersecretstore.yaml
         showlogs: true
 
