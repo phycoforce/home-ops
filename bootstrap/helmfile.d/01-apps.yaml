@@ -46,6 +46,31 @@ releases:
     values: ['./templates/values.yaml.gotmpl']
     needs: ['kube-system/spegel']
 
+  - name: external-secrets
+    namespace: security
+    chart: oci://ghcr.io/external-secrets/charts/external-secrets
+    version: 2.2.0
+    values: ['./templates/values.yaml.gotmpl']
+    needs: ['cert-manager/cert-manager']
+
+  - name: onepassword-connect
+    namespace: security
+    chart: oci://ghcr.io/1password/connect
+    version: 2.4.1
+    values: ['./templates/values.yaml.gotmpl']
+    needs: ['security/external-secrets']
+    hooks:
+      - # Apply 1Password Connect Store
+        events: ['postsync']
+        command: kubectl
+        args:
+          - apply
+          - --server-side
+          - --field-manager=kustomize-controller
+          - --kustomize
+          - --filename=../../kubernetes/apps/security/onepassword-connect/app/clustersecretstore.yaml
+        showlogs: true
+
   - name: flux-operator
     namespace: flux-system
     chart: oci://ghcr.io/controlplaneio-fluxcd/charts/flux-operator
