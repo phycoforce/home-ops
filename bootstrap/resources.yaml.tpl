@@ -7,10 +7,17 @@ metadata:
 apiVersion: v1
 kind: Secret
 metadata:
-  name: onepassword-secret
+  name: onepassword-connect-credentials-secret
   namespace: security
 stringData:
-  1password-credentials.json: op://kubernetes/1password/OP_CREDENTIALS_JSON
+  1password-credentials.json: 'op://kubernetes/1password/OP_CREDENTIALS_JSON' # quote
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: onepassword-connect-vault-secret
+  namespace: security
+stringData:
   token: op://kubernetes/1password/OP_CONNECT_TOKEN
 ---
 apiVersion: v1
