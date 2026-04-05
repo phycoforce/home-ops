@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: dragonfly-operator
+  name: &app dragonfly-operator
 spec:
   chartRef:
     kind: OCIRepository
@@ -12,30 +12,17 @@ spec:
   values:
     controllers:
       dragonfly-operator:
+        replicas: 1
+        serviceAccount:
+          identifier: *app
         strategy: RollingUpdate
-        pod:
-          labels:
-            # required for the operator to determine a primary in each deployed cluster
-            # ref: https://deepwiki.com/dragonflydb/dragonfly-operator/2.2-manual-installation#namespace-resource
-            control-plane: controller-manager
-          securityContext:
-            runAsNonRoot: true
-            runAsUser: 65534
-            runAsGroup: 65534
-            seccompProfile: { type: RuntimeDefault }
-          topologySpreadConstraints:
-            - maxSkew: 1
-              topologyKey: kubernetes.io/hostname
-              whenUnsatisfiable: DoNotSchedule
-              labelSelector:
-                matchLabels:
-                  app.kubernetes.io/name: dragonfly-operator
         containers:
           app:
             image:
               repository: ghcr.io/dragonflydb/operator
               tag: v1.5.0@sha256:2ceb0128302cd7756b743cc5d56ec9479fb08163b5c563897045a4e5e1555f02
-            command: ["/manager"]
+            command:
+              - "/manager"
             args:
               - --health-probe-bind-address=:8081
               - --metrics-bind-address=:8080
@@ -70,12 +57,26 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
-        serviceAccount:
-          identifier: dragonfly-operator
+              capabilities: {drop: ["ALL"]}
+        pod:
+          labels:
+            # required for the operator to determine a primary in each deployed cluster
+            # ref: https://deepwiki.com/dragonflydb/dragonfly-operator/2.2-manual-installation#namespace-resource
+            control-plane: controller-manager
+          securityContext:
+            runAsUser: 65534
+            runAsGroup: 65534
+            runAsNonRoot: true
+          topologySpreadConstraints:
+            - maxSkew: 1
+              topologyKey: kubernetes.io/hostname
+              whenUnsatisfiable: DoNotSchedule
+              labelSelector:
+                matchLabels:
+                  app.kubernetes.io/name: *app
     service:
       app:
-        controller: dragonfly-operator
+        controller: *app
         ports:
           http:
             port: *port
@@ -83,12 +84,15 @@ spec:
             port: 8080
     serviceMonitor:
       app:
+        serviceName: *app
         endpoints:
           - port: metrics
             scheme: http
             path: /metrics
             interval: 1m
             scrapeTimeout: 10s
+    serviceAccount:
+      dragonfly-operator: {}
   postRenderers:
     - kustomize:
         patches:
@@ -97,6 +101,6 @@ spec:
               kind: ServiceMonitor
               metadata:
                 name: dragonfly-operator
-                namespace: database
+                namespace: dbms
               spec:
                 fallbackScrapeProtocol: PrometheusText1.0.0
