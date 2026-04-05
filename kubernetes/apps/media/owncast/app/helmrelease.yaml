@@ -11,7 +11,7 @@ spec:
   interval: 1h
   values:
     controllers:
-      radarr:
+      owncast:
         annotations:
           reloader.stakater.com/auto: "true"
         pod:
