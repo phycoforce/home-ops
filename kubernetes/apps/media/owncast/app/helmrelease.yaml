@@ -57,6 +57,10 @@ spec:
         ports:
           http:
             port: *port
+          rtmp:
+            enabled: true
+            port: 1935
+            protocol: TCP
     route:
       app:
         hostnames: ["stream.${SECRET_DOMAIN_2}"]
