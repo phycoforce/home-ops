@@ -65,7 +65,7 @@ spec:
       app:
         hostnames: ["stream.${SECRET_DOMAIN_2}"]
         parentRefs:
-          - name: envoy-internal
+          - name: envoy-external
             namespace: network
     persistence:
       config:
