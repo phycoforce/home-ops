@@ -86,6 +86,7 @@ spec:
     txtPrefix: k8s.
     domainFilters:
       - ${SECRET_DOMAIN}
+      - ${SECRET_DOMAIN_2}
     serviceMonitor:
       enabled: true
     podAnnotations:
