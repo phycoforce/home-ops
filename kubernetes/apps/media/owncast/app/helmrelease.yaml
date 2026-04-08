@@ -86,3 +86,7 @@ spec:
     persistence:
       config:
         existingClaim: "{{ .Release.Name }}"
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /config/data/logs
