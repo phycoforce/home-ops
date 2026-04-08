@@ -26,7 +26,7 @@ spec:
           app:
             image:
               repository: owncast/owncast
-              tag: 0.2.4@sha256:cb4a40887211a00ebfda430025248d879700a710f1e6ff2821dfa251050a408c
+              tag: 0.2.4@sha256:0138977cbfaf130ec472c773e07314c8bf3c67b1f20d1c52c8086688227eb4ba
             env:
               TZ: Europe/London
             securityContext:
