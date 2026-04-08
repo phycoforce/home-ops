@@ -21,6 +21,7 @@ spec:
             runAsGroup: 1001
             fsGroup: 1001
             fsGroupChangePolicy: OnRootMismatch
+            supplementalGroups: [44, 10000]
             seccompProfile: { type: RuntimeDefault }
         containers:
           app:
