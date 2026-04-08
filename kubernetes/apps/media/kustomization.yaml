@@ -19,4 +19,4 @@ resources:
   - ./calibre-web-automated/ks.yaml
   - ./seerr/ks.yaml
   - ./agregarr/ks.yaml
-  - ./owncast/ks.yaml
+  #- ./owncast/ks.yaml
