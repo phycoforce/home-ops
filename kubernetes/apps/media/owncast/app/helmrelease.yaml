@@ -25,8 +25,8 @@ spec:
         containers:
           app:
             image:
-              repository: owncast/owncast
-              tag: 0.2.4@sha256:cb4a40887211a00ebfda430025248d879700a710f1e6ff2821dfa251050a408c
+              repository: ghcr.io/phycoforce/owncast
+              tag: 0.2.4@sha256:d2be86f16c9e43528553003b3b1575192bdc960830a5f456b89706b8f8bdbfc1
             env:
               TZ: Europe/London
             securityContext:
