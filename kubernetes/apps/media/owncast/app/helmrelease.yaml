@@ -47,11 +47,17 @@ spec:
                   failureThreshold: 3
               readiness: *probes
             resources:
+              claims:
+                - name: gpu
               requests:
                 cpu: 100m
                 #memory: 250Mi
               limits:
                 memory: 1Gi
+    defaultPodOptions:
+      resourceClaims:
+        - name: gpu
+          resourceClaimTemplateName: owncast-gpu
     service:
       app:
         ports:
