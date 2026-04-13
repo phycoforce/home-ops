@@ -26,7 +26,7 @@ spec:
           app:
             image:
               repository: vaultwarden/server
-              tag: 1.35.5@sha256:b0be02bdc08fde3ce253d01be2b5bf9ba0add2ae6f029fbacc096fd65af0a2b8
+              tag: 1.35.7@sha256:9a8eec71f4a52411cc43edc7a50f33e9b6f62b5baca0dd95f0c6e7fd60f1a341
             env:
               DOMAIN: https://bitwarden.${SECRET_DOMAIN}
               TZ: Europe/London
