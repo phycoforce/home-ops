@@ -19,3 +19,4 @@ resources:
   - ./seerr/ks.yaml
   - ./agregarr/ks.yaml
   - ./owncast/ks.yaml
+  - ./bookboss/ks.yaml
