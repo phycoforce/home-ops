@@ -76,7 +76,7 @@ spec:
         existingClaim: shelfmark
       nfs-nas-media:
         type: nfs
-        server: aionios.inernal
+        server: aionios.internal
         path: /mnt/mechonis/media
         advancedMounts:
           shelfmark:
