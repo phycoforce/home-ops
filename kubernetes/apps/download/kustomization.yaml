@@ -9,6 +9,6 @@ replacements:
   - path: ../../components/replacements/ks.yaml
 resources:
   - ./slskd/ks.yaml
-  - ./calibre-downloader/ks.yaml
+  - ./shelfmark/ks.yaml
   - ./notifier/ks.yaml
   - ./sabnzbd/ks.yaml
