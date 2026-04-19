@@ -27,7 +27,7 @@ spec:
           app:
             image:
               repository: ghcr.io/phycoforce/owncast
-              tag: 0.2.4@sha256:1ba7e45fa20cdef005ebd4bda8b3761323afd9608df036e0fef1361a1536520c
+              tag: 0.2.5@sha256:3c474e921381211f74be1b580ac77461359ba015dd2fda2d3ff8ca7c8ac3cea1
             env:
               TZ: Europe/London
             securityContext:
