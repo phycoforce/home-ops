@@ -79,7 +79,5 @@ spec:
         path: /mnt/mechonis/media
         globalMounts:
           - path: /media
-          - path: /media/Downloads/soulseek
-            subPath: Downloads/soulseek
       tmp:
          type: emptyDir
