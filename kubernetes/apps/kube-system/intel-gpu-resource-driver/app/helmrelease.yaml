@@ -25,5 +25,5 @@ spec:
   interval: 1h
   values:
     cdi:
-      staticPath: /run/static
-      dynamicPath: /run/dynamic
+      staticPath: /run/cdi
+      dynamicPath: /run/cdi
