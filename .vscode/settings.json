@@ -53,6 +53,7 @@
       "file:///home/aaron/Documents/home-ops/talos/controlplane/10.0.20.14.yaml",
       "file:///home/aaron/Documents/home-ops/talos/controlplane/10.0.20.3.yaml",
       "file:///home/aaron/Documents/home-ops/talos/controlplane/10.0.20.4.yaml"
-    ]
+    ],
+    "https://raw.githubusercontent.com/yannh/kubernetes-json-schema/refs/heads/master/v1.36.0/mutatingadmissionpolicybinding-admissionregistration-v1.json": "file:///home/aaron/Documents/home-ops/kubernetes/apps/volsync-system/volsync/app/mutatingadmissionpolicy.yaml"
   }
 }
