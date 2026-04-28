@@ -6,11 +6,10 @@ metadata:
   name: prometheus-adapter
 spec:
   interval: 1h
-  path: ./kubernetes/apps/obversability/prometheus-adapter/app
+  path: ./kubernetes/apps/observability/prometheus-adapter/app
   prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  targetNamespace: obversability
-  wait: false
+  wait: true
