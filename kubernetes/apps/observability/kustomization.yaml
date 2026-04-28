@@ -19,3 +19,4 @@ resources:
   - ./teslamate/ks.yaml
   - ./silence-operator/ks.yaml
   - ./kromgo/ks.yaml
+  - ./prometheus-adapter/ks.yaml
