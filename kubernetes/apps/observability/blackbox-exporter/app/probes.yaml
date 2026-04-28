@@ -11,7 +11,7 @@ spec:
   targets:
     staticConfig:
       static:
-        - aionois.internal
+        - aionios.internal
   metricRelabelings:
     - targetLabel: service
       replacement: blackbox-exporter
