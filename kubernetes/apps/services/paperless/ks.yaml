@@ -16,6 +16,8 @@ spec:
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
+    substitute:
+      APP: paperless
   prune: true
   sourceRef:
     kind: GitRepository

@@ -16,6 +16,8 @@ spec:
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
+    substitute:
+      APP: slskd
   prune: true
   sourceRef:
     kind: GitRepository
