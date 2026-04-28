@@ -1,9 +1,9 @@
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.coreos.com/probe_v1.json
 ---
-kind: Probe
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.coreos.com/probe_v1.json
 apiVersion: monitoring.coreos.com/v1
+kind: Probe
 metadata:
-  name: devices
+  name: icmp
 spec:
   module: icmp
   prober:
@@ -11,13 +11,17 @@ spec:
   targets:
     staticConfig:
       static:
-        - aionios.internal
+        - aionois.internal
+  metricRelabelings:
+    - targetLabel: service
+      replacement: blackbox-exporter
+      action: replace
 ---
 # yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.coreos.com/probe_v1.json
 apiVersion: monitoring.coreos.com/v1
 kind: Probe
 metadata:
-  name: lan-nfs
+  name: nfs
 spec:
   jobName: nfs_probe
   module: tcp_connect
@@ -29,5 +33,5 @@ spec:
         - aionios.internal:2049
   metricRelabelings:
     - targetLabel: service
-      replacement: blackbox-exporter-lan
+      replacement: blackbox-exporter
       action: replace
