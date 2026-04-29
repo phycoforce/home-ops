@@ -51,3 +51,13 @@ spec:
     - name: alertname
       value: CephNodeNetworkPacketErrors
       isRegex: false
+---
+# yaml-language-server: $schema=https://kube-schemas.pages.dev/monitoring.giantswarm.io/silence_v1alpha1.json
+apiVersion: observability.giantswarm.io/v1alpha2
+kind: Silence
+metadata:
+  name: hpa-maxed-out
+spec:
+  matchers:
+    - name: alertname
+      value: KubeHpaMaxedOut
