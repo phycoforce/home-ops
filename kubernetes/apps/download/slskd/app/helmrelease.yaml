@@ -28,23 +28,32 @@ spec:
               SLSKD_NO_AUTH: true
               SLSKD_NO_HTTPS: true
               SLSKD_NO_VERSION_CHECK: true
-              SLSKD_SLSK_LISTEN_PORT: 50429
+              SLSKD_SLSK_LISTEN_PORT: &soulseekPort 50429
             envFrom:
               - secretRef:
                   name: "{{ .Release.Name }}-secret"
             probes:
-              liveness: &probes
+              liveness:
+                enabled: true
+                spec:
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 5
+              readiness:
                 enabled: true
                 custom: true
                 spec:
                   httpGet:
                     path: /health
                     port: *port
-                  initialDelaySeconds: 0
                   periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
-              readiness: *probes
+                  timeoutSeconds: 5
+                  failureThreshold: 5
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 10
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
@@ -70,9 +79,20 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
     service:
       app:
+        forceRename: "{{ .Release.Name }}"
+        primary: true
         ports:
           http:
             port: *port
+      soulseek:
+        type: LoadBalancer
+        annotations:
+          lbipam.cilium.io/ips: 10.0.20.247
+        externalTrafficPolicy: Local
+        ports:
+          soulseek-tcp:
+            port: *soulseekPort
+            protocol: TCP
     route:
       app:
         hostnames:
