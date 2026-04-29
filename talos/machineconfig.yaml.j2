@@ -128,7 +128,9 @@ cluster:
     disablePodSecurityPolicy: true
   controllerManager:
     image: registry.k8s.io/kube-controller-manager:v1.36.0
-    extraArgs: { bind-address: 0.0.0.0 }
+    extraArgs:
+      bind-address: 0.0.0.0
+      feature-gates: HPAScaleToZero=true
   coreDNS: { disabled: true }
   etcd:
     advertisedSubnets: ["10.0.20.0/24"]
