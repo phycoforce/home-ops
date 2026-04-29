@@ -18,6 +18,7 @@ spec:
         kind: Secret
     substitute:
       APP: slskd
+      CONTROLLER: StatefulSet
   prune: true
   sourceRef:
     kind: GitRepository
