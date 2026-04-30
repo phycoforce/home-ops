@@ -5,8 +5,6 @@ kind: Kustomization
 namespace: llm
 components:
   - ../../components/namespace
-replacements:
-  - path: ../../components/replacements/ks.yaml
 resources:
   - ./open-webui/ks.yaml
   - ./searxng/ks.yaml

@@ -5,8 +5,6 @@ kind: Kustomization
 namespace: network
 components:
   - ../../components/namespace
-replacements:
-  - path: ../../components/replacements/ks.yaml
 resources:
   - ./cloudflared/ks.yaml
   - ./echo-server/ks.yaml
