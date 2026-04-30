@@ -6,7 +6,6 @@ metadata:
   name: plex
 spec:
   components:
-    - ../../../../components/gpu
     - ../../../../components/volsync
     - ../../../../components/zeroscaler
   dependsOn:

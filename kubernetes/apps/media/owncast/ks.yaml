@@ -6,7 +6,6 @@ metadata:
   name: owncast
 spec:
   components:
-    - ../../../../components/gpu
     - ../../../../components/volsync
   dependsOn:
     - name: rook-ceph-cluster

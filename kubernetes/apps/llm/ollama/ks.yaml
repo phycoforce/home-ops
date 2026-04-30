@@ -5,8 +5,6 @@ kind: Kustomization
 metadata:
   name: ollama
 spec:
-  components:
-    - ../../../../components/gpu
   dependsOn:
     - name: intel-gpu-resource-driver
       namespace: kube-system
