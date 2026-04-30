@@ -6,11 +6,11 @@ kubeconfig
 talosconfig
 .decrypted~*.yaml
 .config.env
+.secrets.yaml
+.secrets.env
 *.agekey
 *.pub
 *.key
-onepassword.env
-talosconfig
 # Private
 .private
 .bin

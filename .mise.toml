@@ -1,18 +1,13 @@
 [env]
-#_.python.venv = { path = "{{config_root}}/.venv", create = true }
+# File Paths
 KUBECONFIG = "{{config_root}}/kubeconfig"
 MINIJINJA_CONFIG_FILE = "{{config_root}}/.minijinja.toml"
 SOPS_AGE_KEY_FILE = "{{config_root}}/age.key"
 TALOSCONFIG = "{{config_root}}/talosconfig"
-# Included file paths
-_.file = [
-  "{{config_root}}/onepassword.env",
-  "{{config_root}}/kubernetes/apps/system-upgrade/versions.env"
-]
 
-#[tasks.deps]
-#description = "Install dependencies"
-#run = "uv pip install -r requirements.txt"
+_.file = [
+  "{{config_root}}/.secrets.env",
+]
 
 [tools]
 "uv" = "latest"
