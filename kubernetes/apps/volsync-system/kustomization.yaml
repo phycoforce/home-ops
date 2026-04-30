@@ -5,8 +5,6 @@ kind: Kustomization
 namespace: volsync-system
 components:
   - ../../components/namespace
-replacements:
-  - path: ../../components/replacements/ks.yaml
 resources:
   - ./snapshot-controller/ks.yaml
   - ./volsync/ks.yaml

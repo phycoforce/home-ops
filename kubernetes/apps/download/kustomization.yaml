@@ -5,8 +5,6 @@ kind: Kustomization
 namespace: download
 components:
   - ../../components/namespace
-replacements:
-  - path: ../../components/replacements/ks.yaml
 resources:
   - ./slskd/ks.yaml
   - ./shelfmark/ks.yaml

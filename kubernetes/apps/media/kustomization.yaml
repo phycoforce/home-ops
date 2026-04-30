@@ -5,8 +5,6 @@ kind: Kustomization
 namespace: media
 components:
   - ../../components/namespace
-replacements:
-  - path: ../../components/replacements/ks.yaml
 resources:
   - ./sonarr/ks.yaml
   - ./radarr/ks.yaml

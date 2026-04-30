@@ -24,3 +24,4 @@ spec:
     name: flux-system
     namespace: flux-system
   wait: false
+  targetNamespace: llm

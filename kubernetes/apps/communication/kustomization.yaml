@@ -5,7 +5,5 @@ kind: Kustomization
 namespace: communication
 components:
   - ../../components/namespace
-replacements:
-  - path: ../../components/replacements/ks.yaml
 resources:
   - ./tuwunel/ks.yaml
