@@ -1,13 +1,10 @@
 ---
-# yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: volsync-system
 components:
-  - ../../components/namespace
-replacements:
-  - path: ../../components/replacements/ks.yaml
+- ../../components/namespace
 resources:
-  - ./snapshot-controller/ks.yaml
-  - ./volsync/ks.yaml
-  - ./kopia/ks.yaml
+- ./snapshot-controller/ks.yaml
+- ./volsync/ks.yaml
+- ./kopia/ks.yaml

@@ -1,5 +1,4 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
@@ -16,26 +15,27 @@ spec:
     name: flux-system
     namespace: flux-system
   wait: false
+  targetNamespace: network
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: squid
 spec:
   dependsOn:
-    - name: squid-secrets
+  - name: squid-secrets
   interval: 1h
   path: ./kubernetes/apps/network/squid/app
   postBuild:
     substitute:
       APP: squid
     substituteFrom:
-      - name: squid-secret
-        kind: Secret
+    - name: squid-secret
+      kind: Secret
   prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
   wait: false
+  targetNamespace: network

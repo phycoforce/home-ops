@@ -12,6 +12,7 @@ spec:
     name: flux-system
     namespace: flux-system
   wait: true
+  targetNamespace: database
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -19,14 +20,13 @@ metadata:
   name: cloudnative-pg-barman-cloud
 spec:
   dependsOn:
-    - name: cert-manager
-      namespace: cert-manager
-    - name: cloudnative-pg
+  - name: cert-manager
+    namespace: cert-manager
+  - name: cloudnative-pg
   interval: 1h
   path: ./kubernetes/apps/database/cloudnative-pg/barman-cloud
   postBuild:
     substitute:
-      # renovate: datasource=docker depName=ghcr.io/cloudnative-pg/plugin-barman-cloud-sidecar
       SIDECAR_IMAGE_VERSION: v0.12.0
   prune: true
   sourceRef:
@@ -34,6 +34,7 @@ spec:
     name: flux-system
     namespace: flux-system
   wait: true
+  targetNamespace: database
 ---
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
@@ -41,26 +42,26 @@ metadata:
   name: cloudnative-pg-cluster
 spec:
   dependsOn:
-    - name: cloudnative-pg
-    - name: cloudnative-pg-barman-cloud
-    - name: external-secrets
-      namespace: security
-    - name: openebs
-      namespace: openebs-system
+  - name: cloudnative-pg
+  - name: cloudnative-pg-barman-cloud
+  - name: external-secrets
+    namespace: security
+  - name: openebs
+    namespace: openebs-system
   healthCheckExprs:
-    - apiVersion: postgresql.cnpg.io/v1
-      kind: Cluster
-      failed: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'False')
-      current: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'True')
+  - apiVersion: postgresql.cnpg.io/v1
+    kind: Cluster
+    failed: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'False')
+    current: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'True')
   interval: 1h
   path: ./kubernetes/apps/database/cloudnative-pg/cluster
   postBuild:
     substitute:
-      # renovate: datasource=docker depName=ghcr.io/cloudnative-pg/postgresql
-      POSTGRESQL_VERSION: "16.8"
+      POSTGRESQL_VERSION: '16.8'
   prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
   wait: true
+  targetNamespace: database

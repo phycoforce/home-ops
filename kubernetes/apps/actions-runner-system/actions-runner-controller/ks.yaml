@@ -1,5 +1,4 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
@@ -13,17 +12,17 @@ spec:
     name: flux-system
     namespace: flux-system
   wait: true
+  targetNamespace: actions-runner-system
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: actions-runner-controller-runners
 spec:
   dependsOn:
-    - name: actions-runner-controller
-    - name: openebs
-      namespace: openebs-system
+  - name: actions-runner-controller
+  - name: openebs
+    namespace: openebs-system
   interval: 1h
   path: ./kubernetes/apps/actions-runner-system/actions-runner-controller/runners
   prune: true
@@ -32,3 +31,4 @@ spec:
     name: flux-system
     namespace: flux-system
   wait: false
+  targetNamespace: actions-runner-system

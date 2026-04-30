@@ -1,22 +1,19 @@
 ---
-# yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: media
 components:
-  - ../../components/namespace
-replacements:
-  - path: ../../components/replacements/ks.yaml
+- ../../components/namespace
 resources:
-  - ./sonarr/ks.yaml
-  - ./radarr/ks.yaml
-  - ./bazarr/ks.yaml
-  - ./prowlarr/ks.yaml
-  - ./lidarr/ks.yaml
-  - ./plex/ks.yaml
-  - ./tautulli/ks.yaml
-  - ./recyclarr/ks.yaml
-  - ./seerr/ks.yaml
-  - ./agregarr/ks.yaml
-  - ./owncast/ks.yaml
-  - ./bookboss/ks.yaml
+- ./sonarr/ks.yaml
+- ./radarr/ks.yaml
+- ./bazarr/ks.yaml
+- ./prowlarr/ks.yaml
+- ./lidarr/ks.yaml
+- ./plex/ks.yaml
+- ./tautulli/ks.yaml
+- ./recyclarr/ks.yaml
+- ./seerr/ks.yaml
+- ./agregarr/ks.yaml
+- ./owncast/ks.yaml
+- ./bookboss/ks.yaml

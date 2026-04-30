@@ -1,19 +1,18 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: plex
 spec:
   components:
-    - ../../../../components/gpu
-    - ../../../../components/volsync
-    - ../../../../components/zeroscaler
+  - ../../../../components/gpu
+  - ../../../../components/volsync
+  - ../../../../components/zeroscaler
   dependsOn:
-    - name: rook-ceph-cluster
-      namespace: rook-ceph
-    - name: intel-gpu-resource-driver
-      namespace: kube-system
+  - name: rook-ceph-cluster
+    namespace: rook-ceph
+  - name: intel-gpu-resource-driver
+    namespace: kube-system
   interval: 1h
   path: ./kubernetes/apps/media/plex/app
   postBuild:
@@ -21,11 +20,12 @@ spec:
       APP: plex
       VOLSYNC_CAPACITY: 15Gi
     substituteFrom:
-      - name: cluster-secrets
-        kind: Secret
+    - name: cluster-secrets
+      kind: Secret
   prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
   wait: false
+  targetNamespace: media

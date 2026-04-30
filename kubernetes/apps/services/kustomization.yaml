@@ -1,14 +1,12 @@
-# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+---
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: services
 components:
-  - ../../components/namespace
-replacements:
-  - path: ../../components/replacements/ks.yaml
+- ../../components/namespace
 resources:
-  - ./paperless/ks.yaml
-  - ./it-tools/ks.yaml
-  - ./home-assistant/ks.yaml
-  - ./karakeep/ks.yaml
-  - ./wastebin/ks.yaml
+- ./paperless/ks.yaml
+- ./it-tools/ks.yaml
+- ./home-assistant/ks.yaml
+- ./karakeep/ks.yaml
+- ./wastebin/ks.yaml

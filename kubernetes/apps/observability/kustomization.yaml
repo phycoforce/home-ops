@@ -1,22 +1,19 @@
 ---
-# yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: observability
 components:
-  - ../../components/namespace
-replacements:
-  - path: ../../components/replacements/ks.yaml
+- ../../components/namespace
 resources:
-  - ./gatus/ks.yaml
-  - ./kube-prometheus-stack/ks.yaml
-  - ./victoria-logs/ks.yaml
-  - ./fluent-bit/ks.yaml
-  - ./blackbox-exporter/ks.yaml
-  - ./grafana/ks.yaml
-  - ./nut-exporter/ks.yaml
-  - ./smartctl-exporter/ks.yaml
-  - ./teslamate/ks.yaml
-  - ./silence-operator/ks.yaml
-  - ./kromgo/ks.yaml
-  - ./prometheus-adapter/ks.yaml
+- ./gatus/ks.yaml
+- ./kube-prometheus-stack/ks.yaml
+- ./victoria-logs/ks.yaml
+- ./fluent-bit/ks.yaml
+- ./blackbox-exporter/ks.yaml
+- ./grafana/ks.yaml
+- ./nut-exporter/ks.yaml
+- ./smartctl-exporter/ks.yaml
+- ./teslamate/ks.yaml
+- ./silence-operator/ks.yaml
+- ./kromgo/ks.yaml
+- ./prometheus-adapter/ks.yaml

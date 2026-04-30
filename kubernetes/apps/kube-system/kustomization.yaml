@@ -1,18 +1,15 @@
 ---
-# yaml-language-server: $schema=https://json.schemastore.org/kustomization
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 namespace: kube-system
 components:
-  - ../../components/namespace
-replacements:
-  - path: ../../components/replacements/ks.yaml
+- ../../components/namespace
 resources:
-  - ./cilium/ks.yaml
-  - ./coredns/ks.yaml
-  - ./metrics-server/ks.yaml
-  - ./reloader/ks.yaml
-  - ./spegel/ks.yaml
-  - ./intel-gpu-resource-driver/ks.yaml
-  - ./descheduler/ks.yaml
-  - ./irqbalance/ks.yaml
+- ./cilium/ks.yaml
+- ./coredns/ks.yaml
+- ./metrics-server/ks.yaml
+- ./reloader/ks.yaml
+- ./spegel/ks.yaml
+- ./intel-gpu-resource-driver/ks.yaml
+- ./descheduler/ks.yaml
+- ./irqbalance/ks.yaml

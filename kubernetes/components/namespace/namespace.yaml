@@ -5,6 +5,6 @@ metadata:
   name: not-used
   annotations:
     kustomize.toolkit.fluxcd.io/prune: disabled
-    volsync.backube/privileged-movers: "true"
+    volsync.backube/privileged-movers: 'true'
   labels:
-    resource.kubernetes.io/admin-access: "true"
+    resource.kubernetes.io/admin-access: 'true'

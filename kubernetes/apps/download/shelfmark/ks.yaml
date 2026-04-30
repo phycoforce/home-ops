@@ -1,19 +1,18 @@
 ---
-# yaml-language-server: $schema=https://schemas.tholinka.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: shelfmark
 spec:
   components:
-    - ../../../../components/volsync
-    - ../../../../components/zeroscaler
+  - ../../../../components/volsync
+  - ../../../../components/zeroscaler
   interval: 1h
   path: ./kubernetes/apps/download/shelfmark/app
   postBuild:
     substituteFrom:
-      - name: cluster-secrets
-        kind: Secret
+    - name: cluster-secrets
+      kind: Secret
     substitute:
       APP: shelfmark
   prune: true
@@ -22,3 +21,4 @@ spec:
     name: flux-system
     namespace: flux-system
   wait: false
+  targetNamespace: download

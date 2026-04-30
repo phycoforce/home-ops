@@ -1,21 +1,20 @@
 ---
-# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/kustomize.toolkit.fluxcd.io/kustomization_v1.json
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
   name: paperless
 spec:
   components:
-    - ../../../../components/zeroscaler
+  - ../../../../components/zeroscaler
   dependsOn:
-    - name: cloudnative-pg-cluster
-      namespace: database
+  - name: cloudnative-pg-cluster
+    namespace: database
   interval: 1h
   path: ./kubernetes/apps/services/paperless/app
   postBuild:
     substituteFrom:
-      - name: cluster-secrets
-        kind: Secret
+    - name: cluster-secrets
+      kind: Secret
     substitute:
       APP: paperless
   prune: true
@@ -24,3 +23,4 @@ spec:
     name: flux-system
     namespace: flux-system
   wait: false
+  targetNamespace: services
