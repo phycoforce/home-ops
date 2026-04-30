@@ -26,3 +26,5 @@ Brewfile.lock.json
 wiki
 # Bootstrap
 /config.yaml
+#LLM
+AGENTS.md
