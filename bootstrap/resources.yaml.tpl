@@ -50,3 +50,12 @@ apiVersion: v1
 kind: Namespace
 metadata:
   name: observability
+---
+apiVersion: v1
+kind: Secret
+metadata:
+  name: cluster-secrets
+  namespace: flux-system
+stringData:
+  SECRET_DOMAIN: op://kubernetes/cluster_secrets/SECRET_DOMAIN
+  SECRET_DOMAIN_2: op://kubernetes/cluster_secrets/SECRET_DOMAIN_2
