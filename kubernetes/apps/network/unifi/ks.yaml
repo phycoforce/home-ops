@@ -17,6 +17,9 @@ spec:
     substitute:
       APP: unifi
       VOLSYNC_CAPACITY: 10Gi
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
   prune: true
   sourceRef:
     kind: GitRepository

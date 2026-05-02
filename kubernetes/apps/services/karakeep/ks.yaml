@@ -15,6 +15,9 @@ spec:
   postBuild:
     substitute:
       APP: karakeep
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
   prune: true
   sourceRef:
     kind: GitRepository
