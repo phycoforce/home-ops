@@ -16,6 +16,9 @@ spec:
     substitute:
       APP: vaultwarden
       VOLSYNC_CAPACITY: 1Gi
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
   prune: true
   sourceRef:
     kind: GitRepository

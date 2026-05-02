@@ -17,6 +17,9 @@ spec:
     substitute:
       APP: radarr
       VOLSYNC_CAPACITY: 5Gi
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
   prune: true
   sourceRef:
     kind: GitRepository

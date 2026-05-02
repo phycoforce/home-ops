@@ -8,6 +8,9 @@ spec:
   interval: 1h
   path: ./kubernetes/apps/download/notifier/app
   postBuild:
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
   prune: true
   sourceRef:
     kind: GitRepository
