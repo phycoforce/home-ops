@@ -41,10 +41,6 @@ spec:
       current: status.ceph.health in ['HEALTH_OK', 'HEALTH_WARN']
   interval: 1h
   path: ./kubernetes/apps/rook-ceph/rook-ceph/cluster
-  postBuild:
-    substituteFrom:
-      - name: cluster-secrets
-        kind: Secret
   prune: true
   sourceRef:
     kind: GitRepository

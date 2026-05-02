@@ -16,9 +16,6 @@ spec:
     substitute:
       APP: tuwunel
       VOLSYNC_CAPACITY: 15Gi
-    substituteFrom:
-      - name: cluster-secrets
-        kind: Secret
   prune: true
   sourceRef:
     kind: GitRepository

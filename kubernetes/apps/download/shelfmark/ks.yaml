@@ -11,9 +11,6 @@ spec:
   interval: 1h
   path: ./kubernetes/apps/download/shelfmark/app
   postBuild:
-    substituteFrom:
-      - name: cluster-secrets
-        kind: Secret
     substitute:
       APP: shelfmark
   prune: true

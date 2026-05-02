@@ -13,9 +13,6 @@ spec:
   interval: 1h
   path: ./kubernetes/apps/download/slskd/app
   postBuild:
-    substituteFrom:
-      - name: cluster-secrets
-        kind: Secret
     substitute:
       APP: slskd
       CONTROLLER: StatefulSet
