@@ -9,7 +9,6 @@ resources:
   - ./gatus/ks.yaml
   - ./kube-prometheus-stack/ks.yaml
   - ./victoria-logs/ks.yaml
-  - ./fluent-bit/ks.yaml
   - ./blackbox-exporter/ks.yaml
   - ./grafana/ks.yaml
   - ./nut-exporter/ks.yaml
