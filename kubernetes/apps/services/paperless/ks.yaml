@@ -13,9 +13,6 @@ spec:
   interval: 1h
   path: ./kubernetes/apps/services/paperless/app
   postBuild:
-    substituteFrom:
-      - name: cluster-secrets
-        kind: Secret
     substitute:
       APP: paperless
   prune: true
