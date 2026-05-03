@@ -26,14 +26,6 @@ metadata:
   name: flux-system
 ---
 apiVersion: v1
-kind: Secret
-metadata:
-  name: sops-age-secret
-  namespace: flux-system
-stringData:
-  age.agekey: op://kubernetes/sops/SOPS_PRIVATE_KEY
----
-apiVersion: v1
 kind: Namespace
 metadata:
   name: network
