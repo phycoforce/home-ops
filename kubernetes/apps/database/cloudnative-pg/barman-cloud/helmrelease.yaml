@@ -62,6 +62,7 @@ spec:
     serviceAccount:
       barman-cloud: {}
     defaultPodOptions:
+      automountServiceAccountToken: true
       securityContext:
         runAsNonRoot: true
         runAsUser: 568
