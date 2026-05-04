@@ -11,6 +11,8 @@ spec:
     - name: rook-ceph-cluster
       namespace: rook-ceph
     - name: certificates-import
+    - name: multus-networks
+      namespace: network
   interval: 1h
   path: ./kubernetes/apps/network/unifi/app
   postBuild:
