@@ -18,6 +18,8 @@ spec:
         kind: Secret
     substitute:
       APP: paperless
+      ZEROSCALER_METRIC_NAME: probe_success_nfs_postgres_gate
+      ZEROSCALER_JOB_NAME: probe_success_nfs_postgres_gate
   prune: true
   sourceRef:
     kind: GitRepository
