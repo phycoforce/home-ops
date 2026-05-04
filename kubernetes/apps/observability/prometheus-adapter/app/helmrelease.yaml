@@ -39,9 +39,17 @@ spec:
           resources:
             namespaced: false
           name:
-            as: probe_success_paperless_gate
+            as: probe_success_nfs_postgres_gate
           metricsQuery: |
-            min(
-              max_over_time(probe_success{job="nfs_probe"}[1m]),
-              max_over_time(probe_success{job="postgres_probe"}[1m])
+            label_replace(
+              vector(
+                min(
+                  scalar(max_over_time(probe_success{job="nfs_probe"}[1m])),
+                  scalar(max_over_time(probe_success{job="postgres_probe"}[1m]))
+                )
+              ),
+              "job",
+              "probe_success_nfs_postgres_gate",
+              "",
+              ""
             )
