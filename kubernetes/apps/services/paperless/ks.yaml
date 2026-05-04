@@ -18,6 +18,7 @@ spec:
         kind: Secret
     substitute:
       APP: paperless
+      ZEROSCALER_METRIC_NAME: probe_success_paperless_gate
   prune: true
   sourceRef:
     kind: GitRepository

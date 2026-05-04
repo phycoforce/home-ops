@@ -35,3 +35,13 @@ spec:
           name:
             as: probe_success
           metricsQuery: max_over_time(<<.Series>>{<<.LabelMatchers>>}[1m])
+        - seriesQuery: '{__name__="probe_success",job=~"nfs_probe|postgres_probe"}'
+          resources:
+            namespaced: false
+          name:
+            as: probe_success_paperless_gate
+          metricsQuery: |
+            min(
+              max_over_time(probe_success{job="nfs_probe"}[1m]),
+              max_over_time(probe_success{job="postgres_probe"}[1m])
+            )
