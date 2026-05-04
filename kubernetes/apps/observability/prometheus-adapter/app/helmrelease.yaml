@@ -43,10 +43,8 @@ spec:
           metricsQuery: |
             label_replace(
               vector(
-                min(
-                  scalar(max_over_time(probe_success{job="nfs_probe"}[1m])),
-                  scalar(max_over_time(probe_success{job="postgres_probe"}[1m]))
-                )
+                scalar(max_over_time(probe_success{job="nfs_probe"}[1m])) *
+                scalar(max_over_time(probe_success{job="postgres_probe"}[1m]))
               ),
               "job",
               "probe_success_nfs_postgres_gate",
