@@ -19,7 +19,7 @@ spec:
           app:
             image:
               repository: quay.io/go-skynet/local-ai
-              tag: v1.40.0-gpu-intel
+              tag: sha-1caab1d-gpu-intel
             env:
               TZ: Europe/London
               DEBUG: "true"
