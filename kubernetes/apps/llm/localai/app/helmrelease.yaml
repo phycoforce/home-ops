@@ -22,7 +22,7 @@ spec:
               tag: v4.1.3-gpu-intel@sha256:8fb1248c11ee7379521c7531a42dff696affe010c2b98d8dc55b03e12841a16c
             env:
               TZ: Europe/London
-              DEBUG: "true"
+              DEBUG: "false"
               LOCALAI_FORCE_META_BACKEND_CAPABILITY: intel
               LOCALAI_BACKEND_GALLERIES: >-
                 [{"name":"localai","url":"https://raw.githubusercontent.com/mudler/LocalAI/master/backend/index.yaml"}]
@@ -30,6 +30,12 @@ spec:
               LOCALAI_MAX_ACTIVE_BACKENDS: "2"
               LOCALAI_WATCHDOG_IDLE: "true"
               LOCALAI_WATCHDOG_IDLE_TIMEOUT: "15m"
+              ZES_ENABLE_SYSMAN: "1"
+              LOCALAI_API_KEY:
+                valueFrom:
+                  secretKeyRef:
+                    name: localai-secret
+                    key: OPENAI_API_KEY
               MODELS_PATH: &modelPath /models
               THREADS: "6"
             resources:
