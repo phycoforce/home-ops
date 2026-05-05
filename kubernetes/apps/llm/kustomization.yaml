@@ -10,4 +10,4 @@ resources:
   - ./opencode-rbac/ks.yaml
   - ./open-webui/ks.yaml
   - ./searxng/ks.yaml
-  - ./ollama/ks.yaml
+  #- ./ollama/ks.yaml
