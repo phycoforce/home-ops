@@ -55,12 +55,6 @@ spec:
         ports:
           http:
             port: 8080
-    route:
-      app:
-        hostnames: ["localai.${SECRET_DOMAIN}"]
-        parentRefs:
-          - name: envoy-internal
-            namespace: network
     persistence:
       models:
         existingClaim: "{{ .Release.Name }}"
