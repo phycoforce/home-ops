@@ -29,7 +29,8 @@ spec:
       restartPolicy: Never
       containers:
         - name: sync
-          image: cgr.dev/chainguard/curl:latest
+          image: curlimages/curl:8.7.1
+          imagePullPolicy: IfNotPresent
           command:
             - /bin/sh
             - -c
