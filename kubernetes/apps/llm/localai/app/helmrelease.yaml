@@ -27,7 +27,7 @@ spec:
               LOCALAI_BACKEND_GALLERIES: >-
                 [{"name":"localai","url":"https://raw.githubusercontent.com/mudler/LocalAI/master/backend/index.yaml"}]
               LOCALAI_EXTERNAL_BACKENDS: llama-cpp
-              LOCALAI_MAX_ACTIVE_BACKENDS: "2"
+              LOCALAI_MAX_ACTIVE_BACKENDS: "3"
               LOCALAI_WATCHDOG_IDLE: "true"
               LOCALAI_WATCHDOG_IDLE_TIMEOUT: "15m"
               ZES_ENABLE_SYSMAN: "1"
@@ -45,7 +45,7 @@ spec:
                 cpu: 500m
                 memory: 8Gi
               limits:
-                memory: 24Gi
+                memory: 16Gi
     defaultPodOptions:
       resourceClaims:
         - name: gpu
