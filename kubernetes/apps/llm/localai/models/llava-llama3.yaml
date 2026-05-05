@@ -29,7 +29,7 @@ spec:
       restartPolicy: Never
       containers:
         - name: sync
-          image: curlimages/curl:8.7.1
+          image: curlimages/curl:8.20.0
           imagePullPolicy: IfNotPresent
           command:
             - /bin/sh
