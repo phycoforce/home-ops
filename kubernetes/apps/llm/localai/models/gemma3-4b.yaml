@@ -1,4 +1,5 @@
 ---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/v1/configmap.json
 apiVersion: v1
 kind: ConfigMap
 metadata:
@@ -14,6 +15,7 @@ data:
     mmap: false
     gpu_layers: 999
 ---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/batch/v1/job.json
 apiVersion: batch/v1
 kind: Job
 metadata:
