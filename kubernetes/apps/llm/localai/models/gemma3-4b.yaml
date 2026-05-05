@@ -35,7 +35,7 @@ spec:
 
               model_file="gemma-3-4b-it-Q4_K_M.gguf"
               model_url="https://huggingface.co/lmstudio-community/gemma-3-4b-it-GGUF/resolve/main/gemma-3-4b-it-Q4_K_M.gguf"
-              model_sha256="REPLACE_WITH_SHA256"
+              model_sha256="be49949e48422e4547b00af14179a193d3777eea7fbbd7d6e1b0861304628a01"
               config_file="gemma3_4b.yaml"
 
               target="/models/${model_file}"

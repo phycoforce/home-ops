@@ -8,8 +8,8 @@ data:
     name: llava_llama3
     backend: llama-cpp
     parameters:
-      model: llava-llama-3-8b-v1_1-Q4_K_M.gguf
-      mmproj: mmproj-llava-llama-3-8b-v1_1-f16.gguf
+      model: llava-llama-3-8b-v1_1.Q4_K_M.gguf
+      mmproj: llava-llama-3-8b-v1_1-mmproj-f16.gguf
     context_size: 4096
     threads: 6
     mmap: false
@@ -34,13 +34,13 @@ spec:
             - |
               set -eu
 
-              model_file="llava-llama-3-8b-v1_1-Q4_K_M.gguf"
-              model_url="https://huggingface.co/bartowski/llava-llama-3-8b-v1_1-GGUF/resolve/main/llava-llama-3-8b-v1_1-Q4_K_M.gguf"
-              model_sha256="REPLACE_WITH_SHA256"
+              model_file="llava-llama-3-8b-v1_1.Q4_K_M.gguf"
+              model_url="https://huggingface.co/MoMonir/llava-llama-3-8b-v1_1-GGUF/resolve/main/llava-llama-3-8b-v1_1.Q4_K_M.gguf"
+              model_sha256="fb34b5aaae5dbce0513a4fd93ec2f98a07400121ecb026216cbf79e87cfd0739"
 
-              mmproj_file="mmproj-llava-llama-3-8b-v1_1-f16.gguf"
-              mmproj_url="https://huggingface.co/bartowski/llava-llama-3-8b-v1_1-GGUF/resolve/main/mmproj-llava-llama-3-8b-v1_1-f16.gguf"
-              mmproj_sha256="REPLACE_WITH_SHA256"
+              mmproj_file="llava-llama-3-8b-v1_1-mmproj-f16.gguf"
+              mmproj_url="https://huggingface.co/MoMonir/llava-llama-3-8b-v1_1-GGUF/resolve/main/llava-llama-3-8b-v1_1-mmproj-f16.gguf"
+              mmproj_sha256="eb569aba7d65cf3da1d0369610eb6869f4a53ee369992a804d5810a80e9fa035"
 
               config_file="llava_llama3.yaml"
 
