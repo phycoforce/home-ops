@@ -1,0 +1,137 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: llama-gemma3-4b
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  interval: 1h
+  values:
+    defaultPodOptions:
+      resourceClaims:
+        - name: gpu
+          resourceClaimTemplateName: litellm-llama-gpu
+    controllers:
+      llama-gemma3-4b:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          model-download:
+            image:
+              repository: python
+              tag: 3.12-slim
+            command:
+              - /bin/sh
+              - -ec
+              - |
+                set -euo pipefail
+                if [ ! -s /models/gemma-3-4b-it-Q4_K_M.gguf ]; then
+                  pip install --no-cache-dir huggingface_hub
+                  hf download \
+                    lmstudio-community/gemma-3-4b-it-GGUF \
+                    gemma-3-4b-it-Q4_K_M.gguf \
+                    --local-dir /models
+                  echo "gemma-3-4b-it-Q4_K_M download complete"
+                else
+                  echo "gemma-3-4b-it-Q4_K_M already downloaded, skipping"
+                fi
+            env:
+              HF_HUB_ENABLE_HF_TRANSFER: "1"
+            envFrom:
+              - secretRef:
+                  name: litellm-secret
+            resources:
+              requests:
+                cpu: 250m
+                memory: 512Mi
+              limits:
+                memory: 4Gi
+        containers:
+          app:
+            image:
+              repository: ghcr.io/ggml-org/llama.cpp
+              tag: server-intel
+            command:
+              - llama-server
+            args:
+              - --host
+              - 0.0.0.0
+              - --port
+              - "8080"
+              - --alias
+              - gemma3_4b
+              - --model
+              - /models/gemma-3-4b-it-Q4_K_M.gguf
+              - --ctx-size
+              - "8192"
+              - --n-gpu-layers
+              - "999"
+              - --threads
+              - "6"
+              - --batch-size
+              - "1024"
+              - --ubatch-size
+              - "512"
+              - --no-mmap
+              - --metrics
+            env:
+              ZES_ENABLE_SYSMAN: "1"
+              ONEAPI_DEVICE_SELECTOR: level_zero:gpu
+              UR_L0_ENABLE_RELAXED_ALLOCATION_LIMITS: "1"
+            resources:
+              claims:
+                - name: gpu
+              requests:
+                cpu: 500m
+                memory: 8Gi
+              limits:
+                memory: 16Gi
+            probes:
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: 8080
+                  initialDelaySeconds: 30
+                  periodSeconds: 30
+                  failureThreshold: 6
+              readiness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: 8080
+                  initialDelaySeconds: 20
+                  periodSeconds: 10
+                  failureThreshold: 6
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: 8080
+                  failureThreshold: 180
+                  periodSeconds: 10
+    persistence:
+      models:
+        existingClaim: gemma3-4b
+        globalMounts:
+          - path: /models
+      dev-dri:
+        type: hostPath
+        hostPath: /dev/dri
+        globalMounts:
+          - path: /dev/dri
+            readOnly: true
+    service:
+      app:
+        ports:
+          http:
+            port: 8080

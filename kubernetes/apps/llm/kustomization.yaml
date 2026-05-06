@@ -6,7 +6,8 @@ namespace: llm
 components:
   - ../../components/namespace
 resources:
-  - ./localai/ks.yaml
+  - ./litellm/ks.yaml
+  #- ./localai/ks.yaml
   - ./opencode-rbac/ks.yaml
   - ./open-webui/ks.yaml
   - ./searxng/ks.yaml
