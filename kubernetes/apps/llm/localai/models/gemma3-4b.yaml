@@ -28,7 +28,7 @@ spec:
       restartPolicy: Never
       containers:
         - name: sync
-          image: curlimages/curl:8.20.0
+          image: ghcr.io/home-operations/busybox:1.37.0@sha256:026ed7273270ec08f6902b4ae8334c23b473e5394bec3bbbdbfe580c710d50bc
           imagePullPolicy: IfNotPresent
           command:
             - /bin/sh
@@ -44,6 +44,32 @@ spec:
               target="/models/${model_file}"
               tmp="${target}.part"
 
+              download_with_retry() {
+                url="$1"
+                output="$2"
+                retries=3
+                attempt=1
+
+                while [ "${attempt}" -le "${retries}" ]; do
+                  if [ -n "${HF_TOKEN:-}" ]; then
+                    if wget -O "${output}" --header="Authorization: Bearer ${HF_TOKEN}" "${url}"; then
+                      return 0
+                    fi
+                  else
+                    if wget -O "${output}" "${url}"; then
+                      return 0
+                    fi
+                  fi
+
+                  if [ "${attempt}" -lt "${retries}" ]; then
+                    sleep 2
+                  fi
+                  attempt=$((attempt + 1))
+                done
+
+                return 1
+              }
+
               if [ "${model_sha256}" != "REPLACE_WITH_SHA256" ] && [ -f "${target}" ]; then
                 existing="$(sha256sum "${target}" | cut -d ' ' -f 1)"
                 if [ "${existing}" = "${model_sha256}" ]; then
@@ -52,11 +78,7 @@ spec:
                 fi
               fi
 
-              if [ -n "${HF_TOKEN:-}" ]; then
-                curl -fL --retry 3 --retry-all-errors -H "Authorization: Bearer ${HF_TOKEN}" -o "${tmp}" "${model_url}"
-              else
-                curl -fL --retry 3 --retry-all-errors -o "${tmp}" "${model_url}"
-              fi
+              download_with_retry "${model_url}" "${tmp}"
 
               if [ "${model_sha256}" != "REPLACE_WITH_SHA256" ]; then
                 actual="$(sha256sum "${tmp}" | cut -d ' ' -f 1)"
