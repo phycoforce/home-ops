@@ -10,6 +10,8 @@ spec:
       namespace: kube-system
     - name: external-secrets
       namespace: security
+    - name: dragonfly-cluster
+      namespace: database
   interval: 1h
   path: ./kubernetes/apps/llm/litellm/app
   prune: true

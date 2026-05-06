@@ -25,6 +25,8 @@ spec:
             env:
               LITELLM_LOG: INFO
               LITELLM_MODE: PRODUCTION
+              REDIS_HOST: dragonfly.database.svc.cluster.local
+              REDIS_PORT: "6379"
             envFrom:
               - secretRef:
                   name: litellm-secret
