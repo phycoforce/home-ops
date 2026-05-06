@@ -54,8 +54,6 @@ spec:
             image:
               repository: ghcr.io/ggml-org/llama.cpp
               tag: server-intel
-            command:
-              - llama-server
             args:
               - --host
               - 0.0.0.0
