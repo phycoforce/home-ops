@@ -78,12 +78,9 @@ spec:
               download_if_needed "${model_file}" "${model_url}" "${model_sha256}"
               download_if_needed "${mmproj_file}" "${mmproj_url}" "${mmproj_sha256}"
               cp "/config/${config_file}" "/models/${config_file}"
-          env:
-            - name: HF_TOKEN
-              valueFrom:
-                secretKeyRef:
-                  name: localai-secret
-                  key: HF_TOKEN
+          envFrom:
+            - secretRef:
+                name: localai-secret
           volumeMounts:
             - name: config
               mountPath: /config

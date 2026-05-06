@@ -31,13 +31,11 @@ spec:
               LOCALAI_WATCHDOG_IDLE: "true"
               LOCALAI_WATCHDOG_IDLE_TIMEOUT: "15m"
               ZES_ENABLE_SYSMAN: "1"
-              LOCALAI_API_KEY:
-                valueFrom:
-                  secretKeyRef:
-                    name: localai-secret
-                    key: OPENAI_API_KEY
               MODELS_PATH: &modelPath /models
               THREADS: "6"
+            envFrom: &envFrom
+              - secretRef:
+                  name: localai-secret
             resources:
               claims:
                 - name: gpu

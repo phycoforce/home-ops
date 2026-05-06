@@ -8,6 +8,8 @@ spec:
   dependsOn:
     - name: intel-gpu-resource-driver
       namespace: kube-system
+    - name: external-secrets
+      namespace: security
   interval: 1h
   path: ./kubernetes/apps/llm/localai/app
   postBuild:
@@ -32,8 +34,6 @@ metadata:
 spec:
   dependsOn:
     - name: localai
-    - name: external-secrets
-      namespace: security
   interval: 1h
   path: ./kubernetes/apps/llm/localai/models
   prune: true
