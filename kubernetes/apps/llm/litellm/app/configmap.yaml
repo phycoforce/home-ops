@@ -35,7 +35,7 @@ data:
         host: os.environ/REDIS_HOST
         port: os.environ/REDIS_PORT
         namespace: litellm
-        redis_db: 6
+        db: 6
       drop_params: true
       set_verbose: false
 
