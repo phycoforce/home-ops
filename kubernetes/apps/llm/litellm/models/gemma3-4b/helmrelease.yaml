@@ -42,7 +42,7 @@ spec:
               HF_HUB_ENABLE_HF_TRANSFER: "1"
             envFrom:
               - secretRef:
-                  name: localai-secret
+                  name: litellm-secret
             resources:
               requests:
                 cpu: 250m
@@ -53,7 +53,7 @@ spec:
           app:
             image:
               repository: ghcr.io/ggml-org/llama.cpp
-              tag: server
+              tag: server-intel
             command:
               - llama-server
             args:
@@ -77,6 +77,10 @@ spec:
               - "512"
               - --no-mmap
               - --metrics
+            env:
+              ZES_ENABLE_SYSMAN: "1"
+              ONEAPI_DEVICE_SELECTOR: level_zero:gpu
+              UR_L0_ENABLE_RELAXED_ALLOCATION_LIMITS: "1"
             resources:
               claims:
                 - name: gpu

@@ -8,6 +8,8 @@ spec:
   dependsOn:
     - name: intel-gpu-resource-driver
       namespace: kube-system
+    - name: external-secrets
+      namespace: security
   interval: 1h
   path: ./kubernetes/apps/llm/litellm/app
   prune: true

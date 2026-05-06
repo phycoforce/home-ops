@@ -25,6 +25,9 @@ spec:
             env:
               LITELLM_LOG: INFO
               LITELLM_MODE: PRODUCTION
+            envFrom:
+              - secretRef:
+                  name: litellm-secret
             resources:
               requests:
                 cpu: 100m
