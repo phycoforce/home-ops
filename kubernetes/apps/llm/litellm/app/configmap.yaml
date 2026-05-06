@@ -1,0 +1,28 @@
+---
+apiVersion: v1
+kind: ConfigMap
+metadata:
+  name: litellm-configmap
+data:
+  config.yaml: |
+    model_list:
+      - model_name: gemma3_4b
+        litellm_params:
+          model: openai/gemma3_4b
+          api_base: http://llama-gemma3-4b.llm.svc.cluster.local:8080/v1
+          api_key: llama-gemma3-4b
+
+      - model_name: llava_llama3
+        litellm_params:
+          model: openai/llava_llama3
+          api_base: http://llama-llava-llama3.llm.svc.cluster.local:8080/v1
+          api_key: llama-llava-llama3
+
+    general_settings:
+      health_check_endpoint: /v1/health
+
+    litellm_settings:
+      success_callback: ["prometheus"]
+      prometheus_adapter: true
+      drop_params: true
+      set_verbose: false
