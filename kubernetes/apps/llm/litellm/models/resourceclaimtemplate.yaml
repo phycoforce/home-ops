@@ -11,3 +11,4 @@ spec:
         - name: gpu
           exactly:
             deviceClassName: gpu.intel.com
+            adminAccess: true
