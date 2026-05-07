@@ -24,6 +24,12 @@ data:
           api_base: http://llama-llava-llama3.llm.svc.cluster.local:8080/v1
           api_key: llama-llava-llama3
 
+      - model_name: qwen3.5-9b
+        litellm_params:
+          model: openai/qwen3.5-9b
+          api_base: http://llama-qwen3.5-9b-intel.llm.svc.cluster.local:8080/v1
+          api_key: llama-qwen3.5-9b-intel
+
     general_settings:
       health_check_endpoint: /v1/health
 
