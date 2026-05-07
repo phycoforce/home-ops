@@ -3,7 +3,7 @@
 apiVersion: v1
 kind: PersistentVolumeClaim
 metadata:
-  name: qwen3.5-9b
+  name: qwen3-5-9b
   namespace: llm
 spec:
   accessModes: ["ReadWriteOnce"]

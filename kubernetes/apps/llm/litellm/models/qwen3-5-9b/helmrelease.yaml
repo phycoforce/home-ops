@@ -3,7 +3,7 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: llama-qwen3.5-9b
+  name: llama-qwen3-5-9b
 spec:
   chartRef:
     kind: OCIRepository
@@ -16,7 +16,7 @@ spec:
           resourceClaimTemplateName: litellm-llama-gpu
       hostIPC: true
     controllers:
-      llama-qwen3.5-9b:
+      llama-qwen3-5-9b:
         annotations:
           reloader.stakater.com/auto: "true"
         initContainers:
@@ -70,7 +70,7 @@ spec:
               - --port
               - "8080"
               - --alias
-              - qwen3.5-9b
+              - qwen3-5-9b
               - --model
               - /models/qwen3-5-9b/Qwen3.5-9B-heretic.Q4_K_M.gguf
               - --mmproj
@@ -161,7 +161,7 @@ spec:
                   periodSeconds: 10
     persistence:
       models:
-        existingClaim: qwen3.5-9b
+        existingClaim: qwen3-5-9b
         globalMounts:
           - path: /models
       dev-dri:
