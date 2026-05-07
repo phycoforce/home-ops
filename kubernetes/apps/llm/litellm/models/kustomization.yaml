@@ -7,4 +7,4 @@ resources:
   - ./gemma4-e4b
   - ./gemma3-4b
   - ./llava-llama3
-  - ./qwen3.5-9b-intel
+  - ./qwen3.5-9b
