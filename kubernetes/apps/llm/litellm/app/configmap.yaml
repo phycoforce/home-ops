@@ -6,6 +6,12 @@ metadata:
 data:
   config.yaml: |
     model_list:
+      - model_name: gemma4_e4b
+        litellm_params:
+          model: openai/gemma4_e4b
+          api_base: http://llama-gemma4-e4b.llm.svc.cluster.local:8080/v1
+          api_key: llama-gemma4-e4b
+
       - model_name: gemma3_4b
         litellm_params:
           model: openai/gemma3_4b
