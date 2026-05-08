@@ -20,7 +20,7 @@ spec:
         kubernetes.io/arch: amd64
       containers:
         - name: xpumd
-          image: intel/xpumanager:1.3.6
+          image: intel/xpumanager:v1.2.27@sha256:7c2123abfdf87ba97fce3865e0db86a8728a8fefdebe96961ab066b2aabcbc86
           imagePullPolicy: IfNotPresent
           command:
             - /usr/bin/xpumd
@@ -50,7 +50,7 @@ spec:
             - name: sockdir
               mountPath: /tmp
         - name: python-exporter
-          image: intel/xpumanager:1.3.6
+          image: intel/xpumanager:v1.2.27@sha256:7c2123abfdf87ba97fce3865e0db86a8728a8fefdebe96961ab066b2aabcbc86
           imagePullPolicy: IfNotPresent
           securityContext:
             allowPrivilegeEscalation: false
