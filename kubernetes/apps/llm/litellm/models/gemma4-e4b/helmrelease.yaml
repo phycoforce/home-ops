@@ -92,9 +92,9 @@ spec:
               - --checkpoint-every-n-tokens
               - "16384"
               - --image-min-tokens
-              - "1120"
+              - "280"
               - --image-max-tokens
-              - "1120"
+              - "560"
               - --metrics
               - --temp
               - "0.1"
