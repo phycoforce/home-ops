@@ -68,7 +68,7 @@ spec:
               - --port
               - "8080"
               - --parallel
-              - "2"
+              - "1"
               - --alias
               - gemma4_e4b
               - --model
