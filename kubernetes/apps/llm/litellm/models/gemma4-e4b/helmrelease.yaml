@@ -74,7 +74,7 @@ spec:
               - --mmproj
               - /models/gemma-4-E4B/mmproj-F16.gguf
               - --ctx-size
-              - "131072"
+              - "65536"
               - --n-gpu-layers
               - "99"
               - --fit
@@ -90,7 +90,7 @@ spec:
               - --ctx-checkpoints
               - "4"
               - --checkpoint-every-n-tokens
-              - "70"
+              - "1024"
               - --image-min-tokens
               - "280"
               - --image-max-tokens
@@ -107,9 +107,9 @@ spec:
               - --threads
               - "6"
               - --batch-size
-              - "1024"
-              - --ubatch-size
               - "512"
+              - --ubatch-size
+              - "256"
               - --reasoning
               - "off"
               - --reasoning-budget
