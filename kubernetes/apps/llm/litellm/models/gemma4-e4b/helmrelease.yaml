@@ -90,7 +90,7 @@ spec:
               - --ctx-checkpoints
               - "4"
               - --checkpoint-every-n-tokens
-              - "16384"
+              - "70"
               - --image-min-tokens
               - "280"
               - --image-max-tokens
