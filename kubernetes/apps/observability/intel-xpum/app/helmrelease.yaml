@@ -48,7 +48,7 @@ spec:
                 spec:
                   httpGet:
                     path: /metrics
-                    port: metrics
+                    port: &port 29999
                   failureThreshold: 10
                   periodSeconds: 10
               liveness:
@@ -57,7 +57,7 @@ spec:
                 spec:
                   httpGet:
                     path: /healtz
-                    port: metrics
+                    port: *port
                   initialDelaySeconds: 60
                   periodSeconds: 10
           xpumd:
