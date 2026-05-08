@@ -1,0 +1,117 @@
+---
+# yaml-language-server: $schema=https://raw.githubusercontent.com/bjw-s-labs/helm-charts/main/charts/other/app-template/schemas/helmrelease-helm-v2.schema.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: intel-xpumanager
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: app-template
+  interval: 1h
+  values:
+    controllers:
+      intel-xpumanager:
+        type: daemonset
+        containers:
+          app:
+            image:
+              repository: intel/xpumanager
+              tag: v1.2.27@sha256:7c2123abfdf87ba97fce3865e0db86a8728a8fefdebe96961ab066b2aabcbc86
+            workingDir: /usr/lib/xpum/rest
+            command:
+              - gunicorn
+              - --bind
+              - 0.0.0.0:29999
+              - --worker-connections
+              - "64"
+              - --worker-class
+              - gthread
+              - --workers
+              - "1"
+              - --threads
+              - "4"
+              - xpum_rest_main:main()
+            env:
+              XPUM_EXPORTER_NO_AUTH: "1"
+              XPUM_EXPORTER_ONLY: "1"
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              runAsUser: 0
+              capabilities:
+                drop: ["ALL"]
+            probes:
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /metrics
+                    port: metrics
+                  failureThreshold: 10
+                  periodSeconds: 10
+              liveness:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /healtz
+                    port: metrics
+                  initialDelaySeconds: 60
+                  periodSeconds: 10
+          xpumd:
+            image:
+              repository: intel/xpumanager
+              tag: v1.2.27@sha256:7c2123abfdf87ba97fce3865e0db86a8728a8fefdebe96961ab066b2aabcbc86
+            command:
+              - /usr/bin/xpumd
+            env:
+              SPDLOG_LEVEL: info
+              XPUM_REST_NO_TLS: "1"
+              XPUM_EXPORTER_NO_AUTH: "1"
+              XPUM_EXPORTER_ONLY: "1"
+            securityContext:
+              privileged: false
+              readOnlyRootFilesystem: true
+              allowPrivilegeEscalation: false
+              runAsUser: 0
+              capabilities:
+                drop: ["ALL"]
+                add: ["SYS_ADMIN"]
+    defaultPodOptions:
+      hostNetwork: false
+      nodeSelector:
+        kubernetes.io/arch: amd64
+        kubernetes.io/hostname: pneuma
+    persistence:
+      kubeletpodres:
+        type: hostPath
+        hostPath: /var/lib/kubelet/pod-resources
+        advancedMounts:
+          intel-xpumanager:
+            xpumd:
+              - path: /var/lib/kubelet/pod-resources
+      sockdir:
+        type: emptyDir
+        medium: Memory
+        advancedMounts:
+          intel-xpumanager:
+            app:
+              - path: /tmp
+            xpumd:
+              - path: /tmp
+      devdri:
+        type: hostPath
+        hostPath: /dev/dri
+        advancedMounts:
+          intel-xpumanager:
+            app:
+              - path: /dev/dri
+                readOnly: true
+    service:
+      app:
+        controller: intel-xpumanager
+        ports:
+          metrics:
+            port: 29999
