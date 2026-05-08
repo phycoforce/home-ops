@@ -1,0 +1,20 @@
+---
+# yaml-language-server: $schema=https://kubernetes-schemas.pages.dev/monitoring.coreos.com/servicemonitor_v1.json
+apiVersion: monitoring.coreos.com/v1
+kind: ServiceMonitor
+metadata:
+  name: intel-xpumanager
+  labels:
+    app.kubernetes.io/name: intel-xpumanager
+spec:
+  selector:
+    matchLabels:
+      app.kubernetes.io/name: intel-xpumanager
+  namespaceSelector:
+    matchNames:
+      - observability
+  endpoints:
+    - port: metrics
+      path: /metrics
+      interval: 30s
+      scrapeTimeout: 10s
