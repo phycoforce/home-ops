@@ -67,8 +67,6 @@ spec:
               - 0.0.0.0
               - --port
               - "8080"
-              - --parallel
-              - "1"
               - --alias
               - gemma4_e4b
               - --model
@@ -76,7 +74,7 @@ spec:
               - --mmproj
               - /models/gemma-4-E4B/mmproj-F16.gguf
               - --ctx-size
-              - "32768"
+              - "131072"
               - --n-gpu-layers
               - "99"
               - --fit
@@ -87,16 +85,18 @@ spec:
               - -sps
               - "0.90"
               - --no-context-shift
-              - --cache-prompt
+              - --cache-ram
+              - "0"
               - --kv-unified
+              - --swa-full
               - --ctx-checkpoints
               - "4"
               - --checkpoint-every-n-tokens
-              - "1024"
+              - "16384"
               - --image-min-tokens
-              - "280"
+              - "70"
               - --image-max-tokens
-              - "560"
+              - "280"
               - --metrics
               - --temp
               - "0.1"
@@ -111,7 +111,7 @@ spec:
               - --batch-size
               - "512"
               - --ubatch-size
-              - "256"
+              - "512"
               - --reasoning
               - "off"
               - --reasoning-budget
