@@ -41,11 +41,11 @@ k8s:
 [script]
 kubeconfig lb="cilium":
     just log info "Running stage..." "stage" "$(basename "$0")"
-    if ! talosctl kubeconfig -n "{{ controller }}" -f --force-context-name k8s "{{ justfile_dir() }}/kubernetes"; then
+    if ! talosctl kubeconfig -n "{{ controller }}" -f --force-context-name origin "{{ justfile_dir() }}/kubernetes"; then
         just log fatal "Failed to fetch kubeconfig" "stage" "$(basename "$0")"
     fi
     if [[ "{{ lb }}" != "cilium" ]]; then
-        if ! kubectl config set-cluster k8s --server "https://{{ controller }}:6443"; then
+        if ! kubectl config set-cluster origin --server "https://{{ controller }}:6443"; then
             just log fatal "Failed to set kubectl cluster server address" "stage" "$(basename "$0")"
         fi
     fi
