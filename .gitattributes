@@ -6,6 +6,8 @@
 *.yaml.j2 linguist-detectable linguist-language=YAML
 *.json linguist-detectable linguist-language=JSON
 *.json5 linguist-detectable linguist-language=JSON5
+*.just linguist-detectable linguist-language=JUST
+*.justfile linguist-detectable linguist-language=JUST
 *.md linguist-detectable linguist-language=MARKDOWN
 *.sh linguist-detectable linguist-language=SHELL
 *.toml linguist-detectable linguist-language=TOML

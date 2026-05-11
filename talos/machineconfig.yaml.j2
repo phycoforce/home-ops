@@ -1,15 +1,15 @@
 version: v1alpha1
 machine:
-  type: {{ machinetype }}
+  type: {{ ENV.MACHINE_TYPE }}
   token: op://kubernetes/talos/MACHINE_TOKEN
   ca:
     crt: op://kubernetes/talos/MACHINE_CA_CRT
-    {% if machinetype == 'controlplane' %}
+    {% if ENV.CONTROLPLANE %}
     key: op://kubernetes/talos/MACHINE_CA_KEY
     {% endif %}
   features:
     rbac: true
-    {% if machinetype == 'controlplane' %}
+    {% if ENV.CONTROLPLANE %}
     kubernetesTalosAPIAccess:
       enabled: true
       allowedRoles: ["os:admin"]
@@ -43,7 +43,7 @@ machine:
         nodiratime=True
         noatime=True
   install:
-    image: factory.talos.dev/metal-installer/38912c3ab2c71c3c16aad1cc58a4a5f5211bcd55364baa189e4f04a01815656e:v1.13.0
+    image: factory.talos.dev/metal-installer/{{ ENV.SCHEMATIC }}:v1.13.0
   kernel:
     modules:
       - name: nbd
@@ -65,7 +65,7 @@ machine:
   nodeLabels:
     node.kubernetes.io/gpu: "true"
     topology.kubernetes.io/region: origin
-    topology.kubernetes.io/zone: {{ 'm' if machinetype == 'controlplane' else 'w' }}
+    topology.kubernetes.io/zone: {{ 'm' if ENV.CONTROLPLANE else 'w' }}
   sysctls:
     fs.inotify.max_user_watches: 1048576   # Watchdog
     fs.inotify.max_user_instances: 8192    # Watchdog
@@ -94,7 +94,7 @@ machine:
 cluster:
   ca:
     crt: op://kubernetes/talos/CLUSTER_CA_CRT
-    {% if machinetype == 'controlplane' %}
+    {% if ENV.CONTROLPLANE %}
     key: op://kubernetes/talos/CLUSTER_CA_KEY
     {% endif %}
   clusterName: origin
@@ -114,7 +114,7 @@ cluster:
     serviceSubnets: ["10.96.0.0/16"]
   secret: op://kubernetes/talos/CLUSTER_SECRET
   token: op://kubernetes/talos/CLUSTER_TOKEN
-  {% if machinetype == 'controlplane' %}
+  {% if ENV.CONTROLPLANE %}
   aggregatorCA:
     crt: op://kubernetes/talos/CLUSTER_AGGREGATORCA_CRT
     key: op://kubernetes/talos/CLUSTER_AGGREGATORCA_KEY
@@ -164,55 +164,6 @@ cluster:
   serviceAccount:
     key: op://kubernetes/talos/CLUSTER_SERVICEACCOUNT_KEY
   {% endif %}
----
-apiVersion: v1alpha1
-kind: EthernetConfig
-name: enp2s0f0np0
-rings:
-  rx: 8160
-  tx: 8160
----
-apiVersion: v1alpha1
-kind: EthernetConfig
-name: enp2s0f1np1
-rings:
-  rx: 8160
-  tx: 8160
----
-## 2.5G
-apiVersion: v1alpha1
-kind: LinkConfig
-name: enp89s0
-up: true
-addresses: []
----
-## 10G
-apiVersion: v1alpha1
-kind: BondConfig
-name: bond0
-links:
-  - enp2s0f1np1
-bondMode: active-backup
-mtu: 9000
----
-apiVersion: v1alpha1
-kind: VLANConfig
-name: bond0.40
-vlanID: 40
-parent: bond0
-mtu: 9000
----
-apiVersion: v1alpha1
-kind: VLANConfig
-name: bond0.99
-vlanID: 99
-parent: bond0
-mtu: 9000
----
-apiVersion: v1alpha1
-kind: DHCPv4Config
-name: bond0
-clientIdentifier: mac
 ---
 apiVersion: v1alpha1
 kind: UserVolumeConfig
