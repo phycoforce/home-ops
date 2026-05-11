@@ -1,46 +1,47 @@
 ---
 # yaml-language-server: $schema=https://raw.githubusercontent.com/siderolabs/talos/refs/heads/release-1.12/website/content/v1.12/schemas/config.schema.json
 machine:
+  type: controlplane
   install:
     diskSelector:
-      serial: "S435NC0R801928"
+      serial: "S435NA0N502095"
 ---
 apiVersion: v1alpha1
 kind: HostnameConfig
-hostname: logos
+hostname: ontos
 ---
-## Ontos
+## logos
 apiVersion: v1alpha1
 kind: LinkAliasConfig
-name: logos-ontos
+name: ontos-logos
 selector:
   match: link.bus_path == "0-1.0"
 ---
 apiVersion: v1alpha1
 kind: LinkConfig
-name: logos-ontos
+name: ontos-logos
 up: true
 mtu: 65520
 addresses:
-  - address: 169.254.255.22/32
+  - address: 169.254.255.23/32
 routes:
-  - destination: 169.254.255.23/32
+  - destination: 169.254.255.22/32
     metric: 2048
 ---
 ## Pneuma
 apiVersion: v1alpha1
 kind: LinkAliasConfig
-name: logos-pneuma
+name: ontos-pneuma
 selector:
   match: link.bus_path == "1-1.0"
 ---
 apiVersion: v1alpha1
 kind: LinkConfig
-name: logos-pneuma
+name: ontos-pneuma
 up: true
 mtu: 65520
 addresses:
-  - address: 169.254.255.22/32
+  - address: 169.254.255.23/32
 routes:
   - destination: 169.254.255.24/32
     metric: 2048

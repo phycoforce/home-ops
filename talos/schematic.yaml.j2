@@ -14,6 +14,7 @@ customization:
     - talos.auditd.disabled=1             # Less security, faster puter
     - i915.force_probe=!a7a0              # Disable iGPU deviceID for i915
     - xe.force_probe=a7a0                 # Enable iGPU deviceID for xe
+    - talos.config.early={{ ENV.CONFIG_EARLY }}        # Early config
   systemExtensions:
     officialExtensions:
       - siderolabs/xe                     # Intel iGPU (XE)

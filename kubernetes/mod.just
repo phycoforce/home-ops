@@ -1,0 +1,103 @@
+set lazy
+set quiet
+set script-interpreter := ['bash', '-euo', 'pipefail']
+set shell := ['bash', '-euo', 'pipefail', '-c']
+
+[private]
+default:
+    just -l kube
+
+[doc('Browse a PVC')]
+browse-pvc ns claim:
+    kubectl browse-pvc -n {{ ns }} -i mirror.gcr.io/alpine:latest {{ claim }}
+
+[doc('View a secret')]
+view-secret ns secret:
+    kubectl view-secret -n {{ ns }} {{ secret }}
+
+[doc('Apply local Flux Kustomization')]
+apply-ks ns ks:
+    just kube render-local-ks "{{ ns }}" "{{ ks }}" | kubectl apply --server-side --force-conflicts --field-manager=kustomize-controller -f -
+
+[doc('Delete local Flux Kustomization')]
+delete-ks ns ks:
+    just kube render-local-ks "{{ ns }}" "{{ ks }}" | kubectl delete -f -
+
+[doc('Open a shell on a node')]
+node-shell node:
+    trap 'kubectl delete pod -n default -l app.kubernetes.io/managed-by=kubectl-debug --ignore-not-found --wait=false' EXIT
+    kubectl debug node/{{ node }} -n default -it --image=mirror.gcr.io/alpine:latest --profile=sysadmin
+
+[doc('Prune pods in Failed, Pending, or Succeeded state')]
+[script]
+prune-pods:
+    for phase in Failed Pending Succeeded; do
+        kubectl delete pods -A --field-selector status.phase="$phase" --ignore-not-found=true
+    done
+
+[doc('Restore a PVC from VolSync')]
+[script]
+restore ns app previous='0':
+    flux -n {{ ns }} suspend kustomization {{ app }}
+    flux -n {{ ns }} suspend helmrelease {{ app }}
+    kubectl -n {{ ns }} get deploy,sts -l app.kubernetes.io/name={{ app }} -o name \
+        | xargs -r -I{} kubectl -n {{ ns }} scale {} --replicas=0
+    kubectl -n {{ ns }} wait pod --for=delete --selector="app.kubernetes.io/name={{ app }}" --timeout=5m
+    kubectl -n {{ ns }} get replicationdestination {{ app }} -o json \
+        | jq 'del(.status)
+            | .metadata = {name: "{{ app }}-manual", namespace: .metadata.namespace}
+            | .spec.kopia.copyMethod = "Direct"
+            | .spec.kopia.destinationPVC = "{{ app }}"
+            | .spec.kopia.previous = {{ previous }}' \
+        | kubectl apply --server-side -f -
+    kubectl -n {{ ns }} wait job/volsync-dst-{{ app }}-manual --for=create --timeout=120s
+    kubectl -n {{ ns }} wait job/volsync-dst-{{ app }}-manual --for=condition=complete --timeout=120m
+    kubectl -n {{ ns }} delete replicationdestination {{ app }}-manual
+    flux -n {{ ns }} resume kustomization {{ app }}
+    flux -n {{ ns }} resume helmrelease {{ app }}
+    flux -n {{ ns }} reconcile helmrelease {{ app }} --force
+    kubectl -n {{ ns }} wait pod --for=condition=ready --selector="app.kubernetes.io/name={{ app }}" --timeout=5m
+
+[doc('Snapshot VolSync PVCs')]
+[script]
+snapshot:
+    kubectl get replicationsources --no-headers -A | while read -r ns name _; do
+        kubectl -n "$ns" patch replicationsources "$name" --type merge -p '{"spec":{"trigger":{"manual":"$(date +%s)"}}}'
+    done
+
+[doc('Suspend or resume VolSync')]
+volsync state:
+    flux -n volsync-system {{ state }} kustomization volsync
+    flux -n volsync-system {{ state }} helmrelease volsync
+    kubectl -n volsync-system scale deployment volsync --replicas {{ if state != "suspend" { "1" } else { "0" } }}
+
+[doc('Sync ExternalSecrets')]
+sync-es:
+    just kube sync-resource es force-sync="$(date +%s)"
+
+[doc('Sync GitRepositories')]
+sync-git:
+    just kube sync-resource gitrepo reconcile.fluxcd.io/requestedAt="$(date +%s)"
+
+[doc('Sync HelmReleases')]
+sync-hr:
+    just kube sync-resource hr reconcile.fluxcd.io/requestedAt="$(date +%s)" reconcile.fluxcd.io/forceAt="$(date +%s)"
+
+[doc('Sync Kustomizations')]
+sync-ks:
+    just kube sync-resource ks reconcile.fluxcd.io/requestedAt="$(date +%s)"
+
+[doc('Sync OCIRepositories')]
+sync-oci:
+    just kube sync-resource ocirepo reconcile.fluxcd.io/requestedAt="$(date +%s)"
+
+[private]
+render-local-ks ns ks:
+    flux-local build ks --namespace {{ ns }} --path "{{ source_directory() }}/flux/cluster" "{{ ks }}"
+
+[private]
+[script]
+sync-resource resource *annotations:
+    kubectl get {{ resource }} --no-headers -A | while read -r ns name _; do
+        kubectl -n "$ns" annotate --field-manager flux-client-side-apply --overwrite {{ resource }} "$name" {{ annotations }}
+    done

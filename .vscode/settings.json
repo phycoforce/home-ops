@@ -2,6 +2,7 @@
   "editor.bracketPairColorization.enabled": true,
   "editor.fontFamily": "FiraCode Nerd Font",
   "editor.fontLigatures": true,
+  "editor.fontSize": 14,
   "editor.guides.bracketPairs": true,
   "editor.guides.bracketPairsHorizontal": true,
   "editor.guides.highlightActiveBracketPair": true,
@@ -11,11 +12,12 @@
   "explorer.autoReveal": true,
   "files.associations": {
     "**/*.json5": "json5",
-    "**/*.yaml.j2": "yaml"
+    "**/*.just": "just",
   },
   "files.trimTrailingWhitespace": true,
   "material-icon-theme.files.associations": {
     "*.gotmpl": "smarty",
+    "*.just": "just",
     "kubeconfig": "kubernetes",
     "talosconfig": "kubernetes"
   },
@@ -25,6 +27,7 @@
     ".renovate": "robot",
     "bootstrap": "seeders",
     "bootstrap/helmfile.d": "helm",
+    "bootstrap/kustomize": "kubernetes",
     "flux": "pipe",
     "talos": "linux",
     // namespaces
@@ -35,19 +38,26 @@
     "flux-system": "pipe",
     "kube-system": "kubernetes",
     "media": "video",
-    "observability": "event",
     "networking": "connection",
+    "observability": "event",
     "openebs-system": "base",
     "rook-ceph": "dump",
     "system-upgrade": "update",
     "volsync-system": "aws"
   },
+  "terminal.integrated.fontSize": 14,
   "vs-kubernetes": {
     "vs-kubernetes.kubeconfig": "./kubernetes/kubeconfig",
-    "vs-kubernetes.knownKubeconfigs": ["./kubernetes/kubeconfig"]
+    "vs-kubernetes.knownKubeconfigs": [
+      "./kubernetes/kubeconfig"
+    ]
   },
+  "window.zoomLevel": 0,
   "yaml.schemaStore.enable": true,
   "yaml.schemas": {
     "kubernetes": "./kubernetes/**/*.yaml"
+  },
+  "[yaml]": {
+    "editor.defaultFormatter": "bluebrown.yamlfmt"
   }
 }
