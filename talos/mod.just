@@ -31,6 +31,11 @@ render-config node:
 reset-node node *args:
     talosctl -n {{ node }} reset --reboot=true --graceful=false {{ args }}
 
+[confirm('Reset the Talos cluster ... continue?')]
+[doc('Reset Talos across the whole cluster')]
+reset-cluster:
+    talosctl reset --nodes "$(talosctl config info -o json | jq --join-output '[.nodes[]] | join(",")')" --graceful=false
+
 [confirm('Shutdown node ' + node + ' [y|N] ?')]
 [doc('Shutdown a node')]
 shutdown-node node *args:
