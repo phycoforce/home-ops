@@ -1,14 +1,19 @@
 version: v1alpha1
 machine:
-  type: {{ ENV.MACHINE_TYPE }}
-  token: op://kubernetes/talos/MACHINE_TOKEN
   ca:
     crt: op://kubernetes/talos/MACHINE_CA_CRT
     {% if ENV.CONTROLPLANE %}
     key: op://kubernetes/talos/MACHINE_CA_KEY
     {% endif %}
   features:
-    rbac: true
+    diskQuotaSupport: true
+    hostDNS:
+      enabled: true
+      resolveMemberNames: true
+      forwardKubeDNSToHost: true # Requires Cilium socketLB features
+    kubePrism:
+      enabled: true
+      port: 7445
     {% if ENV.CONTROLPLANE %}
     kubernetesTalosAPIAccess:
       enabled: true
@@ -19,14 +24,7 @@ machine:
         - os:admin
     {% endif %}
     apidCheckExtKeyUsage: true
-    diskQuotaSupport: true
-    kubePrism:
-      enabled: true
-      port: 7445
-    hostDNS:
-      enabled: true
-      resolveMemberNames: true
-      forwardKubeDNSToHost: true # Requires Cilium socketLB features
+    rbac: true
   files:
     - op: create
       path: /etc/cri/conf.d/20-customization.part
@@ -66,27 +64,29 @@ machine:
     topology.kubernetes.io/region: origin
     topology.kubernetes.io/zone: {{ 'm' if ENV.CONTROLPLANE else 'w' }}
   sysctls:
-    fs.inotify.max_user_watches: 1048576   # Watchdog
-    fs.inotify.max_user_instances: 8192    # Watchdog
-    net.core.default_qdisc: fq             # 10Gb/s
-    net.core.rmem_max: 67108864            # 10Gb/s | Cloudflared / QUIC
-    net.core.wmem_max: 67108864            # 10Gb/s | Cloudflared / QUIC
-    net.ipv4.neigh.default.gc_thresh1: "4096"  # Prevent ARP cache overflows
-    net.ipv4.neigh.default.gc_thresh2: "8192"  # Prevent ARP cache overflows
-    net.ipv4.neigh.default.gc_thresh3: "16384" # Prevent ARP cache overflows
-    net.ipv4.ping_group_range: 0 2147483647
-    net.ipv4.tcp_congestion_control: bbr   # 10Gb/s
-    net.ipv4.tcp_fastopen: 3               # Send and accept data in the opening SYN packet
-    net.ipv4.tcp_mtu_probing: 1            # 10Gb/s | Jumbo frames
-    net.ipv4.tcp_notsent_lowat: "131072"
-    net.ipv4.tcp_rmem: 4096 87380 33554432 # 10Gb/s
-    net.ipv4.tcp_wmem: 4096 65536 33554432 # 10Gb/s
-    net.ipv4.tcp_slow_start_after_idle: "0"
-    net.ipv4.tcp_window_scaling: 1         # 10Gb/s
-    sunrpc.tcp_slot_table_entries: 128     # 10Gb/s | NFS
-    sunrpc.tcp_max_slot_table_entries: 128 # 10Gb/s | NFS
-    user.max_user_namespaces: 11255        # User Namespaces
-    vm.nr_hugepages: 1024                  # PostgreSQL
+    fs.inotify.max_user_instances: 8192   # Watchdog
+    fs.inotify.max_user_watches: 1048576  # Watchdog
+    net.core.default_qdisc: fq            # 10Gb/s
+    net.core.rmem_max: 67108864           # 10Gb/s | Cloudflared / QUIC
+    net.core.wmem_max: 67108864           # 10Gb/s | Cloudflared / QUIC
+    net.ipv4.neigh.default.gc_thresh1: "4096"   # Prevent ARP cache overflows
+    net.ipv4.neigh.default.gc_thresh2: "8192"   # Prevent ARP cache overflows
+    net.ipv4.neigh.default.gc_thresh3: "16384"  # Prevent ARP cache overflows
+    net.ipv4.ping_group_range: 0 2147483647     # Ping non-root
+    net.ipv4.tcp_congestion_control: bbr        # 10Gb/s
+    net.ipv4.tcp_fastopen: 3                    # Send and accept data in the opening SYN packet
+    net.ipv4.tcp_mtu_probing: 1                 # 10Gb/s | Jumbo frames
+    net.ipv4.tcp_notsent_lowat: "131072"        # 10Gb/s
+    net.ipv4.tcp_rmem: 4096 87380 33554432     # 10Gb/s
+    net.ipv4.tcp_wmem: 4096 65536 33554432     # 10Gb/s
+    net.ipv4.tcp_slow_start_after_idle: "0"     # 10Gb/s
+    net.ipv4.tcp_window_scaling: 1              # 10Gb/s
+    sunrpc.tcp_slot_table_entries: 128          # 10Gb/s | NFS
+    sunrpc.tcp_max_slot_table_entries: 128      # 10Gb/s | NFS
+    user.max_user_namespaces: 11255             # User Namespaces
+    vm.nr_hugepages: 1024                       # PostgreSQL
+  token: op://kubernetes/talos/MACHINE_TOKEN
+  type: {{ ENV.MACHINE_TYPE }}
 cluster:
   ca:
     crt: op://kubernetes/talos/CLUSTER_CA_CRT
@@ -120,19 +120,19 @@ cluster:
     key: op://kubernetes/talos/CLUSTER_AGGREGATORCA_KEY
   allowSchedulingOnControlPlanes: true
   apiServer:
-    image: registry.k8s.io/kube-apiserver:v1.36.0
-    extraArgs:
-      enable-aggregator-routing: true
-      feature-gates: HPAScaleToZero=true
     certSANs:
       - 127.0.0.1
       - 10.0.20.250
+    extraArgs:
+      enable-aggregator-routing: true
+      feature-gates: HPAScaleToZero=true
     disablePodSecurityPolicy: true
+    image: registry.k8s.io/kube-apiserver:v1.36.0
   controllerManager:
-    image: registry.k8s.io/kube-controller-manager:v1.36.0
     extraArgs:
       bind-address: 0.0.0.0
       feature-gates: HPAScaleToZero=true
+    image: registry.k8s.io/kube-controller-manager:v1.36.0
   coreDNS:
     disabled: true
   etcd:
@@ -146,7 +146,6 @@ cluster:
   proxy:
     disabled: true
     image: registry.k8s.io/kube-proxy:v1.36.0
-  secretboxEncryptionSecret: op://kubernetes/talos/CLUSTER_SECRETBOXENCRYPTIONSECRET
   scheduler:
     config:
       apiVersion: kubescheduler.config.k8s.io/v1
@@ -165,6 +164,10 @@ cluster:
                   - maxSkew: 1
                     topologyKey: kubernetes.io/hostname
                     whenUnsatisfiable: ScheduleAnyway
+    extraArgs:
+      bind-address: 0.0.0.0
+    image: registry.k8s.io/kube-scheduler:v1.36.0
+  secretboxEncryptionSecret: op://kubernetes/talos/CLUSTER_SECRETBOXENCRYPTIONSECRET
   serviceAccount:
     key: op://kubernetes/talos/CLUSTER_SERVICEACCOUNT_KEY
   {% endif %}
