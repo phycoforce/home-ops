@@ -94,7 +94,7 @@ releases:
     namespace: flux-system
     chart: oci://ghcr.io/controlplaneio-fluxcd/charts/flux-operator
     version: 0.48.0
-    values: ['./templates/values.yaml.gotmpl']
+    values: ['./templates/values-flux-operator.yaml.gotmpl']
     needs: ['cert-manager/cert-manager']
 
   - name: flux-instance

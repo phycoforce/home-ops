@@ -1,0 +1,3 @@
+{{- $values := (exec "yq" (list "select(.kind == \"HelmRelease\").spec.values" (printf "../../../kubernetes/apps/%s/%s/app/helmrelease.yaml" .Release.Namespace .Release.Name)) | fromYaml) -}}
+{{- $_ := set $values.web.httpRoute "enabled" false -}}
+{{ toYaml $values }}
