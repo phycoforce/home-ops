@@ -12,24 +12,14 @@
       minimumGroupSize: 2,
     },
     {
-      description: "Dragonfly Operator Group",
-      groupName: "Dragonfly Operator",
-      matchDatasources: ["docker", "github-releases"],
-      matchPackageNames: ["/dragonfly(?:db)?.operator/"],
+      description: "Flux Operator Group",
+      groupName: "flux-operator",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["/flux-operator/", "/flux-instance/"],
       group: {
         commitMessageTopic: "{{{groupName}}} group",
       },
       minimumGroupSize: 2,
-    },
-    {
-      description: "Flux Operator Group",
-      groupName: "flux-operator",
-      matchDatasources: ["docker"],
-      matchPackageNames: ["/flux-operator/", "/flux-instance/", "/flux-operator-manifests/"],
-      group: {
-        commitMessageTopic: "{{{groupName}}} group",
-      },
-      minimumGroupSize: 3
     },
     {
       description: "Intel Device Plugins Group",
@@ -68,10 +58,10 @@
       minimumGroupSize: 2,
     },
     {
-      description: "Talos Group",
-      groupName: "talos",
-      matchDatasources: ["docker"],
-      matchPackageNames: ["/installer/"],
+      description: "Dragonfly Operator Group",
+      groupName: "Dragonfly Operator",
+      matchDatasources: ["docker", "github-releases"],
+      matchPackageNames: ["/dragonfly(?:db)?.operator/"],
       group: {
         commitMessageTopic: "{{{groupName}}} group",
       },
