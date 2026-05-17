@@ -59,7 +59,7 @@ spec:
           app:
             image:
               repository: ghcr.io/ggml-org/llama.cpp
-              tag: server-intel-b9174@sha256:9f0d701a2a61d6500e9f2d12ec9930395249915220b4eafd8ddbbae93c59a812
+              tag: server-intel-b9191@sha256:d7f0670b4afc36d2c8aea16aaa4f06de7bb94b0187a304e586b7706a1cd26fc8
             securityContext:
               privileged: true
             args:
