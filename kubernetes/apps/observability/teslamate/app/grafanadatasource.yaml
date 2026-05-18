@@ -9,7 +9,7 @@ metadata:
 spec:
   instanceSelector:
     matchLabels:
-      grafana.internal/instance: grafana
+      dashboards: grafana
   valuesFrom:
     - targetPath: "url"
       valueFrom:
