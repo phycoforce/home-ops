@@ -17,6 +17,7 @@ subjects:
     name: home-ops-runner
     namespace: actions-runner-system
 ---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/talos.dev/serviceaccount_v1alpha1.json
 apiVersion: talos.dev/v1alpha1
 kind: ServiceAccount
 metadata:
