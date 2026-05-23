@@ -59,7 +59,7 @@ spec:
           app:
             image:
               repository: ghcr.io/ggml-org/llama.cpp
-              tag: server-vulkan
+              tag: server-vulkan-b9282@sha256:213398d9d59ecdac5f716c201ca0181e9f2f8062dc9a5588203b1a4356fbab89
             securityContext:
               privileged: true
             args:
