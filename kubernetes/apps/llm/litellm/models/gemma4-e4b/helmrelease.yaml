@@ -113,6 +113,7 @@ spec:
               ZES_ENABLE_SYSMAN: "1"
               ONEAPI_DEVICE_SELECTOR: level_zero:gpu
               UR_L0_ENABLE_RELAXED_ALLOCATION_LIMITS: "1"
+              LD_LIBRARY_PATH: /app
             resources:
               claims:
                 - name: gpu
