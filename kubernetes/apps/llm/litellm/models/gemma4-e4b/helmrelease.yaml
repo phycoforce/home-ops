@@ -30,19 +30,19 @@ spec:
               - |
                 set -euo pipefail
 
-                if [ ! -s /models/gemma-4-E4B/gemma-4-E4B-it-UD-Q4_K_XL.gguf ] || [ ! -s /models/gemma-4-E4B/mmproj-F16.gguf ]; then
-                  pip install --no-cache-dir huggingface_hub
-                  mkdir -p /models/gemma-4-E4B
-                  rm -rf /models/gemma-4-E4B/.cache/huggingface/download/gemma-4-E4B-it-UD-Q4_K_XL.gguf.lock
+                if [ ! -s /models/gemma4-E4B/gemma-4-E4B-it-Q4_K_M.gguf ] || [ ! -s /models/gemma4-E4B/mmproj-F16.gguf ]; then
+                  pip install --no-cache-dir "huggingface_hub[hf_transfer]"
+                  mkdir -p /models/gemma4-E4B
+                  rm -rf /models/gemma4-E4B/.cache/huggingface/download/gemma-4-E4B-it-Q4_K_M.gguf.lock
                   hf download \
                     unsloth/gemma-4-E4B-it-GGUF \
-                    gemma-4-E4B-it-UD-Q4_K_XL.gguf \
+                    gemma-4-E4B-it-Q4_K_M.gguf \
                     mmproj-F16.gguf \
-                    --local-dir /models/gemma-4-E4B
+                    --local-dir /models/gemma4-E4B
 
-                  echo "Gemma-4-E4B-it-UD-Q4_K_XL download complete"
+                  echo "Gemma-4-E4B-it-Q4_K_M download complete"
                 else
-                  echo "Gemma-4-E4B-it-UD-Q4_K_XL already downloaded, skipping"
+                  echo "Gemma-4-E4B-it-Q4_K_M already downloaded, skipping"
                 fi
             env:
               HF_HUB_ENABLE_HF_TRANSFER: "1"
@@ -59,7 +59,7 @@ spec:
           app:
             image:
               repository: ghcr.io/ggml-org/llama.cpp
-              tag: server-intel-b9282@sha256:b531f0c31eb1505bdd4ea1f2e254d2c60a6dc3a652f258d562daac53d0ae3797
+              tag: server-vulkan
             securityContext:
               privileged: true
             args:
@@ -70,9 +70,9 @@ spec:
               - --alias
               - gemma4_e4b
               - --model
-              - /models/gemma-4-E4B/gemma-4-E4B-it-UD-Q4_K_XL.gguf
+              - /models/gemma4-E4B/gemma-4-E4B-it-Q4_K_M.gguf
               - --mmproj
-              - /models/gemma-4-E4B/mmproj-F16.gguf
+              - /models/gemma4-E4B/mmproj-F16.gguf
               - --ctx-size
               - "131072"
               - --n-gpu-layers
@@ -81,41 +81,33 @@ spec:
               - "off"
               - --flash-attn
               - "on"
+              - --parallel
+              - "2"
               - --cont-batching
               - -sps
               - "0.90"
               - --no-context-shift
-              - --cache-ram
-              - "0"
+              - --cache-prompt
               - --kv-unified
-              - --swa-full
-              - --ctx-checkpoints
-              - "4"
-              - --checkpoint-every-n-tokens
-              - "16384"
               - --image-min-tokens
-              - "70"
+              - "280"
               - --image-max-tokens
               - "280"
               - --metrics
               - --temp
-              - "0.1"
+              - "1.0"
               - --top-p
-              - "0.90"
+              - "0.95"
               - --top-k
-              - "32"
-              - --min-p
-              - "0"
+              - "64"
               - --threads
               - "6"
+              - --threads-batch
+              - "6"
               - --batch-size
-              - "512"
+              - "1024"
               - --ubatch-size
               - "512"
-              - --reasoning
-              - "off"
-              - --reasoning-budget
-              - "0"
               - --mmap
             env:
               ZES_ENABLE_SYSMAN: "1"
@@ -126,9 +118,9 @@ spec:
                 - name: gpu
               requests:
                 cpu: 500m
-                memory: 12Gi
+                memory: 8Gi
               limits:
-                memory: 24Gi
+                memory: 16Gi
             probes:
               liveness:
                 enabled: true
@@ -169,7 +161,6 @@ spec:
         hostPath: /dev/dri
         globalMounts:
           - path: /dev/dri
-            readOnly: true
     service:
       app:
         ports:
