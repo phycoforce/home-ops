@@ -5,6 +5,3 @@ kind: Kustomization
 resources:
   - ./resourceclaimtemplate.yaml
   - ./gemma4-e4b
-  #- ./gemma3-4b
-  #- ./llava-llama3
-  #- ./qwen3-5-9b
