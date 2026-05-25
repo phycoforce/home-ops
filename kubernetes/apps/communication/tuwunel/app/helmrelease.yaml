@@ -111,7 +111,7 @@ spec:
           gatus.home-operations.com/endpoint: |-
             conditions: ["[STATUS] == 404"]
         hostnames:
-          # Use a fallback to pass flux-local checks when substitution is blank.
+          # Use a fallback to pass flate checks when substitution is blank.
           - "${SECRET_DOMAIN:-example.com}"
         parentRefs:
           - name: envoy-external
