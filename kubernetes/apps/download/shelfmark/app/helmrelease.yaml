@@ -26,19 +26,6 @@ spec:
               tag: v1.3.0@sha256:e891eda444b261da48a839db652034bce4e20ac09c167f14adf939dedf96b572
             env:
               INGEST_DIR: /books
-            command:
-              - gunicorn
-            args:
-              # - --log-level=debug
-              - --access-logfile=-
-              - --error-logfile=-
-              - --worker-class=geventwebsocket.gunicorn.workers.GeventWebSocketWorker
-              - --workers=1
-              - -t
-              - "300"
-              - -b
-              - 0.0.0.0:8084
-              - shelfmark.main:app
             probes:
               liveness:
                 enabled: true
