@@ -10,4 +10,3 @@ _.file = [
 
 [tools]
 "uv" = "latest"
-"pipx:flux-local" = "latest"
