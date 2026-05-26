@@ -52,18 +52,18 @@ jobs:
           tool_versions: |
             github:home-operations/flate latest
 
-      - name: Install moreutils
-        run: sudo apt-get install -y --no-install-recommends moreutils
-
       - name: Run flate test
         env:
+          BRANCH: ${{ github.event.repository.default_branch }}
           KIND: ${{ matrix.kind }}
-        run: flate test "$KIND" --path ./kubernetes
+        run: flate test "$KIND" --path ./kubernetes --base "$BRANCH"
 
       - name: Run flate diff
         env:
           KIND: ${{ matrix.kind }}
-        run: flate diff "$KIND" --path ./kubernetes | ifne tee "$KIND.diff"
+        run: |
+          flate diff "$KIND" --path ./kubernetes > "$KIND.diff"
+          [ -s "$KIND.diff" ] || rm "$KIND.diff"
 
       - if: ${{ hashFiles(format('{0}.diff', matrix.kind)) != '' }}
         name: Upload diff
