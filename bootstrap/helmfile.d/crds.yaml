@@ -13,18 +13,17 @@
 helmDefaults:
   args: ['--include-crds', '--no-hooks']
 
+bases:
+  - default.yaml
+
+defaultInherit: default
+
 releases:
   - name: envoy-gateway
     namespace: network
-    chart: oci://mirror.gcr.io/envoyproxy/gateway-helm
-    version: 1.8.0
 
   - name: kube-prometheus-stack
     namespace: observability
-    chart: oci://ghcr.io/prometheus-community/charts/kube-prometheus-stack
-    version: 86.0.1
 
   - name: grafana-operator
     namespace: observability
-    chart: oci://ghcr.io/grafana/helm-charts/grafana-operator
-    version: 5.23.0
