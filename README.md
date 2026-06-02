@@ -11,11 +11,11 @@ _... managed with Flux, Renovate, and GitHub Actions_ <img src="https://fonts.gs
 
 <div align="center">
 
-[![Discord](https://img.shields.io/discord/673534664354430999?style=for-the-badge&label&logo=discord&logoColor=white&color=blue)](https://discord.gg/home-operations)&nbsp;&nbsp;
+[![Discord](https://img.shields.io/discord/673534664354430999?label&logo=discord&logoColor=white&color=blue)](https://discord.gg/home-operations)&nbsp;&nbsp;
 [![Talos](https://kromgo.bunny.ac/badges/talos_version)](https://talos.dev)&nbsp;&nbsp;
 [![Kubernetes](https://kromgo.bunny.ac/badges/kubernetes_version)](https://kubernetes.io)&nbsp;&nbsp;
 [![Flux](https://kromgo.bunny.ac/badges/flux_version)](https://fluxcd.io)&nbsp;&nbsp;
-[![Renovate](https://img.shields.io/github/actions/workflow/status/phycoforce/home-ops/renovate.yaml?branch=main&label=&logo=renovatebot&style=for-the-badge&color=blue)](https://github.com/phycoforce/home-ops/actions/workflows/renovate.yaml)
+[![Renovate](https://img.shields.io/github/actions/workflow/status/phycoforce/home-ops/renovate.yaml?branch=main&label&logo=renovate&color=blue)](https://github.com/phycoforce/home-ops/actions/workflows/renovate.yaml)
 
 </div>
 
