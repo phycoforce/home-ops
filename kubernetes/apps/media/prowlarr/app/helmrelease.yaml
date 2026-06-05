@@ -33,9 +33,9 @@ spec:
               PROWLARR__APP__THEME: dark
               PROWLARR__SERVER__PORT: &port 80
               TZ: Europe/London
-            #envFrom:
-            #  - secretRef:
-            #      name: prowlarr
+            envFrom:
+              - secretRef:
+                  name: prowlarr-secret
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
