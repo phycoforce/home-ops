@@ -25,11 +25,6 @@ spec:
   interval: 1h
   values:
     csi:
-      cephFSKernelMountOptions: ms_mode=prefer-crc
-      # NOTE: Enable the driver and shapshotter if you want to use CephFS
-      enableCephfsDriver: false
-      enableCephfsSnapshotter: false
-      enableLiveness: true
       serviceMonitor:
         enabled: true
     image:
