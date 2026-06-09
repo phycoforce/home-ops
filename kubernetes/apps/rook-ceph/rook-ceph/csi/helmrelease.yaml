@@ -1,0 +1,69 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/source.toolkit.fluxcd.io/helmrepository_v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: HelmRepository
+metadata:
+  name: ceph-csi-operator
+spec:
+  interval: 15m
+  url: https://ceph.github.io/ceph-csi-operator
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: ceph-csi-drivers
+spec:
+  chart:
+    spec:
+      chart: ceph-csi-drivers
+      interval: 15m
+      sourceRef:
+        kind: HelmRepository
+        name: ceph-csi-operator
+      version: 1.0.1
+  interval: 1h
+  postRenderers:
+    - kustomize:
+        patches:
+          - target:
+              group: csi.ceph.io
+              version: v1
+              kind: Driver
+              name: rook-ceph.rbd.csi.ceph.com
+            patch: |-
+              - op: add
+                path: /spec/liveness
+                value:
+                  metricsPort: 8080
+  values:
+    operatorConfig:
+      namespace: rook-ceph
+      driverSpecDefaults:
+        imageSet:
+          name: rook-csi-operator-image-set-configmap
+        nodePlugin:
+          priorityClassName: system-node-critical
+        controllerPlugin:
+          priorityClassName: system-cluster-critical
+          replicas: 2
+          deploymentStrategy:
+            type: Recreate
+    drivers:
+      rbd:
+        enabled: true
+        name: rook-ceph.rbd.csi.ceph.com
+        snapshotPolicy: volumeSnapshot
+      cephfs:
+        enabled: false
+        name: rook-ceph.cephfs.csi.ceph.com
+        kernelMountOptions:
+          ms_mode: prefer-crc
+        snapshotPolicy: none
+      nfs:
+        enabled: false
+        name: rook-ceph.nfs.csi.ceph.com
+        snapshotPolicy: none
+      nvmeof:
+        enabled: false
+        name: rook-ceph.nvmeof.csi.ceph.com
