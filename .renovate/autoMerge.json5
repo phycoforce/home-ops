@@ -42,7 +42,6 @@
     {
       description: "Auto-merge Grafana dashboards",
       matchDatasources: ["custom.grafana-dashboards"],
-      addLabels: ["renovate/grafana-dashboard"],
       automerge: true,
       automergeType: "branch",
       matchUpdateTypes: ["major"],
