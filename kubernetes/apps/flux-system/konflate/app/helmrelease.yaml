@@ -10,7 +10,7 @@ spec:
     mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
     operation: copy
   ref:
-    tag: 0.2.11
+    tag: 0.2.12
   url: oci://ghcr.io/home-operations/charts/konflate
 
 ---
@@ -27,6 +27,9 @@ spec:
   values:
     config:
       repo: github://phycoforce/home-ops
+      statusChecks: true
+      prComments: true
+      publicUrl: https://{{ .Release.Name }}.${SECRET_DOMAIN_2}
     secret:
       existingSecret: konflate-webhook-token-secret
     httpRoute:
