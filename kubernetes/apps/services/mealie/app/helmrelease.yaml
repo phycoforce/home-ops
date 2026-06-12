@@ -58,7 +58,7 @@ spec:
               readOnlyRootFilesystem: true
     persistence:
       data:
-        existingClaim: mealie
+        existingClaim: "{{ .Release.Name }}"
         globalMounts:
           - path: /app/data
       tmp:
@@ -67,11 +67,8 @@ spec:
           - path: /tmp
     route:
       app:
-        annotations:
-          gatus.home-operations.com/endpoint: |-
-            conditions: ["[STATUS] == 200"]
         hostnames:
-          - mealie.${SECRET_DOMAIN}
+          - "{{ .Release.Name }}.${SECRET_DOMAIN}"
         parentRefs:
           - name: envoy-internal
             namespace: network
