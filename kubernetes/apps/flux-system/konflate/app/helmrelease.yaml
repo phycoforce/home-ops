@@ -30,6 +30,7 @@ spec:
       statusChecks: true
       prComments: true
       publicUrl: https://{{ .Release.Name }}.${SECRET_DOMAIN_2}
+      mcp: true
     secret:
       existingSecret: konflate-webhook-token-secret
     httpRoute:
