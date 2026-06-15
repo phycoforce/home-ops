@@ -6,7 +6,7 @@ namespace: observability
 components:
   - ../../components/namespace
 resources:
-  - ./gatus/ks.yaml
+  - ./gatus-sidecar/ks.yaml
   - ./kube-prometheus-stack/ks.yaml
   - ./victoria-logs/ks.yaml
   - ./blackbox-exporter/ks.yaml
