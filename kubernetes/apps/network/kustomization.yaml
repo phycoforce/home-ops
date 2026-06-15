@@ -7,7 +7,7 @@ components:
   - ../../components/namespace
 resources:
   - ./cloudflared/ks.yaml
-  - ./echo-server/ks.yaml
+  - ./echo/ks.yaml
   - ./external-dns/ks.yaml
   - ./multus/ks.yaml
   - ./unifi/ks.yaml
