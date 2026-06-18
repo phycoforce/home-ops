@@ -14,3 +14,4 @@ resources:
   - ./intel-gpu-resource-driver/ks.yaml
   - ./descheduler/ks.yaml
   - ./irqbalance/ks.yaml
+  - ./drm-exporter/ks.yaml
