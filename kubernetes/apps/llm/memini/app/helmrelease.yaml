@@ -58,6 +58,12 @@ spec:
                 memory: 128Mi
               limits:
                 memory: 512Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
       fsck:
         enabled: true
         cronjob:
@@ -81,17 +87,7 @@ spec:
           - name: envoy-internal
             namespace: network
         rules:
-          - matches:
-              - path:
-                  type: PathPrefix
-                  value: /v1
-              - path:
-                  type: PathPrefix
-                  value: /mcp
-              - path:
-                  type: PathPrefix
-                  value: /.well-known/
-            backendRefs:
+          - backendRefs:
               - identifier: main
                 port: http
       ui:
@@ -99,3 +95,6 @@ spec:
     serviceMonitor:
       main:
         enabled: true
+    grafanaDashboards:
+      enabled: true
+      folder: llm
