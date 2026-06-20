@@ -48,7 +48,6 @@ spec:
               MEMINI_RERANK_MAX_CONCURRENCY: "2"
               MEMINI_RERANK_TIMEOUT: 8s
               MEMINI_SHORT_TERM_CAP: "300"
-              MEMINI_UI_ENABLED: "false"
               MEMINI_WRITE_DEDUP_MIN_SCORE: "0.90"
             envFrom:
               - secretRef:
