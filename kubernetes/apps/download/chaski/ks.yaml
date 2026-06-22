@@ -3,18 +3,14 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: notifier
+  name: chaski
 spec:
   interval: 1h
-  path: ./kubernetes/apps/download/notifier/app
-  postBuild:
-    substituteFrom:
-      - name: cluster-secrets
-        kind: Secret
+  path: ./kubernetes/apps/download/chaski/app
   prune: true
   sourceRef:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  wait: false
   targetNamespace: download
+  wait: false
