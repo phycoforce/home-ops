@@ -1,0 +1,82 @@
+---
+apiVersion: inference.llmkube.dev/v1alpha1
+kind: Model
+metadata:
+  name: llama-gemma4-e4b
+spec:
+  source: https://huggingface.co/unsloth/gemma-4-E4B-it-GGUF/resolve/main/gemma-4-E4B-it-Q4_K_M.gguf
+  format: gguf
+  quantization: Q4_K_M
+  hardware:
+    accelerator: vulkan
+    gpu:
+      enabled: true
+      vendor: intel
+      layers: -1
+      resourceClaims:
+        - name: gpu
+          resourceClaimTemplateName: llmkube-llama-gpu
+  resources:
+    cpu: "500m"
+    memory: 8Gi
+---
+apiVersion: inference.llmkube.dev/v1alpha1
+kind: InferenceService
+metadata:
+  name: llama-gemma4-e4b
+  labels:
+    krr/ignore: "true"
+spec:
+  modelRef: llama-gemma4-e4b
+  replicas: 1
+  image: ghcr.io/ggml-org/llama.cpp:server-vulkan-b9755@sha256:e1f7fafab64479a05c700cf7ac6d1e04d2c5e891362c0b6feb52aac263faa4de
+  contextSize: 131072
+  parallelSlots: 2
+  flashAttention: true
+  batchSize: 1024
+  uBatchSize: 512
+  extraArgs:
+    - --alias
+    - gemma4_e4b
+    - --mmproj-url
+    - https://huggingface.co/unsloth/gemma-4-E4B-it-GGUF/resolve/main/mmproj-F16.gguf
+    - --fit
+    - "off"
+    - --cont-batching
+    - "-sps"
+    - "0.90"
+    - --no-context-shift
+    - --cache-prompt
+    - --kv-unified
+    - --image-min-tokens
+    - "280"
+    - --image-max-tokens
+    - "280"
+    - --temp
+    - "1.0"
+    - --top-p
+    - "0.95"
+    - --top-k
+    - "64"
+    - --threads
+    - "6"
+    - --threads-batch
+    - "6"
+    - --mmap
+  env:
+    - name: ZES_ENABLE_SYSMAN
+      value: "1"
+    - name: ONEAPI_DEVICE_SELECTOR
+      value: level_zero:gpu
+    - name: UR_L0_ENABLE_RELAXED_ALLOCATION_LIMITS
+      value: "1"
+    - name: LD_LIBRARY_PATH
+      value: /app
+  resources:
+    cpu: 500m
+    memory: 8Gi
+  securityContext:
+    privileged: true
+  endpoint:
+    port: 8080
+    type: ClusterIP
