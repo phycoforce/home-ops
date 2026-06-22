@@ -12,24 +12,6 @@ data:
           api_base: http://llama-gemma4-e4b.llm.svc.cluster.local:8080/v1
           api_key: llama-gemma4-e4b
 
-      - model_name: gemma3_4b
-        litellm_params:
-          model: openai/gemma3_4b
-          api_base: http://llama-gemma3-4b.llm.svc.cluster.local:8080/v1
-          api_key: llama-gemma3-4b
-
-      - model_name: llava_llama3
-        litellm_params:
-          model: openai/llava_llama3
-          api_base: http://llama-llava-llama3.llm.svc.cluster.local:8080/v1
-          api_key: llama-llava-llama3
-
-      - model_name: qwen3-5-9b
-        litellm_params:
-          model: openai/qwen3-5-9b
-          api_base: http://llama-qwen3-5-9b.llm.svc.cluster.local:8080/v1
-          api_key: llama-qwen3-5-9b
-
     general_settings:
       health_check_endpoint: /v1/health
 

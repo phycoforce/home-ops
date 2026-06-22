@@ -1,0 +1,75 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/source.toolkit.fluxcd.io/ocirepository_v1.json
+apiVersion: source.toolkit.fluxcd.io/v1
+kind: OCIRepository
+metadata:
+  name: llmkube
+spec:
+  interval: 15m
+  layerSelector:
+    mediaType: application/vnd.cncf.helm.chart.content.v1.tar+gzip
+    operation: copy
+  ref:
+    tag: 0.8.13
+  url: oci://ghcr.io/home-operations/charts-mirror/llmkube
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: llmkube
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: llmkube
+  interval: 1h
+  install:
+    remediation:
+      retries: 3
+  upgrade:
+    cleanupOnFail: true
+    remediation:
+      retries: 3
+  values:
+    namespace: llm
+    crds:
+      install: true
+      keep: true
+    controllerManager:
+      replicaCount: 1
+      leaderElection:
+        enabled: false
+      resources:
+        requests:
+          cpu: 10m
+          memory: 128Mi
+        limits:
+          memory: 512Mi
+      podSecurityContext:
+        runAsNonRoot: true
+        seccompProfile:
+          type: RuntimeDefault
+      securityContext:
+        allowPrivilegeEscalation: false
+        capabilities:
+          drop:
+            - ALL
+        readOnlyRootFilesystem: true
+    metrics:
+      enabled: false
+    modelCache:
+      enabled: true
+      mode: perService
+      size: 20Gi
+      storageClass: ceph-block
+      accessMode: ReadWriteOnce
+      mountPath: /models
+      annotations: {}
+    prometheus:
+      serviceMonitor:
+        enabled: false
+      inferencePodMonitor:
+        enabled: true
+        interval: 30s
+      prometheusRule:
+        enabled: false

@@ -1,0 +1,65 @@
+---
+apiVersion: inference.llmkube.dev/v1alpha1
+kind: Model
+metadata:
+  name: llama-embed
+spec:
+  source: https://huggingface.co/Qwen/Qwen3-Embedding-0.6B-GGUF/resolve/main/Qwen3-Embedding-0.6B-Q8_0.gguf
+  format: gguf
+  quantization: Q8_0
+  hardware:
+    accelerator: vulkan
+    gpu:
+      enabled: true
+      vendor: intel
+      layers: -1
+      resourceClaims:
+        - name: gpu
+          resourceClaimTemplateName: llmkube-llama-gpu
+  resources:
+    cpu: "250m"
+    memory: 2Gi
+---
+apiVersion: inference.llmkube.dev/v1alpha1
+kind: InferenceService
+metadata:
+  name: llama-embed
+  labels:
+    krr/ignore: "true"
+spec:
+  modelRef: llama-embed
+  replicas: 1
+  image: ghcr.io/ggml-org/llama.cpp:server-vulkan-b9755@sha256:e1f7fafab64479a05c700cf7ac6d1e04d2c5e891362c0b6feb52aac263faa4de
+  contextSize: 32768
+  parallelSlots: 2
+  batchSize: 16384
+  uBatchSize: 16384
+  extraArgs:
+    - --alias
+    - llama-embed
+    - --embeddings
+    - --pooling
+    - last
+    - --cont-batching
+    - --threads
+    - "6"
+    - --threads-batch
+    - "12"
+    - --mmap
+  env:
+    - name: ZES_ENABLE_SYSMAN
+      value: "1"
+    - name: ONEAPI_DEVICE_SELECTOR
+      value: level_zero:gpu
+    - name: UR_L0_ENABLE_RELAXED_ALLOCATION_LIMITS
+      value: "1"
+    - name: LD_LIBRARY_PATH
+      value: /app
+  resources:
+    cpu: 250m
+    memory: 2Gi
+  securityContext:
+    privileged: true
+  endpoint:
+    port: 8080
+    type: ClusterIP
