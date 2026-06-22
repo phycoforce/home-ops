@@ -6,3 +6,4 @@ resources:
   - ./cluster.yaml
   - ./podmonitor.yaml
   - ./networkpolicy.yaml
+  - ./networkpolicy-clients.yaml
