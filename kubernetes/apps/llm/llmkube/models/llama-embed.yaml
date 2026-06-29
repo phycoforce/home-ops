@@ -67,8 +67,25 @@ spec:
   resources:
     cpu: 250m
     memory: 2Gi
+  podSecurityContext:
+    runAsNonRoot: true
+    runAsUser: 1000
+    runAsGroup: 1000
+    fsGroup: 102 # render GID; matches what the operator already injects
+    supplementalGroups:
+      - 44 # video
+      - 102 # render -> grants open() on /dev/dri/renderD128
+    seccompProfile:
+      type: RuntimeDefault
   securityContext:
-    privileged: true
+    allowPrivilegeEscalation: false
+    runAsNonRoot: true
+    runAsUser: 1000
+    capabilities:
+      drop:
+        - ALL
+    seccompProfile:
+      type: RuntimeDefault
   endpoint:
     port: 8080
     type: ClusterIP
