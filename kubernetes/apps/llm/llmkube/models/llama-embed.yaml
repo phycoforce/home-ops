@@ -68,7 +68,10 @@ spec:
     cpu: 250m
     memory: 2Gi
   podSecurityContext:
-    runAsNonRoot: true
+    # No pod-level runAsNonRoot: the operator's model-cache-prep init container
+    # must run as root (uid 0, CHOWN/FOWNER) to fix model-cache PVC perms.
+    # The inference container is still enforced non-root via its own
+    # container-level securityContext below.
     runAsUser: 1000
     runAsGroup: 1000
     fsGroup: 102 # render GID; matches what the operator already injects
