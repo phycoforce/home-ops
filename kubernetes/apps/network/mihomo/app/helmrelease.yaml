@@ -1,0 +1,73 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: mihomo
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: mihomo
+  interval: 1h
+  values:
+    controllers:
+      mihomo:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: docker.io/metacubex/mihomo
+              tag: v1.19.27@sha256:23e7666401c91e2e293e01fb2f842b0a75530821c29b8ff2ed79409cd51fc74f
+            args: ["-d", "/config"]
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 25m
+                memory: 64Mi
+              limits:
+                memory: 256Mi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1000
+        runAsGroup: 1000
+        fsGroup: 1000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
+    service:
+      app:
+        type: LoadBalancer
+        annotations:
+          io.cilium/lb-ipam-ips: 10.0.20.242
+        ports:
+          http:
+            port: 3128
+    persistence:
+      # Writable working dir for mihomo (cache.db). config.yaml + secret-sites.yaml are
+      # layered on top as read-only subPath mounts.
+      config:
+        type: emptyDir
+        globalMounts:
+          - path: /config
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+      config-file:
+        type: configMap
+        name: mihomo-configmap
+        globalMounts:
+          - path: /config/config.yaml
+            subPath: config.yaml
+            readOnly: true
+      secret-sites:
+        type: secret
+        name: mihomo-secret-sites
+        globalMounts:
+          - path: /config/secret-sites.yaml
+            subPath: secret-sites.yaml
+            readOnly: true
