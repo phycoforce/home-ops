@@ -47,9 +47,8 @@ spec:
           http:
             port: 3128
     persistence:
-      # Writable working dir for mihomo (cache.db). config.yaml + secret-sites.yaml are
-      # rendered from 1Password into the mihomo-secret Secret and layered on top here as
-      # read-only subPath mounts.
+      # Writable working dir for mihomo (cache.db). config.yaml is rendered from 1Password
+      # into the mihomo-secret Secret and layered on top here as a read-only subPath mount.
       config:
         type: emptyDir
         globalMounts:
@@ -64,7 +63,4 @@ spec:
         globalMounts:
           - path: /config/config.yaml
             subPath: config.yaml
-            readOnly: true
-          - path: /config/secret-sites.yaml
-            subPath: secret-sites.yaml
             readOnly: true
