@@ -3,37 +3,13 @@
 apiVersion: kustomize.toolkit.fluxcd.io/v1
 kind: Kustomization
 metadata:
-  name: mihomo-secrets
-spec:
-  interval: 1h
-  path: ./kubernetes/apps/network/mihomo/secrets
-  postBuild:
-    substitute:
-      APP: mihomo-secrets
-  prune: true
-  sourceRef:
-    kind: GitRepository
-    name: flux-system
-    namespace: flux-system
-  wait: false
-  targetNamespace: network
----
-# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
-apiVersion: kustomize.toolkit.fluxcd.io/v1
-kind: Kustomization
-metadata:
   name: mihomo
 spec:
-  dependsOn:
-    - name: mihomo-secrets
   interval: 1h
   path: ./kubernetes/apps/network/mihomo/app
   postBuild:
     substitute:
       APP: mihomo
-    substituteFrom:
-      - name: mihomo-secret
-        kind: Secret
   prune: true
   sourceRef:
     kind: GitRepository
