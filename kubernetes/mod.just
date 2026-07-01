@@ -1,10 +1,7 @@
+set default-list
 set quiet
 set script-interpreter := ['bash', '-euo', 'pipefail']
 set shell := ['bash', '-euo', 'pipefail', '-c']
-
-[private]
-default:
-    just -l kube
 
 [doc('Apply local Flux Kustomization')]
 apply-ks ns ks:
