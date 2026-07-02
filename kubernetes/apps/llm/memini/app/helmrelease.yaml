@@ -17,11 +17,11 @@ spec:
           reloader.stakater.com/auto: "true"
         pod:
           securityContext:
-            fsGroup: 1000
+            fsGroup: 1001
             fsGroupChangePolicy: OnRootMismatch
-            runAsGroup: 1000
+            runAsGroup: 1001
             runAsNonRoot: true
-            runAsUser: 1000
+            runAsUser: 1001
         containers:
           main:
             env:
@@ -64,6 +64,13 @@ spec:
         enabled: true
         cronjob:
           schedule: "0 5 * * *"
+        pod:
+          securityContext:
+            fsGroup: 1001
+            fsGroupChangePolicy: OnRootMismatch
+            runAsGroup: 1001
+            runAsNonRoot: true
+            runAsUser: 1001
         containers:
           fsck:
             env:
