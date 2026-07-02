@@ -23,6 +23,12 @@ spec:
                 "ips": ["192.168.0.241/24"],
                 "mac": "48:C3:71:81:39:77"
               }]
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+            fsGroup: 1001
+            fsGroupChangePolicy: OnRootMismatch
         containers:
           app:
             image:
@@ -30,12 +36,14 @@ spec:
               tag: v10.0.162@sha256:896c0ab82d33300694dae82982fd7094497afcbea0be92cadc1e94bfead731d3
               pullPolicy: IfNotPresent
             env:
-              RUNAS_UID0: "false"
-              UNIFI_UID: "999"
-              UNIFI_GID: "999"
               UNIFI_STDOUT: "true"
               JVM_INIT_HEAP_SIZE:
               JVM_MAX_HEAP_SIZE: 1024M
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
             resources:
               requests:
                 memory: 2Gi
