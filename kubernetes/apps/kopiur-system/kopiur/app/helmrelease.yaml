@@ -1,0 +1,54 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kopiur
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: kopiur
+  interval: 1h
+  values:
+    controller:
+      # The controller mounts the kopia repository directly (repo connect /
+      # catalog / maintenance ownership). Movers reach the same export via the
+      # ClusterRepository backend.filesystem.volume.nfs synthesized per Job.
+      extraVolumes:
+        - name: repo
+          nfs:
+            server: aionios.internal
+            path: /mnt/bionis/Kopiur
+      extraVolumeMounts:
+        - name: repo
+          mountPath: /repo
+      resources:
+        requests:
+          cpu: 100m
+        limits:
+          memory: 2Gi
+      streamingLists: true
+    features:
+      credentialProjection:
+        enabled: true
+    grafanaDashboard:
+      enabled: true
+      grafanaOperator:
+        enabled: true
+        matchLabels:
+          dashboards: grafana
+    installScope: cluster
+    metrics:
+      serviceMonitor:
+        enabled: true
+      prometheusRule:
+        enabled: true
+    podSecurityContext:
+      runAsNonRoot: true
+      runAsUser: 1001
+      runAsGroup: 1001
+      fsGroup: 1001
+      fsGroupChangePolicy: OnRootMismatch
+    webhook:
+      serviceMonitor:
+        enabled: true

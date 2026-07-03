@@ -7,6 +7,7 @@ metadata:
 spec:
   components:
     - ../../../../components/volsync
+    - ../../../../components/kopiur
     - ../../../../components/zeroscaler
   interval: 1h
   path: ./kubernetes/apps/download/shelfmark/app
