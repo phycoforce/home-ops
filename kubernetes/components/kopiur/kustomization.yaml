@@ -1,0 +1,12 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1alpha1
+kind: Component
+resources:
+  - ./snapshotpolicy.yaml
+  - ./snapshotschedule.yaml
+  # Cutover (Phase 3): uncomment the two lines below to hand PVC ownership to
+  # kopiur's populator. Keep them commented during the volsync dual-run so the
+  # volsync component keeps owning the ${APP} PVC (no duplicate-resource clash).
+  # - ./pvc.yaml
+  # - ./restore.yaml

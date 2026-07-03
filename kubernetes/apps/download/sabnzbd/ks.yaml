@@ -8,6 +8,7 @@ spec:
   components:
     - ../../../../components/zeroscaler
     - ../../../../components/volsync
+    - ../../../../components/kopiur
   dependsOn:
     - name: openebs
       namespace: openebs-system
@@ -19,6 +20,7 @@ spec:
     substitute:
       APP: sabnzbd
       VOLSYNC_CAPACITY: 2Gi
+      KOPIUR_CAPACITY: 2Gi
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
