@@ -46,8 +46,6 @@ metadata:
 spec:
   dependsOn:
     - name: rook-ceph-csi
-    - name: volsync
-      namespace: volsync-system
   healthChecks:
     - apiVersion: helm.toolkit.fluxcd.io/v2
       kind: HelmRelease

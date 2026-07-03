@@ -8,6 +8,6 @@ components:
   - ../../components/cluster-secrets
 resources:
   - ./namespace.yaml
+  # volsync + kopia UI removed after the kopiur migration; this namespace now
+  # hosts only snapshot-controller (still required by kopiur's copyMethod: Snapshot).
   - ./snapshot-controller/ks.yaml
-  - ./volsync/ks.yaml
-  - ./kopia/ks.yaml
