@@ -6,7 +6,6 @@ metadata:
   name: memini
 spec:
   components:
-    - ../../../../components/volsync
     - ../../../../components/kopiur
   dependsOn:
     - name: external-secrets
@@ -20,7 +19,6 @@ spec:
   postBuild:
     substitute:
       APP: memini
-      VOLSYNC_CAPACITY: 10Gi
       KOPIUR_CAPACITY: 10Gi
     substituteFrom:
       - name: cluster-secrets

@@ -7,7 +7,6 @@ metadata:
 spec:
   components:
     - ../../../../components/zeroscaler
-    - ../../../../components/volsync
     - ../../../../components/kopiur
   dependsOn:
     - name: openebs
@@ -19,7 +18,6 @@ spec:
   postBuild:
     substitute:
       APP: sabnzbd
-      VOLSYNC_CAPACITY: 2Gi
       KOPIUR_CAPACITY: 2Gi
     substituteFrom:
       - name: cluster-secrets

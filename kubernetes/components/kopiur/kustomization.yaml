@@ -5,8 +5,8 @@ kind: Component
 resources:
   - ./snapshotpolicy.yaml
   - ./snapshotschedule.yaml
-  # Cutover (Phase 3): uncomment the two lines below to hand PVC ownership to
-  # kopiur's populator. Keep them commented during the volsync dual-run so the
-  # volsync component keeps owning the ${APP} PVC (no duplicate-resource clash).
-  # - ./pvc.yaml
-  # - ./restore.yaml
+  # Cutover complete: kopiur owns the ${APP} PVC via the Restore populator.
+  # A bound PVC's dataSourceRef is immutable, so the old volsync-provisioned PVC
+  # must be deleted so Flux re-creates it here and the populator hydrates it.
+  - ./pvc.yaml
+  - ./restore.yaml

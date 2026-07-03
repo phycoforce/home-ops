@@ -6,7 +6,6 @@ metadata:
   name: tuwunel
 spec:
   components:
-    - ../../../../components/volsync
     - ../../../../components/kopiur
   dependsOn:
     - name: rook-ceph-cluster
@@ -16,7 +15,6 @@ spec:
   postBuild:
     substitute:
       APP: tuwunel
-      VOLSYNC_CAPACITY: 15Gi
       KOPIUR_CAPACITY: 15Gi
     substituteFrom:
       - name: cluster-secrets

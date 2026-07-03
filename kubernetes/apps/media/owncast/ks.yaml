@@ -6,7 +6,6 @@ metadata:
   name: owncast
 spec:
   components:
-    - ../../../../components/volsync
     - ../../../../components/kopiur
   dependsOn:
     - name: rook-ceph-cluster
@@ -18,7 +17,6 @@ spec:
   postBuild:
     substitute:
       APP: owncast
-      VOLSYNC_CAPACITY: 10Gi
       KOPIUR_CAPACITY: 10Gi
     substituteFrom:
       - name: cluster-secrets

@@ -7,7 +7,6 @@ metadata:
 spec:
   components:
     - ../../../../components/zeroscaler
-    - ../../../../components/volsync
     - ../../../../components/kopiur
   dependsOn:
     - name: rook-ceph-cluster
@@ -17,7 +16,6 @@ spec:
   postBuild:
     substitute:
       APP: agregarr
-      VOLSYNC_CAPACITY: 5Gi
       KOPIUR_CAPACITY: 5Gi
     substituteFrom:
       - name: cluster-secrets

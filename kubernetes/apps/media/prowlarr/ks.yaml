@@ -6,7 +6,6 @@ metadata:
   name: prowlarr
 spec:
   components:
-    - ../../../../components/volsync
     - ../../../../components/kopiur
     - ../../../../components/zeroscaler
   dependsOn:
@@ -17,7 +16,6 @@ spec:
   postBuild:
     substitute:
       APP: prowlarr
-      VOLSYNC_CAPACITY: 1Gi
       KOPIUR_CAPACITY: 1Gi
     substituteFrom:
       - name: cluster-secrets
