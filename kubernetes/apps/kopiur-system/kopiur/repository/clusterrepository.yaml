@@ -14,8 +14,6 @@ spec:
         nfs:
           server: aionios.internal
           path: /mnt/bionis/Kopiur
-  create:
-    enabled: true
   credentialProjection:
     allowed: true
   encryption:
