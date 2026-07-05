@@ -9,12 +9,6 @@ spec:
     kind: OCIRepository
     name: bazarr
   interval: 1h
-  install:
-    timeout: 15m
-  upgrade:
-    timeout: 15m
-    remediation:
-      remediateLastFailure: false
   values:
     controllers:
       bazarr:
@@ -43,12 +37,12 @@ spec:
                     path: /api/system/ping
                     port: *port
                   periodSeconds: 10
-                  timeoutSeconds: 10
-                  failureThreshold: 6
+                  timeoutSeconds: 5
+                  failureThreshold: 5
               startup:
                 enabled: true
                 spec:
-                  failureThreshold: 60
+                  failureThreshold: 30
                   periodSeconds: 10
             securityContext:
               allowPrivilegeEscalation: false
