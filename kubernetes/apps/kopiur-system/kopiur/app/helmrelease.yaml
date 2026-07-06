@@ -10,38 +10,27 @@ spec:
     name: kopiur
   interval: 1h
   values:
-    controller:
-      # The controller mounts the kopia repository directly (repo connect /
-      # catalog / maintenance ownership). Movers reach the same export via the
-      # ClusterRepository backend.filesystem.volume.nfs synthesized per Job.
-      extraVolumes:
-        - name: repo
-          nfs:
-            server: aionios.internal
-            path: /mnt/bionis/Kopiur
-      extraVolumeMounts:
-        - name: repo
-          mountPath: /repo
-      resources:
-        requests:
-          cpu: 100m
-        limits:
-          memory: 2Gi
-      streamingLists: true
+    extraVolumes:
+      - name: repo
+        nfs:
+          server: aionios.internal
+          path: /mnt/bionis/Kopiur
+    extraVolumeMounts:
+      - name: repo
+        mountPath: /repo
     features:
       credentialProjection:
         enabled: true
-    grafanaDashboard:
-      enabled: true
-      grafanaOperator:
+    monitoring:
+      dashboards:
         enabled: true
-        matchLabels:
-          dashboards: grafana
-    installScope: cluster
-    metrics:
-      serviceMonitor:
-        enabled: true
+        grafanaOperator:
+          enabled: true
+          matchLabels:
+            dashboards: grafana
       prometheusRule:
+        enabled: true
+      serviceMonitor:
         enabled: true
     podSecurityContext:
       runAsNonRoot: true
@@ -49,6 +38,8 @@ spec:
       runAsGroup: 1001
       fsGroup: 1001
       fsGroupChangePolicy: OnRootMismatch
-    webhook:
-      serviceMonitor:
-        enabled: true
+    resources:
+      requests:
+        cpu: 100m
+      limits:
+        memory: 2Gi
