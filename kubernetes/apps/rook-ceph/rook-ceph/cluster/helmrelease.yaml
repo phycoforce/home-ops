@@ -44,9 +44,6 @@ spec:
         prometheusEndpoint: http://prometheus-operated.observability.svc.cluster.local:9090
       mgr:
         modules:
-          # diskprediction_local + insights leak memory in the active mgr
-          # until it hits the 1Gi chart-default limit and gets OOMKilled;
-          # explicit enabled:false so Rook disables them in the cluster
           - name: diskprediction_local
             enabled: false
           - name: insights
@@ -54,7 +51,7 @@ spec:
           - name: pg_autoscaler
             enabled: true
           - name: rook
-            enabled: true
+            enabled: false
       network:
         provider: host
         addressRanges:
