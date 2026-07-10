@@ -47,6 +47,11 @@ machine:
     image: factory.talos.dev/metal-installer/{{ ENV.SCHEMATIC }}:v1.13.5
   kernel:
     modules:
+      - name: dm_thin_pool # Miroir lvm-thin pool
+      - name: drbd # Miroir DRBD9 replication
+        parameters:
+          - usermode_helper=disabled
+      - name: drbd_transport_tcp # Miroir DRBD9 replication
       - name: nbd
       - name: thunderbolt
       - name: thunderbolt_net
@@ -54,6 +59,8 @@ machine:
     image: ghcr.io/siderolabs/kubelet:v1.36.2
     extraConfig:
       serializeImagePulls: false
+      shutdownGracePeriod: 90s # let Miroir/DRBD release cleanly on node shutdown
+      shutdownGracePeriodCriticalPods: 60s
     defaultRuntimeSeccompProfileEnabled: true
     nodeIP:
       validSubnets:
@@ -173,8 +180,8 @@ cluster:
   {% endif %}
 ---
 apiVersion: v1alpha1
-kind: UserVolumeConfig
-name: local-hostpath
+kind: RawVolumeConfig
+name: miroir # → /dev/disk/by-partlabel/r-miroir (consumed by the Miroir HelmRelease in Stage 3)
 provisioning:
   diskSelector:
     match: disk.model == "Micron_7450_MTFDKBG960TFR" && !system_disk
