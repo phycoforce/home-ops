@@ -1,0 +1,49 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: miroir
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: miroir
+  interval: 1h
+  values:
+    monitoring:
+      dashboards:
+        enabled: true
+        grafanaOperator:
+          enabled: true
+          matchLabels:
+            dashboards: grafana
+      podMonitor:
+        enabled: true
+      prometheusRule:
+        enabled: true
+    # One lvm-thin pool per node on the dedicated Micron 7450 (Talos RawVolumeConfig → r-miroir)
+    nodes:
+      logos:
+        backend: lvmthin
+        device: /dev/disk/by-partlabel/r-miroir
+      ontos:
+        backend: lvmthin
+        device: /dev/disk/by-partlabel/r-miroir
+      pneuma:
+        backend: lvmthin
+        device: /dev/disk/by-partlabel/r-miroir
+    # Both StorageClasses draw from the same per-node pool; differ only by replica count.
+    storageClass: # miroir-local: single copy, no DRBD
+      create: true
+      name: miroir-local
+      isDefault: false
+      replicas: 1
+      fsType: ext4
+      reclaimPolicy: Delete
+    replicatedStorageClass: # miroir-replicated: 2 legs, DRBD9-mirrored (+ diskless tiebreaker)
+      create: true
+      name: miroir-replicated
+      isDefault: false
+      quorum: freeze
+      fsType: ext4
+      reclaimPolicy: Delete
