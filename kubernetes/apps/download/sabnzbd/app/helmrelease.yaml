@@ -74,8 +74,8 @@ spec:
                 accessModes: ["ReadWriteOnce"]
                 resources:
                   requests:
-                    storage: 1Mi # Ignored
-                storageClassName: openebs-hostpath
+                    storage: 200Gi # was 1Mi (openebs ignored size); real CSI enforces it
+                storageClassName: ceph-block
                 volumeMode: Filesystem
       tmpfs:
         type: emptyDir

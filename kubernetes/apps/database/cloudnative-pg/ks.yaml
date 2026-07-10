@@ -50,8 +50,6 @@ spec:
     - name: cloudnative-pg-barman-cloud
     - name: external-secrets
       namespace: security
-    - name: openebs
-      namespace: openebs-system
   healthCheckExprs:
     - apiVersion: postgresql.cnpg.io/v1
       kind: Cluster

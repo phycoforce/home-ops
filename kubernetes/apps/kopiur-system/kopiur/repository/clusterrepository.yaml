@@ -23,15 +23,15 @@ spec:
       key: KOPIA_PASSWORD
   moverDefaults:
     cache:
-      capacity: 1Mi
-      mode: Ephemeral
-      storageClassName: openebs-hostpath
+      capacity: 5Gi # was 1Mi (openebs ignored size); real CSI enforces it
+      mode: Ephemeral # keep interim; Stage 4 → Persistent + storageClassName: miroir-replicated
+      storageClassName: ceph-block
     podSecurityContext:
       fsGroup: 1001
       fsGroupChangePolicy: OnRootMismatch
     scratch:
-      capacity: 1Mi
-      storageClassName: openebs-hostpath
+      capacity: 5Gi # was 1Mi (openebs ignored size)
+      storageClassName: ceph-block
     securityContext:
       runAsUser: 1001
       runAsGroup: 1001
