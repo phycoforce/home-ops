@@ -1,3 +1,3 @@
-{{- $release := printf "../../kubernetes/apps/%s/%s/app/helmrelease.yaml" .Release.Namespace .Release.Name -}}
-chart: {{ exec "yq" (list "select(.kind == \"OCIRepository\").spec.url" $release) }}
-version: {{ exec "yq" (list "select(.kind == \"OCIRepository\").spec.ref.tag" $release) }}
+{{- $oci := fromYaml (readFile (printf "../../kubernetes/apps/%s/%s/app/ocirepository.yaml" .Release.Namespace .Release.Name)) -}}
+chart: {{ $oci.spec.url }}
+version: {{ $oci.spec.ref.tag }}
