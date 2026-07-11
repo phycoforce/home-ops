@@ -21,20 +21,5 @@ spec:
       name: kopiur-nas-secret
       namespace: kopiur-system
       key: KOPIA_PASSWORD
-  moverDefaults:
-    cache:
-      capacity: 5Gi # was 1Mi (openebs ignored size); real CSI enforces it
-      mode: Ephemeral # keep interim; Stage 4 → Persistent + storageClassName: miroir-replicated
-      storageClassName: ceph-block
-    podSecurityContext:
-      fsGroup: 1001
-      fsGroupChangePolicy: OnRootMismatch
-    scratch:
-      capacity: 5Gi # was 1Mi (openebs ignored size)
-      storageClassName: ceph-block
-    securityContext:
-      runAsUser: 1001
-      runAsGroup: 1001
-    ttlSecondsAfterFinished: 300
   scheduleDefaults:
     timezone: Europe/London

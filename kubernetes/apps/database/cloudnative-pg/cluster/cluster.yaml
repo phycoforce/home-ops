@@ -12,7 +12,7 @@ spec:
   primaryUpdateStrategy: unsupervised
   storage:
     size: 20Gi
-    storageClass: miroir-local # was openebs-hostpath; Stage 4 target (inert while cluster ks is commented)
+    storageClass: miroir-local
   superuserSecret:
     name: cloudnative-pg-secret
   enableSuperuserAccess: true

@@ -74,8 +74,8 @@ spec:
                 accessModes: ["ReadWriteOnce"]
                 resources:
                   requests:
-                    storage: 200Gi # was 1Mi (openebs ignored size); real CSI enforces it
-                storageClassName: ceph-block
+                    storage: 150Gi
+                storageClassName: miroir-local
                 volumeMode: Filesystem
       tmpfs:
         type: emptyDir

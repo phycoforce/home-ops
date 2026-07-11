@@ -8,8 +8,5 @@ components:
   - ../../components/cluster-secrets
 resources:
   - ./namespace.yaml
-  # DISABLED for OpenEBS→Miroir migration: CNPG torn down so its OpenEBS PVCs can be
-  # deleted before the Micron repartition. Re-enable in Stage 4 (cluster.yaml is already
-  # set to storageClass: miroir-local; re-bootstraps from barman on aionios MinIO).
-  # - ./cloudnative-pg/ks.yaml
+  - ./cloudnative-pg/ks.yaml
   - ./dragonfly/ks.yaml

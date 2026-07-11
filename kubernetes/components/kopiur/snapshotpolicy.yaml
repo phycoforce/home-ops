@@ -9,6 +9,18 @@ spec:
     compressor: zstd
   credentialProjection:
     enabled: true
+  mover:
+    cache:
+      capacity: ${KOPIUR_CAPACITY:=5Gi}
+      mode: Persistent
+      storageClassName: miroir-replicated
+    podSecurityContext:
+      fsGroup: 1001
+      fsGroupChangePolicy: OnRootMismatch
+    securityContext:
+      runAsUser: 1001
+      runAsGroup: 1001
+    ttlSecondsAfterFinished: 300
   repository:
     kind: ClusterRepository
     name: nas
