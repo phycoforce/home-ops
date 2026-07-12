@@ -16,4 +16,4 @@ resources:
   - ./envoy-gateway/ks.yaml
   - ./mihomo/ks.yaml
   - ./certificates/ks.yaml
-  #- ./towonel-operator/ks.yaml
+  - ./towonel-operator/ks.yaml
