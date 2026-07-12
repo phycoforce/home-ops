@@ -31,7 +31,8 @@ spec:
               ALWAYS_UPDATE_ON_START: true # SteamCMD update+validate on every boot
               STEAMCMD_VALIDATE_FILES: true
               BACKUP_ENABLED: false # kopiur snapshots the PVC instead
-              RESTART_ENABLED: false
+              RESTART_ENABLED: true
+              RESTART_CRON_EXPRESSION: 0 6 * * * #5am daily
               MULTITHREAD_ENABLED: true
               SERVER_SETTINGS_MODE: auto
               ## Server identity / access
