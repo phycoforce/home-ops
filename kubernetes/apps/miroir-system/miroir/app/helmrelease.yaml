@@ -21,6 +21,8 @@ spec:
         enabled: true
       prometheusRule:
         enabled: true
+    drbd:
+      portBase: 7000 #Ceph MGR Conflict
     # One lvm-thin pool per node on the dedicated Micron 7450 (Talos RawVolumeConfig → r-miroir)
     nodes:
       logos:
