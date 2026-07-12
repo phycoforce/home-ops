@@ -21,4 +21,4 @@ spec:
   # Uses a dedicated name (not palworld.${SECRET_DOMAIN_2}) so it can't collide
   # with an orphaned hub hostname claim.
   extraHostnames:
-    - "palworld-tunnel.${SECRET_DOMAIN_2}"
+    - "palworld.${SECRET_DOMAIN_2}"
