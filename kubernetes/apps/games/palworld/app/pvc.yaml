@@ -1,0 +1,13 @@
+---
+# Game binaries + content, re-fetchable by SteamCMD, so this is intentionally a
+# plain PVC that kopiur does NOT back up (only the config/world PVC is snapshotted).
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: palworld-cache
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 20Gi
+  storageClassName: ceph-block

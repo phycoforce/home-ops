@@ -1,0 +1,12 @@
+---
+apiVersion: v1
+kind: Namespace
+metadata:
+  name: _
+  labels:
+    # jammsen/docker-palworld-dedicated-server starts as root (PUID/PGID entrypoint
+    # drops to the steam user via gosu), which the "restricted" PSS level forbids.
+    # "baseline" permits root while still blocking privileged/hostNetwork/hostPath.
+    pod-security.kubernetes.io/enforce: baseline
+  annotations:
+    kustomize.toolkit.fluxcd.io/prune: disabled
