@@ -41,7 +41,10 @@ spec:
               MAX_PLAYERS: 16
               ## Public networking — players reach the server via the Towonel edge
               PUBLIC_IP: palworld.${SECRET_DOMAIN_2}
-              PUBLIC_PORT: &port 8221 # 8211's hub reservation is orphaned under a dead tenant; use 8221
+              # Hosted towonel edge only forwards public ports in its auto-pick band
+              # 10000-32767 (ports.rs AUTO_PICK_START/END); an out-of-band port (8221)
+              # is "reserved" by the hub but never opened on the edge firewall.
+              PUBLIC_PORT: &port 30000
               ## REST API — cluster-internal only (container tooling); NOT exposed
               RESTAPI_ENABLED: true
               RESTAPI_PORT: 8212
@@ -120,7 +123,7 @@ spec:
           towonel.io/tunnel: enable
           towonel.io/tunnel-ref: network/towonel-main
           towonel.io/game.udp: "true"
-          towonel.io/game.public-port: "8221"
+          towonel.io/game.public-port: "30000"
         ports:
           game:
             port: *port # 8221 — public/edge/LAN + advertised (PUBLIC_PORT) port

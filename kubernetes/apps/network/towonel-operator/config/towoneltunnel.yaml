@@ -14,11 +14,9 @@ spec:
   #   EU → edge-eu.towonel.dev (54.36.18.175)
   #   CA → edge-na.towonel.dev (51.79.11.238)
   region: EU
-  # A tunnel needs >=1 authorized hostname to mint its hub invite, even for
-  # UDP-only routing (otherwise it stays Pending and no token secret is issued).
-  # We serve no HTTPS here — this is only the invite anchor, unrelated to the
-  # UDP path (players reach palworld.${SECRET_DOMAIN_2}:8211 by DNS→edge→port).
-  # Uses a dedicated name (not palworld.${SECRET_DOMAIN_2}) so it can't collide
-  # with an orphaned hub hostname claim.
+  # REQUIRED: the hub won't issue an invite for a tunnel with zero hostnames.
+  # This is ONLY the invite anchor (HTTPS/SNI escape hatch) — it is NOT how
+  # players reach the game. Raw UDP is routed purely by public port, and players
+  # connect to palworld.${SECRET_DOMAIN_2}:<public-port> (DNS → edge, port → tenant).
   extraHostnames:
-    - "palworld.${SECRET_DOMAIN_2}"
+    - "palworld-tunnel.${SECRET_DOMAIN_2}"
