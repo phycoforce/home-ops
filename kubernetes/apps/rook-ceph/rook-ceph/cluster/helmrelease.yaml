@@ -41,6 +41,12 @@ spec:
         enabled: true
         urlPrefix: /
         ssl: false
+        # Explicit port: the non-SSL default (7000) collides with miroir's first
+        # DRBD slot (minor 1000 → port 7000) on this hostNetwork cluster — the
+        # mgr dashboard squatting 7000 on mgr nodes is the root cause of every
+        # miroir birth-split (upstream miroir#139/#144). 8081 verified free on
+        # all nodes and outside DRBD's 7xxx range.
+        port: 8081
         prometheusEndpoint: http://prometheus-operated.observability.svc.cluster.local:9090
       mgr:
         modules:
