@@ -88,16 +88,14 @@ spec:
     service:
       app:
         type: LoadBalancer
-        # externalTrafficPolicy: Local preserves the real client IP for LAN
-        # direct-connect (10.0.20.246:8211); external players come via Towonel.
+        # LAN direct-connect at 10.0.20.246:8211 (Local preserves client IP).
+        # External players reach it via the Towonel tunnel — routing is defined
+        # by the hand-authored TowonelAgent (network/towonel-operator/config),
+        # which targets this Service's ClusterIP, so no towonel.io annotations
+        # are needed here.
         externalTrafficPolicy: Local
         annotations:
           lbipam.cilium.io/ips: 10.0.20.246
-          # Towonel opt-in: publish ONLY this UDP game port through the tunnel.
-          towonel.io/tunnel: enable
-          towonel.io/tunnel-ref: network/towonel-main
-          towonel.io/game.udp: "true"
-          towonel.io/game.public-port: "8211"
         ports:
           game:
             port: *port
