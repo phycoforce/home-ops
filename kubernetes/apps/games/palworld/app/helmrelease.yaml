@@ -38,7 +38,7 @@ spec:
               ## Server identity / access
               SERVER_NAME: Kampfler # TODO: your server name (shown in-game)
               SERVER_DESCRIPTION: Palworld dedicated server
-              COMMUNITY_SERVER: false # private: not listed in the public browser
+              COMMUNITY_SERVER: true # listed in the in-game Community Server browser (still password-gated via SERVER_PASSWORD)
               MAX_PLAYERS: 16
               ## Public networking — external players reach the server via a home
               ## router UDP port-forward of 8211 → the LB IP; PUBLIC_IP resolves to
