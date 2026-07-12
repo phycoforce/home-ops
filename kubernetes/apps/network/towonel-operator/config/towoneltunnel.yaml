@@ -14,3 +14,8 @@ spec:
   #   EU → edge-eu.towonel.dev (54.36.18.175)
   #   CA → edge-na.towonel.dev (51.79.11.238)
   region: EU
+  # A tunnel needs >=1 authorized hostname to mint its hub invite, even for
+  # UDP-only routing (otherwise it stays Pending and no token secret is issued).
+  # We serve no HTTPS here — this is just the "escape hatch" hostname anchor.
+  extraHostnames:
+    - "palworld.${SECRET_DOMAIN_2}"

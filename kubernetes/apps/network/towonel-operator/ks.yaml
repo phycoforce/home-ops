@@ -25,6 +25,10 @@ spec:
     - name: towonel-operator
   interval: 1h
   path: ./kubernetes/apps/network/towonel-operator/config
+  postBuild:
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
   prune: true
   sourceRef:
     kind: GitRepository
