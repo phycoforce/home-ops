@@ -16,8 +16,8 @@ spec:
     agent:
       image:
         repository: ghcr.io/phycoforce/miroir-agent
-        tag: fix-144-r4
-        digest: sha256:6d220982d39d61d4c90933483ec6e17dc9942a5fadd7181267f34cace924a592 # takes precedence over tag
+        tag: fix-144-r5
+        digest: sha256:79a507923341e30c61fc9ab0bea96f1366c2f3dc5898fc049b641fee3d0b2f46 # takes precedence over tag
     monitoring:
       dashboards:
         enabled: true
