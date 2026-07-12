@@ -123,5 +123,8 @@ spec:
           towonel.io/game.public-port: "8221"
         ports:
           game:
-            port: *port
+            port: *port # 8221 — public/edge/LAN + advertised (PUBLIC_PORT) port
+            # jammsen ALWAYS binds the game to :8211 regardless of PUBLIC_PORT,
+            # so the Service must target 8211 even though it's published on 8221.
+            targetPort: 8211
             protocol: UDP
