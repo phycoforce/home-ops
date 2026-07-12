@@ -1,0 +1,26 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: towonel-operator
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: towonel-operator
+  interval: 1h
+  values:
+    # Materialised agent pods land in the network namespace.
+    agentNamespace: network
+    credentials:
+      existingSecret: towonel-operator-secret
+      tokenKey: TOWONEL_API_KEY
+    # Scope: do NOT auto-route the Envoy gateway. Only Services that explicitly
+    # carry towonel.io/tunnel=enable are exposed — i.e. Palworld only.
+    gatewayAPI:
+      enabled: false
+    towonel:
+      # Hosted hub (towonel.dev). The operator authenticates with the personal
+      # API key and CREATES the tunnel + RESERVES ports against this API; DNS is
+      # handled separately (external-dns / DNSEndpoint), the operator never is.
+      apiURL: https://hub.towonel.dev

@@ -1,0 +1,16 @@
+---
+# Cluster tunnel. Palworld's Service references this via
+# annotation towonel.io/tunnel-ref: network/towonel-main
+apiVersion: towonel.io/v1alpha1
+kind: TowonelTunnel
+metadata:
+  name: towonel-main
+spec:
+  apiKeySecretRef:
+    name: towonel-operator-secret
+    key: TOWONEL_API_KEY
+  deletionPolicy: Retain
+  # Edge region closest to your players — must match the DNSEndpoint target:
+  #   EU → edge-eu.towonel.dev (54.36.18.175)
+  #   CA → edge-na.towonel.dev (51.79.11.238)
+  region: EU

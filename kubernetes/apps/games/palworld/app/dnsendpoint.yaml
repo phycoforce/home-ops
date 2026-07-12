@@ -1,0 +1,18 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/externaldns.k8s.io/dnsendpoint_v1alpha1.json
+apiVersion: externaldns.k8s.io/v1alpha1
+kind: DNSEndpoint
+metadata:
+  name: palworld
+spec:
+  endpoints:
+    # Grey-cloud (proxied=false) so raw game UDP reaches the Towonel edge; the
+    # cloudflare external-dns CRD source publishes this record.
+    # EU hosted edge (matches towoneltunnel.yaml region: EU). If you switch the
+    # tunnel to region CA, change this to edge-na.towonel.dev.
+    - dnsName: "palworld.${SECRET_DOMAIN_2}"
+      recordType: CNAME
+      targets: ["edge-eu.towonel.dev"]
+      providerSpecific:
+        - name: external-dns.alpha.kubernetes.io/cloudflare-proxied
+          value: "false"
