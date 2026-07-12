@@ -35,7 +35,7 @@ spec:
               MULTITHREAD_ENABLED: true
               SERVER_SETTINGS_MODE: auto
               ## Server identity / access
-              SERVER_NAME: Palworld # TODO: your server name (shown in-game)
+              SERVER_NAME: Kampfler # TODO: your server name (shown in-game)
               SERVER_DESCRIPTION: Palworld dedicated server
               COMMUNITY_SERVER: false # private: not listed in the public browser
               MAX_PLAYERS: 16
@@ -47,6 +47,28 @@ spec:
               RESTAPI_PORT: 8212
               ## RCON removed from image tooling upstream; leave disabled
               RCON_ENABLED: false
+              ## Game Settings
+              DAYTIME_SPEEDRATE: 0.9
+              EXP_RATE: 2.5
+              PAL_CAPTURE_RATE: 1.5
+              PAL_SPAWN_NUM_RATE: 1.2
+              PAL_STOMACH_DECREACE_RATE: 0.6
+              PAL_STAMINA_DECREACE_RATE: 0.2
+              PAL_AUTO_HP_REGENE_RATE_IN_SLEEP: 3.2
+              PLAYER_DAMAGE_RATE_DEFENSE: 0.9
+              PLAYER_STOMACH_DECREASE_RATE: 0.7
+              PLAYER_STAMINA_DECREACE_RATE: 0.6
+              PLAYER_AUTO_HP_REGENE_RATE: 1.2
+              PLAYER_AUTO_HP_REGENE_RATE_IN_SLEEP: 3.5
+              WORK_SPEED_RATE: 1.3
+              BUILD_OBJECT_DAMAGE_RATE: 0.8
+              BUILD_OBJECT_DETERIORATION_DAMAGE_RATE: 0.2
+              COLLECTION_DROP_RATE: 1.5
+              COLLECTION_OBJECT_RESPAWN_SPEED_RATE: 1.1
+              ENEMY_DROP_ITEM_RATE: 1.1
+              ITEM_WEIGHT_RATE: 0.5
+              ITEM_CORRUPTION_MULTIPLIER: 0.4
+              EQUIPMENT_DURABILITY_DAMAGE_RATE: 0.4
             envFrom:
               - secretRef:
                   name: palworld-secret

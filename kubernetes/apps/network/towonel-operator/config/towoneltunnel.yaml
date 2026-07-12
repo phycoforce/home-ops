@@ -16,6 +16,9 @@ spec:
   region: EU
   # A tunnel needs >=1 authorized hostname to mint its hub invite, even for
   # UDP-only routing (otherwise it stays Pending and no token secret is issued).
-  # We serve no HTTPS here — this is just the "escape hatch" hostname anchor.
+  # We serve no HTTPS here — this is only the invite anchor, unrelated to the
+  # UDP path (players reach palworld.${SECRET_DOMAIN_2}:8211 by DNS→edge→port).
+  # Uses a dedicated name (not palworld.${SECRET_DOMAIN_2}) so it can't collide
+  # with an orphaned hub hostname claim.
   extraHostnames:
-    - "palworld.${SECRET_DOMAIN_2}"
+    - "palworld-tunnel.${SECRET_DOMAIN_2}"

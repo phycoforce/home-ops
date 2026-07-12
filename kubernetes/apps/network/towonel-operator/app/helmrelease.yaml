@@ -15,10 +15,13 @@ spec:
     credentials:
       existingSecret: towonel-operator-secret
       tokenKey: TOWONEL_API_KEY
-    # Scope: do NOT auto-route the Envoy gateway. Only Services that explicitly
-    # carry towonel.io/tunnel=enable are exposed — i.e. Palworld only.
+    # "auto" runs the full source layer (needed so a Service's towonel.io/*
+    # annotations attach their route to the tunnel's default agent). Scope is
+    # still Palworld-only: the source layer only acts on objects that carry
+    # towonel.io annotations, and NO Gateway/HTTPRoute in this repo does — only
+    # the Palworld Service opts in.
     gatewayAPI:
-      enabled: false
+      enabled: auto
     towonel:
       # Hosted hub (towonel.dev). The operator authenticates with the personal
       # API key and CREATES the tunnel + RESERVES ports against this API; DNS is
