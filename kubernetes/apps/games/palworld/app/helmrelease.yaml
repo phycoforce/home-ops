@@ -44,7 +44,7 @@ spec:
               # Hosted towonel edge only forwards public ports in its auto-pick band
               # 10000-32767 (ports.rs AUTO_PICK_START/END); an out-of-band port (8221)
               # is "reserved" by the hub but never opened on the edge firewall.
-              PUBLIC_PORT: &port 30000
+              PUBLIC_PORT: &port 30001
               ## REST API — cluster-internal only (container tooling); NOT exposed
               RESTAPI_ENABLED: true
               RESTAPI_PORT: 8212
@@ -123,7 +123,7 @@ spec:
           towonel.io/tunnel: enable
           towonel.io/tunnel-ref: network/towonel-main
           towonel.io/game.udp: "true"
-          towonel.io/game.public-port: "30000"
+          towonel.io/game.public-port: "30001"
         ports:
           game:
             port: *port # 8221 — public/edge/LAN + advertised (PUBLIC_PORT) port
