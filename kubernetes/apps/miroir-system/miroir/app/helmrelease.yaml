@@ -10,6 +10,14 @@ spec:
     name: miroir
   interval: 1h
   values:
+    # TEMPORARY: custom agent image carrying the split-brain convergence fix
+    # (upstream home-operations/miroir#144, branch fix/split-brain-loser-convergence).
+    # Remove once the fix lands in an upstream release.
+    agent:
+      image:
+        repository: ghcr.io/phycoforce/miroir-agent
+        tag: fix-144
+        digest: sha256:57e2efa42b0634fba3bb803c3a3701579d1c19271391386ab01a348d0c3db450 # takes precedence over tag
     monitoring:
       dashboards:
         enabled: true
