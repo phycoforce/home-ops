@@ -35,17 +35,22 @@ spec:
         backend: lvmthin
         device: /dev/disk/by-partlabel/r-miroir
     # Both StorageClasses draw from the same per-node pool; differ only by replica count.
-    storageClass: # miroir-local: single copy, no DRBD
-      create: true
-      name: miroir-local
-      isDefault: false
-      replicas: 1
-      fsType: ext4
-      reclaimPolicy: Delete
-    replicatedStorageClass: # miroir-replicated: 2 legs, DRBD9-mirrored (+ diskless tiebreaker)
-      create: true
-      name: miroir-replicated
-      isDefault: false
-      quorum: freeze
-      fsType: ext4
-      reclaimPolicy: Delete
+    # 0.5.0 unified the singular storageClass/replicatedStorageClass objects into one
+    # storageClasses[] array (empty = none created). replicas now defaults to 1, so the
+    # replicated class must set replicas: 2 explicitly (the old key implied it).
+    storageClasses:
+      - name: miroir-local # single copy, no DRBD
+        isDefault: false
+        replicas: 1
+        fsType: ext4
+        reclaimPolicy: Delete
+      - name: miroir-replicated # 2 legs, DRBD9-mirrored (+ diskless tiebreaker)
+        isDefault: false
+        replicas: 2
+        quorum: freeze
+        fsType: ext4
+        reclaimPolicy: Delete
+    # 0.5.0 added volumeSnapshotClasses[]; miroir-snap backs CSI snapshots
+    # (cluster snapshot-controller + CRDs live in kube-system).
+    volumeSnapshotClasses:
+      - name: miroir-snap
