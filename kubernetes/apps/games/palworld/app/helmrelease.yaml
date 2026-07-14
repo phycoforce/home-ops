@@ -51,6 +51,9 @@ spec:
               ## RCON removed from image tooling upstream; leave disabled
               RCON_ENABLED: false
               ## Game Settings
+              BASE_CAMP_WORKER_MAXNUM: 20 # Max Pals working at a base (default 15)
+              ALLOW_GLOBAL_PALBOX_EXPORT: true # bAllowGlobalPalboxExport — save Pals to the global palbox
+              ALLOW_GLOBAL_PALBOX_IMPORT: true # bAllowGlobalPalboxImport — import Pals from the global palbox (default false)
               DAYTIME_SPEEDRATE: 0.9
               EXP_RATE: 2.5
               PAL_CAPTURE_RATE: 1.5
