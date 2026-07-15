@@ -34,7 +34,10 @@ while true; do
   # errors land in the payload we log on failure.
   pods="$(curl -sS --cacert "${CA}" -H "Authorization: Bearer ${TOKEN}" \
     "${API}/api/v1/namespaces/${NS}/pods?labelSelector=${SELECTOR}" 2>&1)"
-  POD="$(printf '%s' "${pods}" | grep -o '"name":"[^"]*"' | head -n1 | cut -d'"' -f4)"
+  # The apiserver pretty-prints JSON for curl-like clients (`"name": "…"` with a
+  # space after the colon), so tolerate optional whitespace. items[0].metadata.name
+  # (the first "name" in the list) is the game pod.
+  POD="$(printf '%s' "${pods}" | grep -oE '"name":[[:space:]]*"[^"]*"' | head -n1 | cut -d'"' -f4)"
 
   if [ -z "${POD}" ]; then
     log "no game pod resolved; api said: $(printf '%s' "${pods}" | tr '\n' ' ' | head -c 200)"
