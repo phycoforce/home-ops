@@ -354,7 +354,7 @@
         "type": "prometheus",
         "uid": "${DS_PROMETHEUS}"
       },
-      "description": "Current vs. maximum players over time.",
+      "description": "Concurrent players over time: current (filled), peak over the selected range, and configured server capacity.",
       "fieldConfig": {
         "defaults": {
           "color": {
@@ -407,7 +407,7 @@
           {
             "matcher": {
               "id": "byName",
-              "options": "max"
+              "options": "peak"
             },
             "properties": [
               {
@@ -427,7 +427,36 @@
               {
                 "id": "color",
                 "value": {
-                  "fixedColor": "red",
+                  "fixedColor": "orange",
+                  "mode": "fixed"
+                }
+              }
+            ]
+          },
+          {
+            "matcher": {
+              "id": "byName",
+              "options": "capacity"
+            },
+            "properties": [
+              {
+                "id": "custom.lineStyle",
+                "value": {
+                  "dash": [
+                    4,
+                    6
+                  ],
+                  "fill": "dash"
+                }
+              },
+              {
+                "id": "custom.fillOpacity",
+                "value": 0
+              },
+              {
+                "id": "color",
+                "value": {
+                  "fixedColor": "text",
                   "mode": "fixed"
                 }
               }
@@ -475,10 +504,21 @@
             "uid": "${DS_PROMETHEUS}"
           },
           "editorMode": "code",
-          "expr": "palworld_max_player_num",
-          "legendFormat": "max",
+          "expr": "max_over_time(palworld_current_player_num[$__range])",
+          "legendFormat": "peak",
           "range": true,
           "refId": "B"
+        },
+        {
+          "datasource": {
+            "type": "prometheus",
+            "uid": "${DS_PROMETHEUS}"
+          },
+          "editorMode": "code",
+          "expr": "palworld_max_player_num",
+          "legendFormat": "capacity",
+          "range": true,
+          "refId": "C"
         }
       ],
       "title": "Players",
