@@ -1,0 +1,175 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: palworld-server-dashboard
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: palworld-server-dashboard
+  interval: 1h
+  values:
+    controllers:
+      palworld-server-dashboard:
+        replicas: 1
+        # RWO /app/data PVC: release it before a new pod starts.
+        strategy: Recreate
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              # REST-API-only admin panel (no RCON). Upstream publishes only
+              # git-sha + `latest` tags, so pin the digest and let Renovate bump
+              # it. Runs as the image's baked nextjs user (uid/gid 1001).
+              repository: ghcr.io/rnz01/palworld-server-dashboard
+              tag: latest@sha256:6ef88d899b3c457f5575ee308ddb176e144717d1cab33bfc34c541ffd110d1e8
+            env:
+              NODE_ENV: production
+              PORT: &port 3000
+              HOSTNAME: 0.0.0.0
+              # The running game pod's REST API (own ClusterIP svc, TCP 8212).
+              PALWORLD_REST_URL: http://palworld-rest.games.svc.cluster.local:8212
+              # Panel's own account store — persists across restarts on the PVC.
+              PANEL_AUTH_FILE: /app/data/panel-auth.json
+              # Rolling FPS ring written by the fps-sampler sidecar (read here).
+              PALWORLD_FPS_HISTORY_FILE: /metrics/fps-history.json
+              # Behind Envoy: trust X-Forwarded-For so rate limiting keys on the
+              # real client IP rather than the gateway's.
+              RATE_LIMIT_TRUST_PROXY: "true"
+              DEMO_MODE: "0"
+              # Both the bootstrap panel login and the game REST admin password
+              # come from the existing palworld-secret (field ADMIN_PASSWORD),
+              # exactly as the exporter reuses it — no new 1Password field. The
+              # panel password can be changed in-app afterwards (persisted on the
+              # PVC); point PANEL_INITIAL_ADMIN_PASSWORD at a distinct field if
+              # you want the panel login separate from the game admin password.
+              PANEL_INITIAL_ADMIN_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: palworld-secret
+                    key: ADMIN_PASSWORD
+              PALWORLD_ADMIN_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: palworld-secret
+                    key: ADMIN_PASSWORD
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: *port
+                  initialDelaySeconds: 10
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: *port
+                  periodSeconds: 5
+                  failureThreshold: 30
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities: { drop: ["ALL"] }
+              # readOnlyRootFilesystem intentionally NOT set: Next.js standalone
+              # writes cache/temp under /app at runtime; a read-only root risks a
+              # boot failure. /tmp is a writable emptyDir regardless.
+            resources:
+              requests:
+                cpu: 10m
+                memory: 128Mi
+              limits:
+                memory: 512Mi
+          # Sidecar that maintains the FPS history ring the panel graphs. Its
+          # script ships with the image's source, not any registry image, so it
+          # is vendored here as a ConfigMap (tools/palworld-fps-sampler.py) run
+          # on a stock python image. Purely cosmetic — the panel works without
+          # it (live FPS still comes straight from the REST API), and the same
+          # data is already in the Grafana dashboard. Drop this container + the
+          # metrics/sampler-script volumes if you consider it redundant.
+          fps-sampler:
+            image:
+              repository: docker.io/library/python
+              tag: 3.12-alpine@sha256:6d43704baacd1bfbe7c295d7f13079d5d8104ed33568873133f8fc69980419df
+            command: ["python", "/sampler/palworld-fps-sampler.py"]
+            env:
+              PALWORLD_REST_URL: http://palworld-rest.games.svc.cluster.local:8212
+              FPS_HISTORY_FILE: /metrics/fps-history.json
+              FPS_SAMPLE_SECONDS: "5"
+              FPS_WINDOW_MINUTES: "60"
+              PYTHONDONTWRITEBYTECODE: "1"
+              PALWORLD_ADMIN_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: palworld-secret
+                    key: ADMIN_PASSWORD
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 5m
+                memory: 32Mi
+              limits:
+                memory: 64Mi
+    defaultPodOptions:
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
+    persistence:
+      # Panel account store (panel-auth.json).
+      data:
+        existingClaim: palworld-dashboard
+        advancedMounts:
+          palworld-server-dashboard:
+            app:
+              - path: /app/data
+      # FPS ring shared sampler (rw) -> dashboard (ro).
+      metrics:
+        type: emptyDir
+        advancedMounts:
+          palworld-server-dashboard:
+            app:
+              - path: /metrics
+                readOnly: true
+            fps-sampler:
+              - path: /metrics
+      # Vendored sampler script, mounted read-only into the sidecar only.
+      sampler-script:
+        type: configMap
+        name: palworld-dashboard-fps-sampler
+        advancedMounts:
+          palworld-server-dashboard:
+            fps-sampler:
+              - path: /sampler
+                readOnly: true
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp
+    route:
+      app:
+        # Internal-only: the panel holds admin rights over the game server, so it
+        # rides envoy-internal (LAN), never the external gateway.
+        hostnames: ["palworld-dashboard.${SECRET_DOMAIN}"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+    service:
+      app:
+        ports:
+          http:
+            port: *port

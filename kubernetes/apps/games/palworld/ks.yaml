@@ -48,3 +48,30 @@ spec:
     namespace: flux-system
   wait: false
   targetNamespace: games
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: palworld-tools
+spec:
+  # REST-API admin panel (ghcr.io/rnz01/palworld-server-dashboard) on
+  # envoy-internal. Reaches the game via the palworld-rest ClusterIP Service
+  # (defined in exporter/) and reuses palworld-secret (ADMIN_PASSWORD), so it
+  # depends on the exporter KS — which in turn depends on the game. wait: false —
+  # nothing depends on it being Ready and it self-recovers once the API answers.
+  dependsOn:
+    - name: palworld-exporter
+  interval: 1h
+  path: ./kubernetes/apps/games/palworld/tools
+  postBuild:
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  wait: false
+  targetNamespace: games

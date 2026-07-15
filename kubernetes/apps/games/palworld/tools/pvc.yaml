@@ -1,0 +1,15 @@
+---
+# Panel account store only (panel-auth.json — the dashboard's own login/mod
+# accounts, written after first boot). Trivial state that is cheap to recreate
+# from PANEL_INITIAL_ADMIN_PASSWORD, so this is a plain ceph-block PVC that
+# kopiur deliberately does NOT back up.
+apiVersion: v1
+kind: PersistentVolumeClaim
+metadata:
+  name: palworld-dashboard
+spec:
+  accessModes: ["ReadWriteOnce"]
+  resources:
+    requests:
+      storage: 1Gi
+  storageClassName: ceph-block
