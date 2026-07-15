@@ -3,12 +3,17 @@
 apiVersion: kustomize.config.k8s.io/v1beta1
 kind: Kustomization
 resources:
+  - ./ocirepository.yaml
+  - ./helmrelease.yaml
+  - ./restservice.yaml
   - ./grafanadashboard.yaml
 configMapGenerator:
   - name: palworld-dashboard
     files:
       - palworld.json
 generatorOptions:
+  # Keep the name stable (the GrafanaDashboard configMapRef points at it) and
+  # shield the dashboard JSON from any Flux postBuild variable substitution.
   disableNameSuffixHash: true
   annotations:
     kustomize.toolkit.fluxcd.io/substitute: disabled
