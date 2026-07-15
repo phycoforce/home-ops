@@ -1,0 +1,31 @@
+---
+# The ServiceAccount itself is created by the HelmRelease (app-template
+# `serviceAccount:` block); this file grants it the read-only log access the
+# chat-bridge relay needs.
+apiVersion: rbac.authorization.k8s.io/v1
+kind: Role
+metadata:
+  name: palworld-dashboard-log-reader
+rules:
+  # The chat-bridge relay sidecar finds the game pod and streams its stdout (the
+  # [CHAT] + join/leave lines). Read-only, this namespace only, pods/log — it can
+  # neither write nor exec.
+  - apiGroups: [""]
+    resources: ["pods"]
+    verbs: ["get", "list"]
+  - apiGroups: [""]
+    resources: ["pods/log"]
+    verbs: ["get"]
+---
+apiVersion: rbac.authorization.k8s.io/v1
+kind: RoleBinding
+metadata:
+  name: palworld-dashboard-log-reader
+roleRef:
+  apiGroup: rbac.authorization.k8s.io
+  kind: Role
+  name: palworld-dashboard-log-reader
+subjects:
+  - kind: ServiceAccount
+    name: palworld-server-dashboard
+    namespace: games

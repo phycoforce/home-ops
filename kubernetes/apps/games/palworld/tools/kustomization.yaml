@@ -5,12 +5,19 @@ kind: Kustomization
 resources:
   - ./ocirepository.yaml
   - ./externalsecret.yaml
+  - ./rbac.yaml
   - ./helmrelease.yaml
   - ./pvc.yaml
 configMapGenerator:
   - name: palworld-dashboard-fps-sampler
     files:
       - palworld-fps-sampler.py
+  # Chat bridge: the relay sidecar streams the game pod log; the journalctl shim
+  # (keyed as `journalctl`) cats it for the app container.
+  - name: palworld-dashboard-chat-bridge
+    files:
+      - relay.sh=chat-bridge-relay.sh
+      - journalctl=chat-bridge-journalctl.sh
 generatorOptions:
   disableNameSuffixHash: true
   annotations:

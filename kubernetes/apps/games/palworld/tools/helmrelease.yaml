@@ -12,6 +12,9 @@ spec:
   values:
     controllers:
       palworld-server-dashboard:
+        # Lets the chat-relay sidecar read the game pod's logs (see rbac.yaml).
+        serviceAccount:
+          identifier: palworld-server-dashboard
         strategy: Recreate
         annotations:
           reloader.stakater.com/auto: "true"
@@ -29,6 +32,10 @@ spec:
               PALWORLD_FPS_HISTORY_FILE: /metrics/fps-history.json
               RATE_LIMIT_TRUST_PROXY: "true"
               DEMO_MODE: "0"
+              # Prepend the chat-bridge shim dir so the app's `journalctl` call
+              # (chat read) resolves to our shim. node + docker-entrypoint.sh stay
+              # in /usr/local/bin, so the rest of PATH is the image default.
+              PATH: /bridge:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
             envFrom:
               - secretRef:
                   name: palworld-dashboard-secret
@@ -90,7 +97,29 @@ spec:
                 memory: 32Mi
               limits:
                 memory: 64Mi
+          # Chat bridge relay: streams the game pod's stdout (the [CHAT] +
+          # join/leave lines) via the k8s API into /gamelog for the journalctl
+          # shim to serve to the app. Read-only k8s access (rbac.yaml).
+          chat-relay:
+            image:
+              repository: docker.io/curlimages/curl
+              tag: latest@sha256:7c12af72ceb38b7432ab85e1a265cff6ae58e06f95539d539b654f2cfa64bb13
+            command: ["/bin/sh", "/bridge/relay.sh"]
+            env:
+              GAMELOG_WINDOW_SECONDS: "600"
+              GAMELOG_INTERVAL_SECONDS: "10"
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 5m
+                memory: 16Mi
+              limits:
+                memory: 64Mi
     defaultPodOptions:
+      automountServiceAccountToken: true
       securityContext:
         runAsNonRoot: true
         runAsUser: 1001
@@ -122,6 +151,30 @@ spec:
             fps-sampler:
               - path: /sampler
                 readOnly: true
+      # Shared file the relay writes and the app reads (via the journalctl shim).
+      gamelog:
+        type: emptyDir
+        advancedMounts:
+          palworld-server-dashboard:
+            app:
+              - path: /gamelog
+                readOnly: true
+            chat-relay:
+              - path: /gamelog
+      # Chat-bridge scripts: relay.sh (sidecar) + the journalctl shim (app);
+      # 0755 so the shim is executable on the app's PATH.
+      bridge:
+        type: configMap
+        name: palworld-dashboard-chat-bridge
+        defaultMode: 0755
+        advancedMounts:
+          palworld-server-dashboard:
+            app:
+              - path: /bridge
+                readOnly: true
+            chat-relay:
+              - path: /bridge
+                readOnly: true
       tmp:
         type: emptyDir
         globalMounts:
@@ -137,3 +190,6 @@ spec:
         ports:
           http:
             port: *port
+    # Created here; rbac.yaml grants it read-only pod-log access for the relay.
+    serviceAccount:
+      palworld-server-dashboard: {}
