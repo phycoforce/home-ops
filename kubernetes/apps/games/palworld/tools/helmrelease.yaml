@@ -102,8 +102,8 @@ spec:
           # shim to serve to the app. Read-only k8s access (rbac.yaml).
           chat-relay:
             image:
-              repository: docker.io/curlimages/curl
-              tag: latest@sha256:7c12af72ceb38b7432ab85e1a265cff6ae58e06f95539d539b654f2cfa64bb13
+              repository: ghcr.io/home-operations/busybox
+              tag: 1.38.0@sha256:7e2c04dd50ede647bf4a7a4c8dbd629dd4971cd139b9b88fb22bfc3c7a6c13df
             command: ["/bin/sh", "/bridge/relay.sh"]
             env:
               GAMELOG_WINDOW_SECONDS: "600"
