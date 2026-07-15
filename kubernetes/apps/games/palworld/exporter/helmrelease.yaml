@@ -19,7 +19,7 @@ spec:
         containers:
           app:
             image:
-              repository: docker.io/jimmysharp/palworld_exporter
+              repository: mirror.gcr.io/jimmysharp/palworld_exporter
               tag: 0.2.1@sha256:96cffeee31cd8d014a29407895ca2f3b6e406272ad786ef4aa4dbfcb30e1079f
             env:
               SCRAPE_URI: http://palworld-rest.games.svc.cluster.local:8212/v1/api/metrics
