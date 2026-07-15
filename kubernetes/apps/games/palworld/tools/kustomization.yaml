@@ -6,13 +6,12 @@ resources:
   - ./ocirepository.yaml
   - ./externalsecret.yaml
   - ./helmrelease.yaml
+  - ./pvc.yaml
 configMapGenerator:
   - name: palworld-dashboard-fps-sampler
     files:
       - palworld-fps-sampler.py
 generatorOptions:
-  # Keep the name stable (the HelmRelease sampler-script volume points at it)
-  # and shield the Python source from any Flux postBuild variable substitution.
   disableNameSuffixHash: true
   annotations:
     kustomize.toolkit.fluxcd.io/substitute: disabled
