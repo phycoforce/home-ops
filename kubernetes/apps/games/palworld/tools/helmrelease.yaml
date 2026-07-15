@@ -24,11 +24,8 @@ spec:
               NODE_ENV: production
               PORT: &port 3000
               HOSTNAME: 0.0.0.0
-              # The running game pod's REST API (own ClusterIP svc, TCP 8212).
               PALWORLD_REST_URL: http://palworld-rest.games.svc.cluster.local:8212
-              # Panel's own account store — persists across restarts on the PVC.
               PANEL_AUTH_FILE: /app/data/panel-auth.json
-              # Rolling FPS ring written by the fps-sampler sidecar (read here).
               PALWORLD_FPS_HISTORY_FILE: /metrics/fps-history.json
               RATE_LIMIT_TRUST_PROXY: "true"
               DEMO_MODE: "0"
@@ -59,22 +56,13 @@ spec:
             securityContext:
               allowPrivilegeEscalation: false
               capabilities: { drop: ["ALL"] }
-              # readOnlyRootFilesystem intentionally NOT set: Next.js standalone
-              # writes cache/temp under /app at runtime; a read-only root risks a
-              # boot failure. /tmp is a writable emptyDir regardless.
             resources:
               requests:
                 cpu: 10m
                 memory: 128Mi
               limits:
                 memory: 512Mi
-          # Sidecar that maintains the FPS history ring the panel graphs. Its
-          # script ships with the image's source, not any registry image, so it
-          # is vendored here as a ConfigMap (tools/palworld-fps-sampler.py) run
-          # on a stock python image. Purely cosmetic — the panel works without
-          # it (live FPS still comes straight from the REST API), and the same
-          # data is already in the Grafana dashboard. Drop this container + the
-          # metrics/sampler-script volumes if you consider it redundant.
+          # FPS Monitoring Script, derived from upstream pythons script
           fps-sampler:
             image:
               repository: docker.io/library/python
@@ -110,18 +98,12 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
         seccompProfile: { type: RuntimeDefault }
     persistence:
-      # Panel account store (panel-auth.json). Deliberately an emptyDir, not a
-      # PVC: the login is seeded from PANEL_PASSWORD (1Password) on every boot,
-      # so it is authoritative and always in sync. Trade-off: in-app account
-      # changes don't persist across restarts (fine for a single-admin panel),
-      # and it removes the stale-seed-file foot-gun.
       data:
         type: emptyDir
         advancedMounts:
           palworld-server-dashboard:
             app:
               - path: /app/data
-      # FPS ring shared sampler (rw) -> dashboard (ro).
       metrics:
         type: emptyDir
         advancedMounts:
@@ -131,7 +113,6 @@ spec:
                 readOnly: true
             fps-sampler:
               - path: /metrics
-      # Vendored sampler script, mounted read-only into the sidecar only.
       sampler-script:
         type: configMap
         name: palworld-dashboard-fps-sampler

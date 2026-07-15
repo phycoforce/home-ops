@@ -14,9 +14,6 @@ spec:
       palworld:
         annotations:
           reloader.stakater.com/auto: "true"
-        # Singleton stateful game server: one replica, never two against one world
-        # (guaranteed save corruption). Recreate so the old pod releases the RWO
-        # PVC before the new one starts.
         strategy: Recreate
         containers:
           app:
@@ -44,7 +41,7 @@ spec:
               ## Public networking — external players reach the server via a home
               ## router UDP port-forward of 8211 → the LB IP; PUBLIC_IP resolves to
               ## the WAN IP (palworld DNS managed manually, grey-cloud).
-              PORT: &port 8211 # game bind port (Service targetPort)
+              PORT: &port 8211
               PUBLIC_IP: palworld.${SECRET_DOMAIN_2}
               PUBLIC_PORT: *port
               REST_API_ENABLED: true
@@ -90,8 +87,6 @@ spec:
               requests:
                 cpu: 1000m
                 memory: 8Gi
-              # RAM grows with world size; a tight limit OOM-killed mid-save can
-              # corrupt the world, so keep generous headroom.
               limits:
                 memory: 20Gi
     defaultPodOptions:
@@ -119,9 +114,6 @@ spec:
     service:
       app:
         type: LoadBalancer
-        # LB IP 10.0.20.246 on UDP 8211 (the port the game binds). LAN plays
-        # direct at 10.0.20.246:8211; external is a MikroTik UDP port-forward of
-        # WAN 8211 → 10.0.20.246:8211. Local preserves the real client IP.
         externalTrafficPolicy: Local
         annotations:
           lbipam.cilium.io/ips: 10.0.20.246
