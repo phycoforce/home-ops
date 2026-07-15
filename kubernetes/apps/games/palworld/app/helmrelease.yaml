@@ -54,6 +54,7 @@ spec:
               BASE_CAMP_WORKER_MAXNUM: 20 # Max Pals working at a base (default 15)
               ALLOW_GLOBAL_PALBOX_EXPORT: true # bAllowGlobalPalboxExport — save Pals to the global palbox
               ALLOW_GLOBAL_PALBOX_IMPORT: true # bAllowGlobalPalboxImport — import Pals from the global palbox (default false)
+              ENABLE_NON_LOGIN_PENALTY: false
               DAYTIME_SPEEDRATE: 0.9
               EXP_RATE: 1.25
               PAL_CAPTURE_RATE: 1.5
