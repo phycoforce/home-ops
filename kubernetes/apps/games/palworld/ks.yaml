@@ -61,7 +61,7 @@ spec:
   # depends on the exporter KS — which in turn depends on the game. wait: false —
   # nothing depends on it being Ready and it self-recovers once the API answers.
   dependsOn:
-    - name: palworld-exporter
+    - name: palworld
   interval: 1h
   path: ./kubernetes/apps/games/palworld/tools
   postBuild:

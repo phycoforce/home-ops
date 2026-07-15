@@ -12,17 +12,12 @@ spec:
   values:
     controllers:
       palworld-server-dashboard:
-        replicas: 1
-        # RWO /app/data PVC: release it before a new pod starts.
         strategy: Recreate
         annotations:
           reloader.stakater.com/auto: "true"
         containers:
           app:
             image:
-              # REST-API-only admin panel (no RCON). Upstream publishes only
-              # git-sha + `latest` tags, so pin the digest and let Renovate bump
-              # it. Runs as the image's baked nextjs user (uid/gid 1001).
               repository: ghcr.io/rnz01/palworld-server-dashboard
               tag: latest@sha256:6ef88d899b3c457f5575ee308ddb176e144717d1cab33bfc34c541ffd110d1e8
             env:
@@ -35,26 +30,11 @@ spec:
               PANEL_AUTH_FILE: /app/data/panel-auth.json
               # Rolling FPS ring written by the fps-sampler sidecar (read here).
               PALWORLD_FPS_HISTORY_FILE: /metrics/fps-history.json
-              # Behind Envoy: trust X-Forwarded-For so rate limiting keys on the
-              # real client IP rather than the gateway's.
               RATE_LIMIT_TRUST_PROXY: "true"
               DEMO_MODE: "0"
-              # Both the bootstrap panel login and the game REST admin password
-              # come from the existing palworld-secret (field ADMIN_PASSWORD),
-              # exactly as the exporter reuses it — no new 1Password field. The
-              # panel password can be changed in-app afterwards (persisted on the
-              # PVC); point PANEL_INITIAL_ADMIN_PASSWORD at a distinct field if
-              # you want the panel login separate from the game admin password.
-              PANEL_INITIAL_ADMIN_PASSWORD:
-                valueFrom:
-                  secretKeyRef:
-                    name: palworld-secret
-                    key: ADMIN_PASSWORD
-              PALWORLD_ADMIN_PASSWORD:
-                valueFrom:
-                  secretKeyRef:
-                    name: palworld-secret
-                    key: ADMIN_PASSWORD
+            envFrom:
+              - secretRef:
+                  name: palworld-dashboard-secret
             probes:
               liveness: &probes
                 enabled: true
@@ -130,9 +110,13 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
         seccompProfile: { type: RuntimeDefault }
     persistence:
-      # Panel account store (panel-auth.json).
+      # Panel account store (panel-auth.json). Deliberately an emptyDir, not a
+      # PVC: the login is seeded from PANEL_PASSWORD (1Password) on every boot,
+      # so it is authoritative and always in sync. Trade-off: in-app account
+      # changes don't persist across restarts (fine for a single-admin panel),
+      # and it removes the stale-seed-file foot-gun.
       data:
-        existingClaim: palworld-dashboard
+        type: emptyDir
         advancedMounts:
           palworld-server-dashboard:
             app:
@@ -162,8 +146,6 @@ spec:
           - path: /tmp
     route:
       app:
-        # Internal-only: the panel holds admin rights over the game server, so it
-        # rides envoy-internal (LAN), never the external gateway.
         hostnames: ["palworld-dashboard.${SECRET_DOMAIN}"]
         parentRefs:
           - name: envoy-internal
