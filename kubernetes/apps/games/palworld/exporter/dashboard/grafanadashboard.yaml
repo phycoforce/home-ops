@@ -1,0 +1,32 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanafolder_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaFolder
+metadata:
+  name: games
+spec:
+  # Folder + dashboard live in the games namespace but import into the Grafana
+  # instance in observability, so cross-namespace import must be allowed.
+  allowCrossNamespaceImport: true
+  title: Games
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/grafana.integreatly.org/grafanadashboard_v1beta1.json
+apiVersion: grafana.integreatly.org/v1beta1
+kind: GrafanaDashboard
+metadata:
+  name: palworld
+spec:
+  allowCrossNamespaceImport: true
+  folderRef: games
+  instanceSelector:
+    matchLabels:
+      dashboards: grafana
+  datasources:
+    - datasourceName: prometheus
+      inputName: DS_PROMETHEUS
+  configMapRef:
+    name: palworld-dashboard
+    key: palworld.json

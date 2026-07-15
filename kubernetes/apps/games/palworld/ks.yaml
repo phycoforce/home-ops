@@ -26,3 +26,41 @@ spec:
     namespace: flux-system
   wait: false
   targetNamespace: games
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: palworld-exporter
+spec:
+  # REST-API metrics exporter (own pod, never a sidecar) + Grafana dashboard.
+  # Needs palworld's secret (ADMIN_PASSWORD) and the running game pod.
+  dependsOn:
+    - name: palworld
+  interval: 1h
+  path: ./kubernetes/apps/games/palworld/exporter/app
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  wait: true
+  targetNamespace: games
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: palworld-exporter-dashboard
+spec:
+  dependsOn:
+    - name: palworld-exporter
+  interval: 1h
+  path: ./kubernetes/apps/games/palworld/exporter/dashboard
+  prune: true
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  wait: false
+  targetNamespace: games

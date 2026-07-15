@@ -1,0 +1,25 @@
+---
+apiVersion: v1
+kind: Service
+metadata:
+  name: palworld-rest
+  labels:
+    app.kubernetes.io/name: palworld-rest
+spec:
+  # Standalone ClusterIP Service that exposes ONLY the cluster-internal Palworld
+  # REST API (TCP 8212) for the exporter to scrape. The selector is copied
+  # verbatim from the live game Service so it targets the same game pod. The
+  # palworld HelmRelease and its game LoadBalancer (UDP 8211) are intentionally
+  # left untouched — adding a second service to that HelmRelease would rename the
+  # game Service (app-template `<release>-<identifier>`) and disturb the LB, so
+  # the REST API is exposed here instead. Nothing here can affect gameplay.
+  type: ClusterIP
+  selector:
+    app.kubernetes.io/name: palworld
+    app.kubernetes.io/instance: palworld
+    app.kubernetes.io/controller: palworld
+  ports:
+    - name: rest
+      port: 8212
+      targetPort: 8212
+      protocol: TCP
