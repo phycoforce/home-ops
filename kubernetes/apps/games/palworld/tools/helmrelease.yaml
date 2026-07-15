@@ -72,7 +72,8 @@ spec:
               PALWORLD_REST_URL: http://palworld-rest.games.svc.cluster.local:8212
               FPS_HISTORY_FILE: /metrics/fps-history.json
               FPS_SAMPLE_SECONDS: "5"
-              FPS_WINDOW_MINUTES: "60"
+              FPS_WINDOW_MINUTES: "120"
+              FPS_SANE_MAX: "240"
               PYTHONDONTWRITEBYTECODE: "1"
               PALWORLD_ADMIN_PASSWORD:
                 valueFrom:
