@@ -24,16 +24,25 @@ spec:
     drbd:
       portBase: 7000 #Ceph MGR Conflict
     # One lvm-thin pool per node on the dedicated Micron 7450 (Talos RawVolumeConfig → r-miroir)
+    # 0.10 reshaped nodes.<name> into named pools: the flat backend/device pair now lives
+    # under pools.<name> (classes without a `pool` key draw from "default"). zone/address
+    # would stay node-level. See chart values.yaml "Storage topology".
     nodes:
       logos:
-        backend: lvmthin
-        device: /dev/disk/by-partlabel/r-miroir
+        pools:
+          default:
+            backend: lvmthin
+            device: /dev/disk/by-partlabel/r-miroir
       ontos:
-        backend: lvmthin
-        device: /dev/disk/by-partlabel/r-miroir
+        pools:
+          default:
+            backend: lvmthin
+            device: /dev/disk/by-partlabel/r-miroir
       pneuma:
-        backend: lvmthin
-        device: /dev/disk/by-partlabel/r-miroir
+        pools:
+          default:
+            backend: lvmthin
+            device: /dev/disk/by-partlabel/r-miroir
     # Both StorageClasses draw from the same per-node pool; differ only by replica count.
     # 0.5.0 unified the singular storageClass/replicatedStorageClass objects into one
     # storageClasses[] array (empty = none created). replicas now defaults to 1, so the
