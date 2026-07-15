@@ -21,37 +21,48 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/jammsen/docker-palworld-dedicated-server
-              tag: master@sha256:ee924ca970450f59c89656953367c42c07327a7cdffc66f156be285dccae93c8
+              # thijsvanloef image (GHCR mirror). Same underlying SteamCMD-fetched
+              # Palworld server binary as the old jammsen image, so no resource
+              # change — the wrapper only adds REST-driven reboots/backups/notifs.
+              repository: ghcr.io/thijsvanloef/palworld-server-docker
+              tag: v2.6.0@sha256:85ae20d8756dd398ec24f4253a59b80907e5ffe411148a67b2c80c4527a8855e
             env:
               TZ: Europe/London
               ## Container behaviour
               PUID: "1001"
               PGID: "1001"
-              ALWAYS_UPDATE_ON_START: true # SteamCMD update+validate on every boot
-              STEAMCMD_VALIDATE_FILES: true
+              UPDATE_ON_BOOT: true # SteamCMD update+validate on every boot
               BACKUP_ENABLED: false # kopiur snapshots the PVC instead
-              RESTART_ENABLED: true
-              RESTART_CRON_EXPRESSION: 0 6 * * * #5am daily
-              MULTITHREAD_ENABLED: true
-              SERVER_SETTINGS_MODE: auto
+              # Scheduled daily reboot (replaces jammsen RESTART_*). thijsvanloef
+              # reboots via the REST API (no RCON needed) and warns players first.
+              AUTO_REBOOT_ENABLED: true
+              AUTO_REBOOT_CRON_EXPRESSION: "0 6 * * *" # 6am daily
+              AUTO_REBOOT_EVEN_IF_PLAYERS_ONLINE: true # match prior unconditional restart
+              AUTO_REBOOT_WARN_MINUTES: 5
+              MULTITHREADING: true
               ## Server identity / access
-              SERVER_NAME: Kampfler # TODO: your server name (shown in-game)
+              SERVER_NAME: Kampfler # shown in-game
               SERVER_DESCRIPTION: Palworld dedicated server
-              COMMUNITY_SERVER: true # listed in the in-game Community Server browser (still password-gated via SERVER_PASSWORD)
-              MAX_PLAYERS: 16
+              COMMUNITY: true # listed in the in-game Community Server browser (still password-gated via SERVER_PASSWORD)
+              PLAYERS: 16
               ## Public networking — external players reach the server via a home
               ## router UDP port-forward of 8211 → the LB IP; PUBLIC_IP resolves to
               ## the WAN IP (palworld DNS managed manually, grey-cloud).
+              PORT: &port 8211 # game bind port (Service targetPort)
               PUBLIC_IP: palworld.${SECRET_DOMAIN_2}
-              PUBLIC_PORT: &port 8211
-              ## REST API — cluster-internal only (container tooling); NOT exposed
-              RESTAPI_ENABLED: true
-              RESTAPI_PORT: 8212
-              ## RCON removed from image tooling upstream; leave disabled
+              PUBLIC_PORT: *port
+              ## REST API — cluster-internal (localhost). Drives the graceful
+              ## AUTO_REBOOT above, the save-on-SIGTERM shutdown (the container's
+              ## term_handler saves + shuts down over REST — no RCON), and is the
+              ## scrape target for the metrics exporter via the palworld-rest
+              ## Service. NOT exposed externally.
+              REST_API_ENABLED: true
+              REST_API_PORT: 8212
+              ## RCON left disabled — Pocketpair deprecated it at the game/API level
+              ## and nothing here needs it (management + metrics all go via REST).
               RCON_ENABLED: false
               ## Game Settings
-              BASE_CAMP_WORKER_MAXNUM: 20 # Max Pals working at a base (default 15)
+              BASE_CAMP_WORKER_MAX_NUM: 20 # Max Pals working at a base (default 15)
               ALLOW_GLOBAL_PALBOX_EXPORT: true # bAllowGlobalPalboxExport — save Pals to the global palbox
               ALLOW_GLOBAL_PALBOX_IMPORT: true # bAllowGlobalPalboxImport — import Pals from the global palbox (default false)
               ENABLE_NON_LOGIN_PENALTY: false
@@ -59,14 +70,14 @@ spec:
               EXP_RATE: 1.25
               PAL_CAPTURE_RATE: 1.5
               PAL_SPAWN_NUM_RATE: 1.2
-              PAL_STOMACH_DECREACE_RATE: 0.6
-              PAL_STAMINA_DECREACE_RATE: 0.2
-              PAL_AUTO_HP_REGENE_RATE_IN_SLEEP: 3.2
+              PAL_STOMACH_DECREASE_RATE: 0.6
+              PAL_STAMINA_DECREASE_RATE: 0.2
+              PAL_AUTO_HP_REGEN_RATE_IN_SLEEP: 3.2
               PLAYER_DAMAGE_RATE_DEFENSE: 0.9
               PLAYER_STOMACH_DECREASE_RATE: 0.7
-              PLAYER_STAMINA_DECREACE_RATE: 0.6
-              PLAYER_AUTO_HP_REGENE_RATE: 1.2
-              PLAYER_AUTO_HP_REGENE_RATE_IN_SLEEP: 3.5
+              PLAYER_STAMINA_DECREASE_RATE: 0.6
+              PLAYER_AUTO_HP_REGEN_RATE: 1.2
+              PLAYER_AUTO_HP_REGEN_RATE_IN_SLEEP: 3.5
               WORK_SPEED_RATE: 1.3
               BUILD_OBJECT_DAMAGE_RATE: 0.8
               BUILD_OBJECT_DETERIORATION_DAMAGE_RATE: 0.2
@@ -94,6 +105,11 @@ spec:
               # corrupt the world, so keep generous headroom.
               limits:
                 memory: 20Gi
+    defaultPodOptions:
+      # The container's SIGTERM handler saves + gracefully shuts the world down
+      # over the REST API. Give it room to finish on pod deletion / node drain
+      # before the kubelet SIGKILLs the container (default grace is only 30s).
+      terminationGracePeriodSeconds: 120
     persistence:
       # World + config (Pal/Saved). kopiur component provisions this PVC (name
       # == ${APP} == palworld) and snapshots it hourly to the NAS repository.
