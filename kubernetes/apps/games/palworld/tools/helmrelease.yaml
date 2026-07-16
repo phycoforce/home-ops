@@ -21,8 +21,8 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/phycoforce/palworld-server-dashboard
-              tag: dirty@sha256:b8184c44d5518892477895900a7048f42edfda4ee3cf701394021c775855e466
+              repository: ghcr.io/rnz01/palworld-server-dashboard
+              tag: latest@sha256:a5f5ec8e439b87c4e640f4205d9a58a804dbc095f10730a52d654cac411db28e
             env:
               NODE_ENV: production
               PORT: &port 3000
