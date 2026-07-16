@@ -21,8 +21,8 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/rnz01/palworld-server-dashboard
-              tag: latest@sha256:a5f5ec8e439b87c4e640f4205d9a58a804dbc095f10730a52d654cac411db28e
+              repository: ghcr.io/phycoforce/palworld-server-dashboard
+              tag: dirty@sha256:d6c6429d93db01d52921a5a5685583cc7eea3c16e4366530a2b8a23be6cd0e3b
             env:
               NODE_ENV: production
               PORT: &port 3000
@@ -32,10 +32,7 @@ spec:
               PALWORLD_FPS_HISTORY_FILE: /metrics/fps-history.json
               RATE_LIMIT_TRUST_PROXY: "true"
               DEMO_MODE: "0"
-              # Prepend the chat-bridge shim dir so the app's `journalctl` call
-              # (chat read) resolves to our shim. node + docker-entrypoint.sh stay
-              # in /usr/local/bin, so the rest of PATH is the image default.
-              PATH: /bridge:/usr/local/sbin:/usr/local/bin:/usr/sbin:/usr/bin:/sbin:/bin
+              PALWORLD_CHAT_LOG_FILE: /gamelog/palworld.log
             envFrom:
               - secretRef:
                   name: palworld-dashboard-secret
