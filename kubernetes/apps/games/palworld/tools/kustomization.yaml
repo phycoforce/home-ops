@@ -17,7 +17,6 @@ configMapGenerator:
   - name: palworld-dashboard-chat-bridge
     files:
       - relay.sh=chat-bridge-relay.sh
-      - journalctl=chat-bridge-journalctl.sh
 generatorOptions:
   disableNameSuffixHash: true
   annotations:
