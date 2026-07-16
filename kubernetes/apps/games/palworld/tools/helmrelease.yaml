@@ -22,7 +22,7 @@ spec:
           app:
             image:
               repository: ghcr.io/rnz01/palworld-server-dashboard
-              tag: latest@sha256:6ef88d899b3c457f5575ee308ddb176e144717d1cab33bfc34c541ffd110d1e8
+              tag: latest@sha256:e7ec8cfe65af7b891edff88de72b70dbf55f8a55cf985be7bdf1ecba4f513fce
             env:
               NODE_ENV: production
               PORT: &port 3000
