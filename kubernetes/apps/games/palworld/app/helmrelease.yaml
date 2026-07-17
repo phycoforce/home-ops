@@ -49,7 +49,6 @@ spec:
               RCON_ENABLED: false
               ## Game Settings
               BASE_CAMP_WORKER_MAX_NUM: 20 # Max Pals working at a base (default 15)
-              BASE_CAMP_MAX_NUM: 4 # Default 3
               ALLOW_GLOBAL_PALBOX_EXPORT: true # bAllowGlobalPalboxExport — save Pals to the global palbox
               ALLOW_GLOBAL_PALBOX_IMPORT: true # bAllowGlobalPalboxImport — import Pals from the global palbox (default false)
               ENABLE_NON_LOGIN_PENALTY: false
