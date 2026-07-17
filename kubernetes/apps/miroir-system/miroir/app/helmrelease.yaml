@@ -10,6 +10,10 @@ spec:
     name: miroir
   interval: 1h
   values:
+    autoEvictAfter: 1h
+    drbd:
+      alExtents: 6007
+      portBase: 7000 #Ceph MGR Conflict
     monitoring:
       dashboards:
         enabled: true
@@ -21,45 +25,5 @@ spec:
         enabled: true
       prometheusRule:
         enabled: true
-    drbd:
-      portBase: 7000 #Ceph MGR Conflict
-    # One lvm-thin pool per node on the dedicated Micron 7450 (Talos RawVolumeConfig → r-miroir)
-    # 0.10 reshaped nodes.<name> into named pools: the flat backend/device pair now lives
-    # under pools.<name> (classes without a `pool` key draw from "default"). zone/address
-    # would stay node-level. See chart values.yaml "Storage topology".
-    nodes:
-      logos:
-        pools:
-          default:
-            backend: lvmthin
-            device: /dev/disk/by-partlabel/r-miroir
-      ontos:
-        pools:
-          default:
-            backend: lvmthin
-            device: /dev/disk/by-partlabel/r-miroir
-      pneuma:
-        pools:
-          default:
-            backend: lvmthin
-            device: /dev/disk/by-partlabel/r-miroir
-    # Both StorageClasses draw from the same per-node pool; differ only by replica count.
-    # 0.5.0 unified the singular storageClass/replicatedStorageClass objects into one
-    # storageClasses[] array (empty = none created). replicas now defaults to 1, so the
-    # replicated class must set replicas: 2 explicitly (the old key implied it).
-    storageClasses:
-      - name: miroir-local # single copy, no DRBD
-        isDefault: false
-        replicas: 1
-        fsType: ext4
-        reclaimPolicy: Delete
-      - name: miroir-replicated # 2 legs, DRBD9-mirrored (+ diskless tiebreaker)
-        isDefault: false
-        replicas: 2
-        quorum: freeze
-        fsType: ext4
-        reclaimPolicy: Delete
-    # 0.5.0 added volumeSnapshotClasses[]; miroir-snap backs CSI snapshots
-    # (cluster snapshot-controller + CRDs live in kube-system).
-    volumeSnapshotClasses:
-      - name: miroir-snap
+    replicaCount: 2
+
