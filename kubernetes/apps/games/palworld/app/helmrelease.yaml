@@ -48,7 +48,7 @@ spec:
               REST_API_PORT: 8212
               RCON_ENABLED: false
               ## Game Settings
-              BASE_CAMP_WORKER_MAX_NUM: 20 # Max Pals working at a base (default 15)
+              BASE_CAMP_WORKER_MAX_NUM: 25 # Max Pals working at a base (default 15)
               ALLOW_GLOBAL_PALBOX_EXPORT: true # bAllowGlobalPalboxExport — save Pals to the global palbox
               ALLOW_GLOBAL_PALBOX_IMPORT: true # bAllowGlobalPalboxImport — import Pals from the global palbox (default false)
               ENABLE_NON_LOGIN_PENALTY: false
@@ -71,7 +71,7 @@ spec:
               COLLECTION_OBJECT_RESPAWN_SPEED_RATE: 1.1
               ENEMY_DROP_ITEM_RATE: 1.1
               ITEM_WEIGHT_RATE: 0.5
-              ITEM_CORRUPTION_MULTIPLIER: 0.4
+              ITEM_CORRUPTION_MULTIPLIER: 0.1
               EQUIPMENT_DURABILITY_DAMAGE_RATE: 0.4
             envFrom:
               - secretRef:
