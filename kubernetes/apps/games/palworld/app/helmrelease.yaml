@@ -19,7 +19,7 @@ spec:
           app:
             image:
               repository: ghcr.io/thijsvanloef/palworld-server-docker
-              tag: v2.6.0@sha256:85ae20d8756dd398ec24f4253a59b80907e5ffe411148a67b2c80c4527a8855e
+              tag: v2.7.0@sha256:4145c58737fcd9f9f03d35de6bf33c0008b829b65d3080822bc46830bdb38fdf
             env:
               TZ: Europe/London
               ## Container behaviour
