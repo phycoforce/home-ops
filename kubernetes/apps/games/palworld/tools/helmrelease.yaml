@@ -22,7 +22,7 @@ spec:
           app:
             image:
               repository: ghcr.io/rnz01/palworld-server-dashboard
-              tag: latest@sha256:469169252781bef6087e172ed4d055e21b99486b723346f460ed9601bd155d53
+              tag: latest@sha256:d1e9e5142c9dd749c913e46f915096cfdadb914b1957fa2575f453cf0b90ab76
             env:
               NODE_ENV: production
               PORT: &port 3000
@@ -33,6 +33,7 @@ spec:
               RATE_LIMIT_TRUST_PROXY: "true"
               DEMO_MODE: "0"
               PALWORLD_CHAT_LOG_FILE: /gamelog/palworld.log
+              PUBLIC_VIEW_ENABLED: "true"
             envFrom:
               - secretRef:
                   name: palworld-dashboard-secret
@@ -177,11 +178,34 @@ spec:
         globalMounts:
           - path: /tmp
     route:
+      # Internal: full admin panel (behind the PANEL password) on the LAN.
       app:
         hostnames: ["palworld-dashboard.${SECRET_DOMAIN}"]
         parentRefs:
           - name: envoy-internal
             namespace: network
+      external:
+        hostnames: ["palworld-dashboard.${SECRET_DOMAIN_2}"]
+        parentRefs:
+          - name: envoy-external
+            namespace: network
+        rules:
+          - matches:
+              - path: # the public page itself
+                  type: PathPrefix
+                  value: /view
+              - path: # its only data source
+                  type: PathPrefix
+                  value: /api/public-view
+              - path: # live-map background + marker images (public/palworld-map)
+                  type: PathPrefix
+                  value: /palworld-map
+              - path: # JS/CSS/font/image build assets
+                  type: PathPrefix
+                  value: /_next
+            backendRefs:
+              - identifier: app
+                port: *port
     service:
       app:
         ports:
