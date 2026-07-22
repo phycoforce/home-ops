@@ -29,7 +29,7 @@ metadata:
 spec:
   modelRef: llama-rerank
   replicas: 1
-  image: ghcr.io/ggml-org/llama.cpp:server-vulkan-b10068@sha256:5672ed099865337417b3f2d0fd360839740168efb96acf44c80770b7808d896c
+  image: ghcr.io/ggml-org/llama.cpp:server-vulkan-b10088@sha256:7909e1cb0c4ad507bf0118344b78db7b33a3e40caf1f48d90ef08352af999e4c
   podLabels:
     igpu-workload: "true"
   topologySpreadConstraints:
