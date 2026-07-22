@@ -21,15 +21,21 @@ spec:
         containers:
           app:
             image:
-              repository: ghcr.io/rnz01/palworld-server-dashboard
-              tag: latest@sha256:d1e9e5142c9dd749c913e46f915096cfdadb914b1957fa2575f453cf0b90ab76
+              repository: ghcr.io/phycoforce/palworld-server-dashboard
+              tag: dirty@sha256:68fedac31181abe5c59d5a1a0cdef5d4e2898f613f4a762280300995789eb171
             env:
               NODE_ENV: production
               PORT: &port 3000
               HOSTNAME: 0.0.0.0
               PALWORLD_REST_URL: http://palworld-rest.games.svc.cluster.local:8212
-              PANEL_AUTH_FILE: /app/data/panel-auth.json
-              PALWORLD_FPS_HISTORY_FILE: /metrics/fps-history.json
+              # On emptyDir (not the /app/data PVC) so the panel login re-seeds
+              # from 1Password every boot instead of pinning an old password.
+              PANEL_AUTH_FILE: /app/auth/panel-auth.json
+              # In-process FPS sampler (replaces the old python sidecar); reuses
+              # PALWORLD_REST_URL + PALWORLD_ADMIN_PASSWORD from envFrom.
+              PALWORLD_FPS_SAMPLER: "true"
+              PALWORLD_FPS_HISTORY_FILE: /app/data/fps-history.json
+              FPS_WINDOW_MINUTES: "120"
               RATE_LIMIT_TRUST_PROXY: "true"
               DEMO_MODE: "0"
               PALWORLD_CHAT_LOG_FILE: /gamelog/palworld.log
@@ -67,34 +73,6 @@ spec:
                 memory: 128Mi
               limits:
                 memory: 512Mi
-          # FPS Monitoring Script, derived from upstream pythons script
-          fps-sampler:
-            image:
-              repository: mirror.gcr.io/library/python
-              tag: 3.14-alpine@sha256:26730869004e2b9c4b9ad09cab8625e81d256d1ce97e72df5520e806b1709f92
-            command: ["python", "/sampler/palworld-fps-sampler.py"]
-            env:
-              PALWORLD_REST_URL: http://palworld-rest.games.svc.cluster.local:8212
-              FPS_HISTORY_FILE: /metrics/fps-history.json
-              FPS_SAMPLE_SECONDS: "5"
-              FPS_WINDOW_MINUTES: "120"
-              FPS_SANE_MAX: "240"
-              PYTHONDONTWRITEBYTECODE: "1"
-              PALWORLD_ADMIN_PASSWORD:
-                valueFrom:
-                  secretKeyRef:
-                    name: palworld-secret
-                    key: ADMIN_PASSWORD
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities: { drop: ["ALL"] }
-            resources:
-              requests:
-                cpu: 5m
-                memory: 32Mi
-              limits:
-                memory: 64Mi
           # Chat bridge relay: streams the game pod's stdout (the [CHAT] +
           # join/leave lines) via the k8s API into /gamelog for the journalctl
           # shim to serve to the app. Read-only k8s access (rbac.yaml).
@@ -126,29 +104,22 @@ spec:
         fsGroupChangePolicy: OnRootMismatch
         seccompProfile: { type: RuntimeDefault }
     persistence:
+      # FPS ring history written by the in-process sampler. Reuses the old
+      # sampler-sidecar "metrics" PVC so the ring file (already at its root)
+      # survives restarts and carries the existing history forward.
       data:
-        type: emptyDir
-        advancedMounts:
-          palworld-server-dashboard:
-            app:
-              - path: /app/data
-      metrics:
         existingClaim: palworld-dashboard-metrics
         advancedMounts:
           palworld-server-dashboard:
             app:
-              - path: /metrics
-                readOnly: true
-            fps-sampler:
-              - path: /metrics
-      sampler-script:
-        type: configMap
-        name: palworld-dashboard-fps-sampler
+              - path: /app/data
+      # Panel-auth store must stay ephemeral (see PANEL_AUTH_FILE).
+      auth:
+        type: emptyDir
         advancedMounts:
           palworld-server-dashboard:
-            fps-sampler:
-              - path: /sampler
-                readOnly: true
+            app:
+              - path: /app/auth
       # Shared file the relay writes and the app reads (via the journalctl shim).
       gamelog:
         type: emptyDir
