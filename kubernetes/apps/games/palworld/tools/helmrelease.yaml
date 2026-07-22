@@ -36,6 +36,9 @@ spec:
               PALWORLD_FPS_SAMPLER: "true"
               PALWORLD_FPS_HISTORY_FILE: /app/data/fps-history.json
               FPS_WINDOW_MINUTES: "120"
+              # Server runs unlocked (~100-118fps); the sampler's default sane-max
+              # of 65 would discard every sample.
+              FPS_SANE_MAX: "240"
               RATE_LIMIT_TRUST_PROXY: "true"
               DEMO_MODE: "0"
               PALWORLD_CHAT_LOG_FILE: /gamelog/palworld.log
