@@ -16,7 +16,6 @@ spec:
   postBuild:
     substitute:
       APP: bazarr
-      KOPIUR_CAPACITY: 1Gi
     substituteFrom:
       - name: cluster-secrets
         kind: Secret

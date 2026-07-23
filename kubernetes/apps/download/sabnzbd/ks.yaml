@@ -16,7 +16,6 @@ spec:
   postBuild:
     substitute:
       APP: sabnzbd
-      KOPIUR_CAPACITY: 2Gi
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
