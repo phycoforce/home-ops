@@ -48,6 +48,8 @@ spec:
               requests:
                 memory: 2Gi
                 cpu: 50m
+              limits:
+                memory: 3Gi
     service:
       app:
         type: LoadBalancer
@@ -96,6 +98,15 @@ spec:
         existingClaim: unifi
         globalMounts:
           - path: /unifi
+      # /usr/lib/unifi/run is a symlink to /unifi/run, baked into the image as
+      # 999:999 0755. The container runs as 1001, so it cannot write mongod.pid
+      # there and mongo crash-loops. A run dir is meant to be ephemeral, so
+      # overlay an emptyDir (group-1001-writable via fsGroup) — also prevents a
+      # stale db.needsRepair marker from ever persisting across restarts.
+      run:
+        type: emptyDir
+        globalMounts:
+          - path: /unifi/run
       cert:
         type: secret
         name: '${SECRET_DOMAIN/./-}-unifi'
