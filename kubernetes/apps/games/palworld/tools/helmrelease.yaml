@@ -39,6 +39,8 @@ spec:
               # Server runs unlocked (~100-118fps); the sampler's default sane-max
               # of 65 would discard every sample.
               FPS_SANE_MAX: "240"
+              PALWORLD_PLAYER_ACTIVITY: "true"
+              PALWORLD_PLAYER_ACTIVITY_FILE: /app/data/player-activity.json
               RATE_LIMIT_TRUST_PROXY: "true"
               DEMO_MODE: "0"
               PALWORLD_CHAT_LOG_FILE: /gamelog/palworld.log
