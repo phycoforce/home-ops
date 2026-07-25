@@ -61,3 +61,19 @@ spec:
   matchers:
     - name: alertname
       value: KubeHpaMaxedOut
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/observability.giantswarm.io/silence_v1alpha2.json
+# Transient during ceph upgrades / node reboots: mgr failover briefly emits
+# duplicate ceph_pool_metadata series, breaking the pools-group join rules
+# (CephPoolGrowthWarning etc). Upstream rook/rook#14338 & #14427, wontfix.
+apiVersion: observability.giantswarm.io/v1alpha2
+kind: Silence
+metadata:
+  name: ceph-pools-rule-eval-failures
+spec:
+  matchers:
+    - name: alertname
+      value: PrometheusRuleFailures
+    - name: rule_group
+      value: .*rook-ceph-prometheus-ceph-rules.*;pools
+      matchType: =~
