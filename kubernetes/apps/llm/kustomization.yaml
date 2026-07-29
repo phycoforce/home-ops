@@ -11,5 +11,4 @@ resources:
   - ./llmkube/ks.yaml
   - ./litellm/ks.yaml
   - ./memini/ks.yaml
-  - ./opencode-rbac/ks.yaml
   - ./toolhive/ks.yaml
