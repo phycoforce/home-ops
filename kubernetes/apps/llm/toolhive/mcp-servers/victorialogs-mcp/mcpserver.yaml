@@ -1,0 +1,44 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/toolhive.stacklok.dev/mcpserver_v1beta1.json
+apiVersion: toolhive.stacklok.dev/v1beta1
+kind: MCPServer
+metadata:
+  name: victorialogs
+spec:
+  image: ghcr.io/victoriametrics/mcp-victorialogs:v1.9.0@sha256:753bb4fbe402ca1a782842f44636830f9895736f11d7fe783b924f8a0daf083d
+  transport: streamable-http
+  proxyMode: streamable-http
+  proxyPort: 8080
+  mcpPort: 8000
+  resources:
+    requests:
+      cpu: 50m
+      memory: 128Mi
+    limits:
+      cpu: 500m
+      memory: 256Mi
+  # No credentials: the VictoriaLogs instance is unauthenticated in-cluster.
+  # The server exposes only VictoriaLogs' read-only query APIs.
+  env:
+    - name: VL_INSTANCE_ENTRYPOINT
+      value: http://victoria-logs.observability.svc.cluster.local:9428
+    - name: MCP_SERVER_MODE
+      value: http
+    # Defaults to localhost:8081, which would not accept connections from the
+    # toolhive proxy; bind all interfaces on the port toolhive expects.
+    - name: MCP_LISTEN_ADDR
+      value: ":8000"
+    - name: MCP_LOG_LEVEL
+      value: info
+  podTemplateSpec:
+    spec:
+      containers:
+        - name: mcp
+          securityContext:
+            allowPrivilegeEscalation: false
+            readOnlyRootFilesystem: true
+            capabilities:
+              drop:
+                - ALL
+  groupRef:
+    name: mcp-tools

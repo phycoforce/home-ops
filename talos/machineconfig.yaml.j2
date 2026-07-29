@@ -19,9 +19,11 @@ machine:
       enabled: true
       allowedKubernetesNamespaces:
         - actions-runner-system
+        - llm
         - system-upgrade
       allowedRoles:
         - os:admin
+        - os:reader
     {% endif %}
     apidCheckExtKeyUsage: true
     rbac: true

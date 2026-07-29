@@ -4,17 +4,43 @@ kind: ServiceAccount
 metadata:
   name: kubectl-mcp-readonly
 ---
+# Broad read-only access for the kubectl and flux MCP servers. Bound to both
+# service accounts, alongside the separate binding to the built-in "view" role.
+#
+# Deliberately NOT an aggregated ClusterRole. Setting aggregationRule here would
+# make the control plane overwrite the rules below with the union of every
+# aggregate-to-view ClusterRole, discarding this list entirely and fighting Flux
+# on every reconcile. "view" is picked up via its own ClusterRoleBinding instead.
+#
+# Core v1 Secrets are excluded: they are only in the core group, which is
+# enumerated explicitly below, so the "*" on non-core groups cannot reach them.
+# exec/attach/proxy subresources are likewise omitted.
 apiVersion: rbac.authorization.k8s.io/v1
 kind: ClusterRole
 metadata:
   name: kubectl-mcp-readonly-extra
 rules:
+  - nonResourceURLs:
+      - /api
+      - /api/*
+      - /apis
+      - /apis/*
+      - /healthz
+      - /livez
+      - /openapi
+      - /openapi/*
+      - /readyz
+      - /version
+      - /version/
+    verbs:
+      - get
   - apiGroups:
       - ""
     resources:
       - pods/log
     verbs:
       - get
+  # Cluster-scoped core resources that "view" does not grant.
   - apiGroups:
       - ""
     resources:
@@ -25,10 +51,77 @@ rules:
       - get
       - list
       - watch
+  # Lets an agent ask "what am I allowed to do?" and report a precise gap
+  # instead of guessing at a Forbidden. Self-scoped only: these review its own
+  # access and cannot be used to impersonate or escalate.
   - apiGroups:
-      - storage.k8s.io
+      - authorization.k8s.io
     resources:
-      - storageclasses
+      - selfsubjectaccessreviews
+      - selfsubjectrulesreviews
+    verbs:
+      - create
+  # Every non-core API group present in this cluster. Secret objects only exist
+  # in the core group, so "*" here cannot expose them. Keep in sync with
+  # `kubectl api-resources`; a group missing from this list is a silent Forbidden.
+  - apiGroups:
+      - acme.cert-manager.io
+      - actions.github.com
+      - admissionregistration.k8s.io
+      - apiextensions.k8s.io
+      - apiregistration.k8s.io
+      - apps
+      - autoscaling
+      - barmancloud.cnpg.io
+      - batch
+      - ceph.rook.io
+      - certificates.k8s.io
+      - cert-manager.io
+      - cilium.io
+      - coordination.k8s.io
+      - csi.ceph.io
+      - discovery.k8s.io
+      - dragonflydb.io
+      - events.k8s.io
+      - externaldns.k8s.io
+      - external-secrets.io
+      - federation.llmkube.dev
+      - flowcontrol.apiserver.k8s.io
+      - fluxcd.controlplane.io
+      - gateway.envoyproxy.io
+      - gateway.networking.k8s.io
+      - gateway.networking.x-k8s.io
+      - generators.external-secrets.io
+      - grafana.integreatly.org
+      - groupsnapshot.storage.k8s.io
+      - helm.toolkit.fluxcd.io
+      - inference.llmkube.dev
+      - k8s.cni.cncf.io
+      - kopiur.home-operations.com
+      - kustomize.toolkit.fluxcd.io
+      - metrics.k8s.io
+      - miroir.home-operations.com
+      - monitoring.coreos.com
+      - monitoring.giantswarm.io
+      - networking.k8s.io
+      - node.k8s.io
+      - notification.toolkit.fluxcd.io
+      - objectbucket.io
+      - observability.giantswarm.io
+      - onepassword.com
+      - policy
+      - postgresql.cnpg.io
+      - rbac.authorization.k8s.io
+      - resource.k8s.io
+      - scheduling.k8s.io
+      - snapshot.storage.k8s.io
+      - source.toolkit.fluxcd.io
+      - storage.k8s.io
+      - talos.dev
+      - toolhive.stacklok.dev
+      - tuppr.home-operations.com
+    resources:
+      - "*"
     verbs:
       - get
       - list
