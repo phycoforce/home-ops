@@ -10,6 +10,7 @@ spec:
     name: prometheus-adapter
   interval: 1h
   values:
+    logLevel: 1
     prometheus:
       url: http://prometheus-operated.observability.svc.cluster.local
     rules:

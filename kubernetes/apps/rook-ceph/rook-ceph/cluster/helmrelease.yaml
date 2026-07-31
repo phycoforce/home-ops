@@ -26,6 +26,8 @@ spec:
             namespace: network
     cephClusterSpec:
       cephConfig:
+        mon:
+          mon_cluster_log_level: info
         global:
           bdev_enable_discard: "true" # quote
           bdev_async_discard_threads: "1" # quote
