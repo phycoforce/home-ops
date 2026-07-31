@@ -8,15 +8,71 @@ spec:
   groups:
     - name: smartctl-exporter.rules
       rules:
+        - record: smart:device_temperature:current
+          expr: |
+            smartctl_device_temperature{temperature_type="current"}
+              * on (instance, device) group_left (model_name) smartctl_device
+
+        - record: smart:device_temperature_threshold:warning
+          expr: |
+            (smartctl_device{model_name=~"Micron_7450_.*"} * 0 + 75)
+            or (smartctl_device{model_name=~"SAMSUNG MZ.*"} * 0 + 75)
+            or (smartctl_device{model_name=~"Samsung SSD 9.*"} * 0 + 75)
+            or (smartctl_device{model_name=~"Samsung Portable.*"} * 0 + 60)
+            or (smartctl_device{model_name=~"ST[0-9]+NM.*"} * 0 + 52)
+            or (smartctl_device * 0 + 65)
+
+        - record: smart:device_temperature_threshold:critical
+          expr: |
+            (smartctl_device{model_name=~"Micron_7450_.*"} * 0 + 78)
+            or (smartctl_device{model_name=~"SAMSUNG MZ.*"} * 0 + 80)
+            or (smartctl_device{model_name=~"Samsung SSD 9.*"} * 0 + 82)
+            or (smartctl_device{model_name=~"Samsung Portable.*"} * 0 + 70)
+            or (smartctl_device{model_name=~"ST[0-9]+NM.*"} * 0 + 58)
+            or (smartctl_device * 0 + 70)
+
         - alert: SmartDeviceHighTemperature
           expr: |
-            smartctl_device_temperature{temperature_type="current"} > 68
-          for: 5m
+            smart:device_temperature:current
+              >= on (instance, device) group_left ()
+                 smart:device_temperature_threshold:warning
+          for: 30m
           annotations:
             summary: >-
-              Mounted drive {{ $labels.device }} on device {{ $labels.instance }} has a temperature higher than 68°C
+              {{ $labels.model_name }} ({{ $labels.device }}) on {{ $labels.instance }}
+              has held {{ $value }}°C for 30m, above its warning threshold
+          labels:
+            severity: warning
+
+        - alert: SmartDeviceCriticalTemperature
+          expr: |
+            smart:device_temperature:current
+              >= on (instance, device) group_left ()
+                 smart:device_temperature_threshold:critical
+          for: 15m
+          annotations:
+            summary: >-
+              {{ $labels.model_name }} ({{ $labels.device }}) on {{ $labels.instance }}
+              has held {{ $value }}°C for 15m and is approaching its thermal limit
           labels:
             severity: critical
+
+        # Call out specific device
+        - alert: SmartDeviceTemperatureOutlier
+          expr: |
+            (
+              smart:device_temperature:current
+                - on (model_name) group_left ()
+                  quantile by (model_name) (0.5, smart:device_temperature:current)
+            ) > 15
+          for: 1h
+          annotations:
+            summary: >-
+              {{ $labels.model_name }} ({{ $labels.device }}) on {{ $labels.instance }}
+              is running {{ $value }}°C hotter than its identical siblings — check
+              airflow, fan and heatsink seating on this host
+          labels:
+            severity: warning
 
         - alert: SmartDeviceTestFailed
           expr: |
