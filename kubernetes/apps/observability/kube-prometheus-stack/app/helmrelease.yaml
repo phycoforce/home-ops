@@ -91,7 +91,41 @@ spec:
         folder: observability
         matchLabels:
           dashboards: grafana
+    defaultRules:
+      disabled:
+        # replaced by the guarded copy in additionalPrometheusRulesMap.hpa-rules:
+        # 15 HPAs are min=0/max=1 probe gates where current==max is the healthy state
+        KubeHpaMaxedOut: true
     additionalPrometheusRulesMap:
+      hpa-rules:
+        groups:
+          - name: hpa
+            rules:
+              # upstream 87.19.2 rule + third clause: ignore HPAs that cannot
+              # scale above 1 replica; re-diff against upstream on major bumps
+              - alert: KubeHpaMaxedOut
+                annotations:
+                  description: HPA {{ $labels.namespace }}/{{ $labels.horizontalpodautoscaler }} has been running at max replicas for longer than 15 minutes.
+                  runbook_url: https://runbooks.prometheus-operator.dev/runbooks/kubernetes/kubehpamaxedout
+                  summary: HPA is running at max replicas
+                expr: |-
+                  (
+                    kube_horizontalpodautoscaler_status_current_replicas{job="kube-state-metrics", namespace=~".*"}
+                      ==
+                    kube_horizontalpodautoscaler_spec_max_replicas{job="kube-state-metrics", namespace=~".*"}
+                  )
+                  and on (namespace, horizontalpodautoscaler, cluster) (
+                    kube_horizontalpodautoscaler_spec_max_replicas{job="kube-state-metrics", namespace=~".*"}
+                      !=
+                    kube_horizontalpodautoscaler_spec_min_replicas{job="kube-state-metrics", namespace=~".*"}
+                  )
+                  and on (namespace, horizontalpodautoscaler, cluster) (
+                    kube_horizontalpodautoscaler_spec_max_replicas{job="kube-state-metrics", namespace=~".*"}
+                      > 1
+                  )
+                for: 15m
+                labels:
+                  severity: warning
       dockerhub-rules:
         groups:
           - name: dockerhub
