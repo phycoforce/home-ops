@@ -13,6 +13,7 @@ spec:
     deploymentAnnotations:
       reloader.stakater.com/auto: "true"
     gatus:
+      logLevel: WARN
       delayStartSeconds: "5"
       env:
         TZ: Europe/London

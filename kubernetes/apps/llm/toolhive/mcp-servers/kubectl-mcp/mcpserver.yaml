@@ -35,5 +35,7 @@ spec:
               value: in-cluster
             - name: PYTHONUNBUFFERED
               value: "1"
+            - name: FASTMCP_LOG_LEVEL
+              value: WARNING
   groupRef:
     name: mcp-tools
