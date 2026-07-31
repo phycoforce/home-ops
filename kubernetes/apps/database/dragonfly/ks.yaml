@@ -23,6 +23,11 @@ metadata:
 spec:
   dependsOn:
     - name: dragonfly
+  healthCheckExprs:
+    # status.phase constants in the operator: ResourcesCreated, Configuring, RollingUpdate, Ready
+    - apiVersion: dragonflydb.io/v1alpha1
+      kind: Dragonfly
+      current: status.phase == 'Ready'
   interval: 1h
   path: ./kubernetes/apps/database/dragonfly/cluster
   prune: true
@@ -30,5 +35,8 @@ spec:
     kind: GitRepository
     name: flux-system
     namespace: flux-system
-  wait: false
+  # bound health-check failure to 10m instead of the 1h interval default;
+  # litellm and paperless dependsOn this ks
+  timeout: 10m
+  wait: true
   targetNamespace: database

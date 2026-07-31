@@ -1,11 +1,15 @@
 ---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/networking.k8s.io/networkpolicy_v1.json
 apiVersion: networking.k8s.io/v1
 kind: NetworkPolicy
 metadata:
-  labels:
-    app: dragonfly
   name: dragonfly-clients
 spec:
+  podSelector:
+    matchLabels:
+      app: dragonfly
+  policyTypes:
+    - Ingress
   ingress:
     - from:
         - namespaceSelector:
@@ -23,10 +27,3 @@ spec:
       ports:
         - port: 6379
           protocol: TCP
-  podSelector:
-    matchLabels:
-      app: dragonfly
-      app.kubernetes.io/name: dragonfly
-      app.kubernetes.io/part-of: dragonfly
-  policyTypes:
-    - Ingress

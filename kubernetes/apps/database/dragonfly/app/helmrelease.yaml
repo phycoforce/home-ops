@@ -3,106 +3,25 @@
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:
-  name: &app dragonfly-operator
+  name: dragonfly-operator
 spec:
   chartRef:
     kind: OCIRepository
     name: dragonfly-operator
   interval: 1h
   values:
-    defaultPodOptions:
-      automountServiceAccountToken: true
-    controllers:
-      dragonfly-operator:
-        replicas: 1
-        serviceAccount:
-          identifier: *app
-        strategy: RollingUpdate
-        containers:
-          app:
-            image:
-              repository: ghcr.io/dragonflydb/operator
-              tag: v1.6.1@sha256:b11411142935f92ed0ec30a5ddeb31680e09ab66beecb827cb0224f1c4238638
-            command:
-              - "/manager"
-            args:
-              - --health-probe-bind-address=:8081
-              - --metrics-bind-address=:8080
-            probes:
-              liveness:
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /healthz
-                    port: &port 8081
-                  initialDelaySeconds: 15
-                  periodSeconds: 20
-                  timeoutSeconds: 1
-                  failureThreshold: 3
-              readiness:
-                enabled: true
-                custom: true
-                spec:
-                  httpGet:
-                    path: /readyz
-                    port: *port
-                  initialDelaySeconds: 5
-                  periodSeconds: 10
-                  timeoutSeconds: 1
-                  failureThreshold: 3
-            resources:
-              requests:
-                cpu: 10m
-              limits:
-                memory: 128Mi
-            securityContext:
-              allowPrivilegeEscalation: false
-              readOnlyRootFilesystem: true
-              capabilities: {drop: ["ALL"]}
-        pod:
-          labels:
-            # required for the operator to determine a primary in each deployed cluster
-            # ref: https://deepwiki.com/dragonflydb/dragonfly-operator/2.2-manual-installation#namespace-resource
-            control-plane: controller-manager
-          securityContext:
-            runAsUser: 65534
-            runAsGroup: 65534
-            runAsNonRoot: true
-          topologySpreadConstraints:
-            - maxSkew: 1
-              topologyKey: kubernetes.io/hostname
-              whenUnsatisfiable: DoNotSchedule
-              labelSelector:
-                matchLabels:
-                  app.kubernetes.io/name: *app
-    service:
-      app:
-        controller: *app
-        ports:
-          http:
-            port: *port
-          metrics:
-            port: 8080
+    manager:
+      image:
+        # default docker.dragonflydb.io is a proxy for ghcr.io (identical digests); pull the source directly
+        repository: ghcr.io/dragonflydb/operator
+    rbacProxy:
+      # metrics stay plain HTTP on :8080, scraped in-cluster only — the TLS/authz sidecar buys nothing here
+      enabled: false
     serviceMonitor:
-      app:
-        serviceName: *app
-        endpoints:
-          - port: metrics
-            scheme: http
-            path: /metrics
-            interval: 1m
-            scrapeTimeout: 10s
-    serviceAccount:
-      dragonfly-operator: {}
-  postRenderers:
-    - kustomize:
-        patches:
-          - patch: |-
-              apiVersion: monitoring.coreos.com/v1
-              kind: ServiceMonitor
-              metadata:
-                name: dragonfly-operator
-                namespace: database
-              spec:
-                fallbackScrapeProtocol: PrometheusText1.0.0
+      enabled: true
+    grafanaDashboard:
+      enabled: true
+      grafanaOperator:
+        enabled: true
+        matchLabels:
+          dashboards: grafana

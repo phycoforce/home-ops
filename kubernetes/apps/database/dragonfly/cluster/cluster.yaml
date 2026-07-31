@@ -23,11 +23,13 @@ spec:
       memory: 128Mi
     limits:
       memory: 512Mi
+  # the operator injects no scheduling rules of its own; this is the only thing
+  # keeping the 3 replicas on 3 different nodes across drains and upgrades
   topologySpreadConstraints:
     - maxSkew: 1
-      topologyKey: "kubernetes.io/hostname"
-      whenUnsatisfiable: "DoNotSchedule"
+      topologyKey: kubernetes.io/hostname
+      whenUnsatisfiable: DoNotSchedule
       nodeTaintsPolicy: Honor
       labelSelector:
         matchLabels:
-          app.kubernetes.io/part-of: dragonfly
+          app: dragonfly
