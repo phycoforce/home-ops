@@ -29,7 +29,7 @@ metadata:
 spec:
   modelRef: llama-gemma4-e4b
   replicas: 1
-  image: ghcr.io/ggml-org/llama.cpp:server-vulkan-b10362@sha256:e81580aa79792130a0afdd69372d5559f4057b2bff7aa32943be34ab72672aa7
+  image: ghcr.io/ggml-org/llama.cpp:server-vulkan-b10380@sha256:f8584357d2f0751a69434400df9f3a8da3333ac246c7fecd1ba7bd93276e5f09
   podLabels:
     igpu-workload: "true"
   topologySpreadConstraints:
