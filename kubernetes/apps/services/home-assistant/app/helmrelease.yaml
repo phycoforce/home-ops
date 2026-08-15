@@ -18,11 +18,9 @@ spec:
               repository: ghcr.io/home-operations/home-assistant
               tag: 2026.8.2@sha256:84f5b1b26e1597a3d5a19a7b6e2ed085ec8e3fffcbe46049acf62f9e25ea400e
             env:
-              HOME_ASSISTANT_EXTERNAL_URL: hass.${SECRET_DOMAIN}
+              HOME_ASSISTANT_EXTERNAL_URL: https://hass.${SECRET_DOMAIN}
               HOME_ASSISTANT_PURGE_KEEP_DAYS: 30
               TZ: Europe/London
-              HASS_HTTP_TRUSTED_PROXY_1: 10.69.0.0/16
-              HASS_HTTP_TRUSTED_PROXY_2: 10.0.20.0/24
             envFrom:
               - secretRef:
                   name: home-assistant-secret
