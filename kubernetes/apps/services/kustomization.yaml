@@ -14,3 +14,4 @@ resources:
   - ./karakeep/ks.yaml
   - ./mealie/ks.yaml
   - ./wastebin/ks.yaml
+  - ./video/ks.yaml

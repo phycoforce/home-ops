@@ -14,6 +14,12 @@ ingress:
       tcpKeepAlive: 7200s
   - hostname: "*.${SECRET_DOMAIN}"
     service: https://envoy-external.network.svc.cluster.local
+  - hostname: "${SECRET_DOMAIN_2}"
+    service: https://envoy-external.network.svc.cluster.local
+    originRequest:
+      keepAliveTimeout: 3600s
+      originServerName: "${SECRET_DOMAIN_2}"
+      tcpKeepAlive: 7200s
   - hostname: "*.${SECRET_DOMAIN_2}"
     service: https://envoy-external.network.svc.cluster.local
     originRequest:

@@ -1,0 +1,86 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: video
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: video
+  interval: 1h
+  values:
+    controllers:
+      video:
+        replicas: 1
+        strategy: Recreate # RWO PVC
+        annotations:
+          reloader.stakater.com/auto: "true"
+        pod:
+          securityContext:
+            runAsUser: 1000
+            runAsGroup: 1000
+            fsGroup: 1000
+            fsGroupChangePolicy: "OnRootMismatch"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/static-web-server/static-web-server
+              tag: 2.44.0@sha256:2c1a7c3e0feaea5859307403b74e1c575f3ec1499094fc077344173d11abaae2
+            env:
+              SERVER_PORT: &port 8080
+              SERVER_ROOT: /public
+              SERVER_HEALTH: "true"
+              SERVER_LOG_LEVEL: info
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: *port
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            resources:
+              requests:
+                cpu: 5m
+                memory: 16Mi
+              limits:
+                memory: 128Mi
+            securityContext:
+              allowPrivilegeEscalation: false
+              capabilities:
+                drop:
+                  - ALL
+              readOnlyRootFilesystem: true
+    service:
+      app:
+        ports:
+          http:
+            port: *port
+    persistence:
+      index:
+        type: configMap
+        name: video-index
+        globalMounts:
+          - path: /public/index.html
+            subPath: index.html
+            readOnly: true
+      media:
+        existingClaim: video-media
+        globalMounts:
+          - path: /public/media
+            readOnly: true
+    route:
+      app:
+        annotations:
+          gatus.home-operations.com/endpoint: |-
+            conditions: ["[STATUS] == 200"]
+        hostnames: ["${SECRET_DOMAIN_2:-example.com}"]
+        parentRefs:
+          - name: envoy-external
+            namespace: network
