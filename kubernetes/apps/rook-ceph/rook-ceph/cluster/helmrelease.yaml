@@ -9,6 +9,7 @@ spec:
     kind: OCIRepository
     name: rook-ceph-cluster
   interval: 1h
+  timeout: 10m
   values:
     monitoring:
       enabled: true
@@ -45,10 +46,24 @@ spec:
         ssl: false
         port: 8081 #DRBD Miroir Conflict
         prometheusEndpoint: http://prometheus-operated.observability.svc.cluster.local:9090
+      healthCheck:
+        muteHealthWarning:
+          AUTH_INSECURE_ROTATING_SERVICE_KEY_TYPE:
+            policy: mute
+          AUTH_INSECURE_CLIENT_KEY_TYPE:
+            policy: mute
+          AUTH_INSECURE_KEYS_ALLOWED:
+            policy: mute
+          AUTH_INSECURE_KEYS_CREATABLE:
+            policy: mute
       mgr:
         modules:
           - name: pg_autoscaler
             enabled: true
+          # The chart's v1.20.6 default disables this, but our list override
+          # suppresses it; the operator's hard-coded disable stops at ceph v20.2.5
+          - name: rook
+            enabled: false
       network:
         provider: host
         addressRanges:
