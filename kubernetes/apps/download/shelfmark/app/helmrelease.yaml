@@ -30,6 +30,18 @@ spec:
               FLASK_PORT: &port 80
               CUSTOM_DNS: system
               BOOK_LANGUAGE: en
+              # Pin the bypasser via env: env beats UI-persisted settings on every
+              # boot and locks the UI toggle, so this can't drift back into the
+              # flaresolverr-ghost or surprise-Chromium states again.
+              USE_CF_BYPASS: true
+              USING_EXTERNAL_BYPASSER: false
+              # Undocumented env-only switch; without it every boot auto-launches
+              # Chromium ~15s in (warmup search), which is what turned OOM into a
+              # crashloop. User searches still use the bypasser normally.
+              SEARCH_WARMUP_ENABLED: false
+              # Reap the persistent bypass helper (new in v1.3.11) after 60s idle
+              # instead of 180s to release its memory sooner.
+              BYPASS_BROWSER_IDLE_TIMEOUT: 60
               CALIBRE_WEB_URL: https://bookboss.${SECRET_DOMAIN}
               BOOKS_OUTPUT_MODE: folder
               INGEST_DIR: /books
@@ -68,9 +80,13 @@ spec:
             resources:
               requests:
                 cpu: 10m
-                memory: 128Mi
+                memory: 256Mi
               limits:
-                memory: 512Mi
+                # Upstream: 2GB is the safe minimum with Direct Download enabled;
+                # the internal Chromium bypasser peaks well past 512Mi (OOM loop).
+                # Bypasses are serialized (one browser max), so this doesn't scale
+                # with MAX_CONCURRENT_DOWNLOADS. The dshm tmpfs counts against it.
+                memory: 2Gi
             securityContext:
               allowPrivilegeEscalation: false
               readOnlyRootFilesystem: true
@@ -97,6 +113,15 @@ spec:
             subPath: tmp
           - path: /var/log
             subPath: var-log
+      dshm:
+        # Chromium (the internal Cloudflare bypasser) uses /dev/shm and shelfmark
+        # doesn't pass --disable-dev-shm-usage; the containerd default is 64Mi,
+        # which crashes renderers mid-solve ("No download URL found" failures).
+        type: emptyDir
+        medium: Memory
+        sizeLimit: 512Mi
+        globalMounts:
+          - path: /dev/shm
     route:
       app:
         hostnames:
