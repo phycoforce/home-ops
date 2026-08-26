@@ -1,0 +1,24 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/dragonflydb.io/dragonfly_v1alpha1.json
+apiVersion: dragonflydb.io/v1alpha1
+kind: Dragonfly
+metadata:
+  name: immich-dragonfly
+spec:
+  image: ghcr.io/dragonflydb/dragonfly:v1.40.1
+  replicas: 1
+  args:
+    # ~80% of the container limit, unlike the shared CR's 100%: headroom for the
+    # allocator/connection buffers so the initial library import (one BullMQ job
+    # per asset) hits Dragonfly's own eviction instead of the kernel OOM killer
+    - --maxmemory=800Mi
+    - --proactor_threads=2
+    # Immich's BullMQ Lua scripts touch undeclared keys; Dragonfly rejects them without this,
+    # which is why Immich gets its own instance instead of the shared `dragonfly` in database
+    - --default_lua_flags=allow-undeclared-keys
+  resources:
+    requests:
+      cpu: 50m
+      memory: 256Mi
+    limits:
+      memory: 1Gi

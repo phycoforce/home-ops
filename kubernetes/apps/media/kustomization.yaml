@@ -21,3 +21,4 @@ resources:
   - ./owncast/ks.yaml
   - ./bookboss/ks.yaml
   - ./deduparr/ks.yaml
+  - ./immich/ks.yaml

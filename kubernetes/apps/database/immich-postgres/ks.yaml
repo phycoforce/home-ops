@@ -1,0 +1,33 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: immich-postgres
+spec:
+  dependsOn:
+    - name: cloudnative-pg
+    - name: cloudnative-pg-barman-cloud
+    # reuses ObjectStore/r2 and Secret/cloudnative-pg-secret created by the shared cluster's path
+    - name: cloudnative-pg-cluster
+  healthCheckExprs:
+    - apiVersion: postgresql.cnpg.io/v1
+      kind: Cluster
+      failed: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'False')
+      current: status.conditions.filter(e, e.type == 'Ready').all(e, e.status == 'True')
+  interval: 1h
+  path: ./kubernetes/apps/database/immich-postgres/cluster
+  postBuild:
+    substitute:
+      # renovate: datasource=docker depName=ghcr.io/tensorchord/cloudnative-vectorchord
+      VECTORCHORD_VERSION: "18.4-1.1.1"
+  prune: true
+  retryInterval: 2m
+  sourceRef:
+    kind: GitRepository
+    name: flux-system
+    namespace: flux-system
+  # bound health-check failure to 10m instead of the 1h interval default; immich dependsOn this ks
+  timeout: 10m
+  wait: true
+  targetNamespace: database
