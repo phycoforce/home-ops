@@ -6,5 +6,14 @@
       matchPackageNames: ["/postgresql/"],
       allowedVersions: "/^18(?:\\.|$)/",
     },
+    {
+      // keep the Immich CNPG image on PG 18 and VectorChord <2; tag shape is
+      // <pgMajor>.<pgMinor>-<vchordVersion>, and Immich refuses to start outside
+      // its VECTORCHORD_VERSION_RANGE (server/src/constants.ts, '>=0.3 <2' at v3.1.0)
+      matchDatasources: ["docker"],
+      matchPackageNames: ["/cloudnative-vectorchord/"],
+      versioning: "redhat",
+      allowedVersions: "/^18\\.\\d+-(0\\.[3-9]|1)\\./",
+    },
   ],
 }

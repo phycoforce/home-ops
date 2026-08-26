@@ -1,0 +1,214 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: immich
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: immich
+  interval: 1h
+  values:
+    defaultPodOptions:
+      automountServiceAccountToken: false
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile: { type: RuntimeDefault }
+    controllers:
+      immich:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          init-db: &initDb
+            image:
+              repository: ghcr.io/home-operations/postgres-init
+              tag: 18.6@sha256:b6d3af974df781c673d37e49bdddfa14a6f5be28b18d2cb7713f0449bea4057b
+            envFrom: &envFrom
+              - secretRef:
+                  name: immich-secret
+        containers:
+          app:
+            image: &serverImage
+              repository: ghcr.io/immich-app/immich-server
+              tag: v3.1.0@sha256:b434cb9287eea1471c9974845914d4dd328c9c2d652e446ed4930f99944f0ceb
+            env:
+              <<: &env
+                TZ: Europe/London
+                IMMICH_MACHINE_LEARNING_URL: http://immich-machine-learning.media.svc.cluster.local:3003
+                REDIS_HOSTNAME: immich-dragonfly.media.svc.cluster.local
+                # trust X-Forwarded-* from the envoy gateways (pod CIDR) so auth cookies
+                # get the Secure attribute and audit logs record real client IPs
+                IMMICH_TRUSTED_PROXIES: 10.69.0.0/16
+              IMMICH_WORKERS_INCLUDE: api
+            envFrom: *envFrom
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /api/server/ping
+                    port: &port 2283
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 10
+            securityContext: &securityContext
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            resources:
+              requests:
+                cpu: 100m
+                memory: 512Mi
+              limits:
+                memory: 4Gi
+      microservices:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          # postgres-init is idempotent; without it this pod crash-loops on first
+          # boot until the immich role/database exist
+          init-db: *initDb
+        containers:
+          app:
+            image: *serverImage
+            env:
+              <<: *env
+              IMMICH_WORKERS_EXCLUDE: api
+            envFrom: *envFrom
+            securityContext: *securityContext
+            resources:
+              requests:
+                cpu: 100m
+                memory: 1Gi
+              limits:
+                memory: 6Gi
+      machine-learning:
+        annotations:
+          reloader.stakater.com/auto: "true"
+        containers:
+          app:
+            image:
+              repository: ghcr.io/immich-app/immich-machine-learning
+              tag: v3.1.0@sha256:5a0839dc5303cd7215bcd2180a26aed3af41675aefb3e75e5157e9f10ad16e6e
+            env:
+              TZ: Europe/London
+              # matplotlib refuses a read-only config dir
+              MPLCONFIGDIR: /cache/matplotlib-config
+            probes:
+              liveness: &mlProbes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /ping
+                    port: &mlPort 3003
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+              readiness: *mlProbes
+              startup:
+                enabled: true
+                spec:
+                  failureThreshold: 30
+                  periodSeconds: 10
+            securityContext: *securityContext
+            resources:
+              requests:
+                cpu: 100m
+                memory: 512Mi
+              limits:
+                memory: 4Gi
+    service:
+      app:
+        forceRename: immich
+        primary: true
+        controller: immich
+        ports:
+          http:
+            port: *port
+      machine-learning:
+        controller: machine-learning
+        ports:
+          http:
+            port: *mlPort
+    route:
+      app:
+        annotations:
+          gatus.home-operations.com/endpoint: |-
+            path: /api/server/ping
+        hostnames:
+          - "{{ .Release.Name }}.${SECRET_DOMAIN}"
+        parentRefs:
+          # both gateways (tuwunel precedent): mikrotik split-horizon DNS only covers
+          # envoy-internal, so this keeps home-Wi-Fi uploads direct instead of
+          # hairpinning through the Cloudflare tunnel and its 100MB body cap
+          - name: envoy-external
+            namespace: network
+          - name: envoy-internal
+            namespace: network
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: *port
+    persistence:
+      media:
+        type: nfs
+        server: aionios.internal
+        path: /mnt/mechonis/immich/media
+        advancedMounts:
+          immich:
+            app:
+              - path: /data
+          microservices:
+            app:
+              - path: /data
+      # separate dataset so the regenerable thumbs/transcodes stay out of the
+      # media dataset's snapshot/replication stream
+      cache:
+        type: nfs
+        server: aionios.internal
+        path: /mnt/mechonis/immich/cache
+        advancedMounts:
+          immich:
+            app: &cacheMounts
+              - path: /data/thumbs
+                subPath: thumbs
+              - path: /data/encoded-video
+                subPath: encoded-video
+          microservices:
+            app: *cacheMounts
+      ml-cache:
+        existingClaim: immich-ml-cache
+        advancedMounts:
+          machine-learning:
+            app:
+              # HOME resolves to /, so HF/xet caches land in /.cache
+              - path: /cache
+                subPath: cache
+              - path: /.cache
+                subPath: dotcache
+      dshm:
+        type: emptyDir
+        medium: Memory
+        advancedMounts:
+          machine-learning:
+            app:
+              - path: /dev/shm
+      tmp:
+        type: emptyDir
+        globalMounts:
+          - path: /tmp

@@ -1,0 +1,39 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/postgresql.cnpg.io/cluster_v1.json
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: immich-postgres
+  annotations:
+    cnpg.io/skipEmptyWalArchiveCheck: "enabled"
+spec:
+  instances: 3
+  # dedicated cluster: Immich hard-requires the VectorChord extension, which the
+  # stock CNPG image used by the shared `postgres` cluster cannot load
+  imageName: ghcr.io/tensorchord/cloudnative-vectorchord:${VECTORCHORD_VERSION}
+  primaryUpdateStrategy: unsupervised
+  storage:
+    size: 20Gi
+    storageClass: miroir-local
+  superuserSecret:
+    name: cloudnative-pg-secret
+  enableSuperuserAccess: true
+  postgresql:
+    parameters:
+      shared_buffers: 512MB
+    # vchord.so must be preloaded before `CREATE EXTENSION vchord` can succeed
+    shared_preload_libraries:
+      - vchord.so
+  resources:
+    requests:
+      cpu: 200m
+    limits:
+      memory: 2Gi
+  monitoring:
+    enablePodMonitor: true
+  plugins:
+    - name: barman-cloud.cloudnative-pg.io
+      isWALArchiver: true
+      parameters:
+        barmanObjectName: r2
+        serverName: immich-018

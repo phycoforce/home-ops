@@ -32,6 +32,16 @@
       minimumGroupSize: 2,
     },
     {
+      description: "Immich Group",
+      groupName: "immich",
+      matchDatasources: ["docker"],
+      matchPackageNames: ["/immich-server/", "/immich-machine-learning/"],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
+      },
+      minimumGroupSize: 2,
+    },
+    {
       description: "Kubernetes Group",
       groupName: "kubernetes",
       matchDatasources: ["docker"],
