@@ -13,6 +13,8 @@ spec:
       namespace: database
     - name: rook-ceph-cluster
       namespace: rook-ceph
+    - name: intel-gpu-resource-driver
+      namespace: kube-system
   interval: 1h
   path: ./kubernetes/apps/services/immich/app
   postBuild:
