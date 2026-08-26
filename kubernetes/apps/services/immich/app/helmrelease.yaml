@@ -18,6 +18,7 @@ spec:
         runAsGroup: 1001
         fsGroup: 1001
         fsGroupChangePolicy: OnRootMismatch
+        supplementalGroups: [44, 10000] # video, render — /dev/dri access (plex pattern)
         seccompProfile: { type: RuntimeDefault }
     controllers:
       immich:
@@ -77,6 +78,10 @@ spec:
       microservices:
         annotations:
           reloader.stakater.com/auto: "true"
+        pod: &gpuPod
+          resourceClaims:
+            - name: gpu
+              resourceClaimName: immich-gpu
         initContainers:
           # postgres-init is idempotent; without it this pod crash-loops on first
           # boot until the immich role/database exist
@@ -90,6 +95,8 @@ spec:
             envFrom: *envFrom
             securityContext: *securityContext
             resources:
+              claims:
+                - name: gpu
               requests:
                 cpu: 100m
                 memory: 1Gi
@@ -98,11 +105,14 @@ spec:
       machine-learning:
         annotations:
           reloader.stakater.com/auto: "true"
+        pod: *gpuPod
         containers:
           app:
             image:
+              # -openvino variant for Iris Xe inference; falls back to CPU providers
+              # if the GPU is unusable, so this is safe to run degraded
               repository: ghcr.io/immich-app/immich-machine-learning
-              tag: v3.1.0@sha256:5a0839dc5303cd7215bcd2180a26aed3af41675aefb3e75e5157e9f10ad16e6e
+              tag: v3.1.0-openvino@sha256:4b6ef958e7749fc548377bb23ee219c09c74da8decee080d76dc6a388c39b013
             env:
               TZ: Europe/London
               # matplotlib refuses a read-only config dir
@@ -127,11 +137,15 @@ spec:
                   periodSeconds: 10
             securityContext: *securityContext
             resources:
+              claims:
+                - name: gpu
               requests:
                 cpu: 100m
                 memory: 512Mi
               limits:
-                memory: 4Gi
+                # OpenVINO holds models in system RAM; upstream warns iGPUs misbehave
+                # when memory-starved
+                memory: 6Gi
     service:
       app:
         forceRename: immich

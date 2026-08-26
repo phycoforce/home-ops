@@ -1,0 +1,16 @@
+---
+# a plain ResourceClaim (not a template, unlike plex/owncast) so the microservices
+# and machine-learning pods SHARE one iGPU: plex + owncast hold exclusive claims on
+# 2 of the 3 node GPUs, and adminAccess sharing would need the admin-access label
+# this cluster deliberately restricts to llm/kube-system. Both pods co-schedule on
+# the node whose GPU is unclaimed.
+apiVersion: resource.k8s.io/v1
+kind: ResourceClaim
+metadata:
+  name: immich-gpu
+spec:
+  devices:
+    requests:
+      - name: gpu
+        exactly:
+          deviceClassName: gpu.intel.com

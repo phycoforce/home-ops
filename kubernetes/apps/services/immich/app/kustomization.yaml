@@ -8,3 +8,4 @@ resources:
   - ./helmrelease.yaml
   - ./dragonfly.yaml
   - ./pvc-ml-cache.yaml
+  - ./resourceclaim.yaml
