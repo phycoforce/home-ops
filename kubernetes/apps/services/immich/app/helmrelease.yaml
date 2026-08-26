@@ -39,8 +39,8 @@ spec:
             env:
               <<: &env
                 TZ: Europe/London
-                IMMICH_MACHINE_LEARNING_URL: http://immich-machine-learning.media.svc.cluster.local:3003
-                REDIS_HOSTNAME: immich-dragonfly.media.svc.cluster.local
+                IMMICH_MACHINE_LEARNING_URL: http://immich-machine-learning.services.svc.cluster.local:3003
+                REDIS_HOSTNAME: immich-dragonfly.services.svc.cluster.local
                 # trust X-Forwarded-* from the envoy gateways (pod CIDR) so auth cookies
                 # get the Secure attribute and audit logs record real client IPs
                 IMMICH_TRUSTED_PROXIES: 10.69.0.0/16
