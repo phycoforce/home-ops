@@ -14,7 +14,7 @@ spec:
     - name: rook-ceph-cluster
       namespace: rook-ceph
   interval: 1h
-  path: ./kubernetes/apps/media/immich/app
+  path: ./kubernetes/apps/services/immich/app
   postBuild:
     substituteFrom:
       - name: cluster-secrets
@@ -25,4 +25,4 @@ spec:
     name: flux-system
     namespace: flux-system
   wait: false
-  targetNamespace: media
+  targetNamespace: services

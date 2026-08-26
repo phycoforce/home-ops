@@ -15,3 +15,4 @@ resources:
   - ./mealie/ks.yaml
   - ./wastebin/ks.yaml
   - ./video/ks.yaml
+  - ./immich/ks.yaml
