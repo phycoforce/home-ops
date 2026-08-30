@@ -1,0 +1,166 @@
+---
+version: v1alpha1
+machine:
+  ca:
+    crt: op://kubernetes/talos/MACHINE_CA_CRT
+  features:
+    apidCheckExtKeyUsage: true
+    diskQuotaSupport: true
+    rbac: true
+  token: op://kubernetes/talos/MACHINE_TOKEN
+cluster:
+  ca:
+    crt: op://kubernetes/talos/CLUSTER_CA_CRT
+  clusterName: origin
+  controlPlane:
+    endpoint: https://10.0.20.250:6443
+  token: op://kubernetes/talos/CLUSTER_TOKEN
+---
+apiVersion: v1alpha1
+kind: ResolverConfig
+hostDNS:
+  enabled: true
+  forwardKubeDNSToHost: true # Requires Cilium socketLB features
+  resolveMemberNames: true
+---
+apiVersion: v1alpha1
+kind: DiscoveryServiceConfig
+name: default
+endpoint: https://discovery.talos.dev/
+---
+apiVersion: v1alpha1
+kind: DiscoveryIdentityConfig
+clusterID: op://kubernetes/talos/CLUSTER_ID
+clusterSecret: op://kubernetes/talos/CLUSTER_SECRET
+---
+apiVersion: v1alpha1
+kind: UnattendedInstallConfig
+installer:
+  image: factory.talos.dev/metal-installer/{{ ENV.SCHEMATIC }}:v1.14.0
+---
+apiVersion: v1alpha1
+kind: RawVolumeConfig
+name: miroir # → /dev/disk/by-partlabel/r-miroir (consumed by the Miroir HelmRelease in Stage 3)
+provisioning:
+  diskSelector:
+    match: disk.model == "Micron_7450_MTFDKBG960TFR" && !system_disk
+  minSize: 960GB
+---
+apiVersion: v1alpha1
+kind: FilesystemTrimConfig
+interval: 168h0m0s
+---
+apiVersion: v1alpha1
+kind: FilesystemScrubConfig
+interval: 168h0m0s
+---
+apiVersion: v1alpha1
+kind: WatchdogTimerConfig
+device: /dev/watchdog0
+timeout: 5m
+---
+apiVersion: v1alpha1
+kind: KernelModuleConfig
+name: dm_thin_pool # Miroir lvm-thin pool
+---
+apiVersion: v1alpha1
+kind: KernelModuleConfig
+name: drbd # Miroir DRBD9 replication
+parameters:
+  - usermode_helper=disabled
+---
+apiVersion: v1alpha1
+kind: KernelModuleConfig
+name: drbd_transport_tcp # Miroir DRBD9 replication
+---
+apiVersion: v1alpha1
+kind: KernelModuleConfig
+name: nbd
+---
+apiVersion: v1alpha1
+kind: KernelModuleConfig
+name: thunderbolt
+---
+apiVersion: v1alpha1
+kind: KernelModuleConfig
+name: thunderbolt_net
+---
+apiVersion: v1alpha1
+kind: SysctlConfig
+params:
+  fs.inotify.max_user_instances: 8192   # Watchdog
+  fs.inotify.max_user_watches: 1048576  # Watchdog
+  net.core.default_qdisc: fq            # 10Gb/s
+  net.core.rmem_max: 67108864           # 10Gb/s | Cloudflared / QUIC
+  net.core.wmem_max: 67108864           # 10Gb/s | Cloudflared / QUIC
+  net.ipv4.neigh.default.gc_thresh1: "4096"   # Prevent ARP cache overflows
+  net.ipv4.neigh.default.gc_thresh2: "8192"   # Prevent ARP cache overflows
+  net.ipv4.neigh.default.gc_thresh3: "16384"  # Prevent ARP cache overflows
+  net.ipv4.ping_group_range: 0 2147483647     # Ping non-root
+  net.ipv4.tcp_congestion_control: bbr        # 10Gb/s
+  net.ipv4.tcp_fastopen: 3                    # Send and accept data in the opening SYN packet
+  net.ipv4.tcp_mtu_probing: 1                 # 10Gb/s | Jumbo frames
+  net.ipv4.tcp_notsent_lowat: "131072"        # 10Gb/s
+  net.ipv4.tcp_rmem: 4096 87380 33554432     # 10Gb/s
+  net.ipv4.tcp_wmem: 4096 65536 33554432     # 10Gb/s
+  net.ipv4.tcp_slow_start_after_idle: "0"     # 10Gb/s
+  net.ipv4.tcp_window_scaling: 1              # 10Gb/s
+  sunrpc.tcp_slot_table_entries: 128          # 10Gb/s | NFS
+  sunrpc.tcp_max_slot_table_entries: 128      # 10Gb/s | NFS
+  user.max_user_namespaces: 11255             # User Namespaces
+  vm.nr_hugepages: 1024                       # PostgreSQL
+---
+apiVersion: v1alpha1
+kind: EtcFileConfig
+name: nfsmount.conf
+mode: 0o644
+contents: |
+  [ NFSMount_Global_Options ]
+  nfsvers=4.2
+  hard=True
+  nconnect=16
+  nodiratime=True
+  noatime=True
+---
+apiVersion: v1alpha1
+kind: CRICustomizationConfig
+name: containerd
+content: |
+  [plugins."io.containerd.cri.v1.images"]
+    discard_unpacked_layers = false
+  [plugins."io.containerd.cri.v1.runtime"]
+    device_ownership_from_security_context = true
+---
+apiVersion: v1alpha1
+kind: KubeNodeConfig
+nodeIP:
+  validSubnets:
+    - 10.0.20.0/24
+labels:
+  node.kubernetes.io/gpu: "true"
+  topology.kubernetes.io/region: origin
+---
+apiVersion: v1alpha1
+kind: KubeletConfig
+config:
+  crashLoopBackOff:
+    maxContainerRestartPeriod: 60s
+  imageMaximumGCAge: 168h
+  maxParallelImagePulls: 3
+  serializeImagePulls: false
+  shutdownGracePeriod: 90s # let Miroir/DRBD release cleanly on node shutdown
+  shutdownGracePeriodCriticalPods: 60s
+defaultRuntimeSeccompProfileEnabled: true
+image: ghcr.io/siderolabs/kubelet:v1.37.0
+---
+apiVersion: v1alpha1
+kind: KubeNetworkConfig
+dnsDomain: cluster.local
+podSubnets:
+  - 10.69.0.0/16
+serviceSubnets:
+  - 10.96.0.0/16
+---
+apiVersion: v1alpha1
+kind: KubePrismConfig
+port: 7445
