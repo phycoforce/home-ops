@@ -8,4 +8,4 @@ components:
   - ../../components/cluster-secrets
 resources:
   - ./namespace.yaml
-  - ./palworld/ks.yaml
+  #- ./palworld/ks.yaml
