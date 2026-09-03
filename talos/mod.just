@@ -16,11 +16,12 @@ reboot-node node *args:
 [doc('Render Talos config for a node')]
 [script]
 render-config node:
-    export CONTROLPLANE="$(just talos machine-controller {{ node }})"
+    TYPE="$(just talos machine-type {{ node }})"
     export SCHEMATIC="$(just talos schematic-id)"
-    talosctl machineconfig patch <(just template "{{ source_directory() }}/machineconfig.yaml.j2") \
+    talosctl machineconfig patch <(just template "{{ source_directory() }}/cluster.yaml.j2") \
         -p @<(just template "{{ source_directory() }}/networking.yaml.j2") \
-        -p @<(just template "{{ source_directory() }}/nodes/{{ node }}.yaml.j2")
+        -p @<(just template "{{ source_directory() }}/nodes/{{ node }}.yaml.j2") \
+        -p @<(just template "{{ source_directory() }}/${TYPE}.yaml.j2")
 
 [confirm('Reset node ' + node + ' [y|N] ?')]
 [doc('Reset a node')]
@@ -71,14 +72,14 @@ machine-hostname node:
     just template "{{ source_directory() }}/nodes/{{ node }}.yaml.j2" | yq -e 'select(.kind == "HostnameConfig") | .hostname'
 
 [private]
-machine-controller node:
-    just template "{{ source_directory() }}/nodes/{{ node }}.yaml.j2" | yq -e 'select(.machine) | (.machine.type == "controlplane") // ""'
+machine-type node:
+    just template "{{ source_directory() }}/nodes/{{ node }}.yaml.j2" | yq -r -e 'select(.machine) | .machine.type'
 
 [private]
 [script]
 machine-image:
     export SCHEMATIC="$(just talos schematic-id)"
-    just template "{{ source_directory() }}/machineconfig.yaml.j2" | yq -e 'select(.machine) | .machine.install.image'
+    just template "{{ source_directory() }}/cluster.yaml.j2" | yq -r -e 'select(.kind == "UnattendedInstallConfig") | .installer.image'
 
 [private]
 config-early:

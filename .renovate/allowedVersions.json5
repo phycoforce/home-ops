@@ -7,6 +7,14 @@
       allowedVersions: "/^18(?:\\.|$)/",
     },
     {
+      // CoreDNS >=1.14.3 prefetch poisons autopath answers (coredns/coredns#8390) —
+      // 1.47.0 caused the 2026-07-29 AAAA-only dial failures cluster-wide; hold at
+      // 1.46.2 until fixed upstream
+      matchDatasources: ["docker"],
+      matchPackageNames: ["ghcr.io/coredns/charts/coredns"],
+      enabled: false,
+    },
+    {
       // keep the Immich CNPG image on PG 18 and VectorChord <2; tag shape is
       // <pgMajor>.<pgMinor>-<vchordVersion>, and Immich refuses to start outside
       // its VECTORCHORD_VERSION_RANGE (server/src/constants.ts, '>=0.3 <2' at v3.1.0)
