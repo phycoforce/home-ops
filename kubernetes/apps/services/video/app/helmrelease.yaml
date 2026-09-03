@@ -71,7 +71,7 @@ spec:
             subPath: index.html
             readOnly: true
       media:
-        existingClaim: video-media
+        existingClaim: "{{ .Release.Name }}"
         globalMounts:
           - path: /public/media
             readOnly: true

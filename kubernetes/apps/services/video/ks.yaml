@@ -5,9 +5,16 @@ kind: Kustomization
 metadata:
   name: video
 spec:
+  components:
+    - ../../../../components/kopiur
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   interval: 1h
   path: ./kubernetes/apps/services/video/app
   postBuild:
+    substitute:
+      APP: video
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
