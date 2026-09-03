@@ -22,6 +22,8 @@ hostDNS:
   enabled: true
   forwardKubeDNSToHost: true # Requires Cilium socketLB features
   resolveMemberNames: true
+searchDomains:
+  disableDefault: true # 1.14 derives search domains from the hostname FQDN; keep node resolv.conf clean
 ---
 apiVersion: v1alpha1
 kind: DiscoveryServiceConfig
