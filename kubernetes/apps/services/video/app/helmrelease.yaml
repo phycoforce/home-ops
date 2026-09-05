@@ -84,3 +84,41 @@ spec:
         parentRefs:
           - name: envoy-external
             namespace: network
+        rules:
+          # Link unfurlers asking for / get the mp4 itself, so chat clients
+          # embed the video inline instead of an og:video card. no-store keeps
+          # Cloudflare from caching that response and serving it to browsers.
+          - matches:
+              - path:
+                  type: Exact
+                  value: /
+                headers:
+                  - name: user-agent
+                    type: RegularExpression
+                    value: (?i).*(discordbot|twitterbot|slackbot|facebookexternalhit|telegrambot|whatsapp|redditbot|mastodon|bluesky|iframely|embedly|skypeuripreview|linkedinbot|matrix|element).*
+            filters:
+              - type: URLRewrite
+                urlRewrite:
+                  path:
+                    type: ReplaceFullPath
+                    replaceFullPath: /media/video.mp4
+              - type: ResponseHeaderModifier
+                responseHeaderModifier:
+                  set:
+                    - name: Cache-Control
+                      value: no-store
+                  add:
+                    - name: Vary
+                      value: User-Agent
+            backendRefs:
+              - identifier: app
+                port: *port
+          - filters:
+              - type: ResponseHeaderModifier
+                responseHeaderModifier:
+                  add:
+                    - name: Vary
+                      value: User-Agent
+            backendRefs:
+              - identifier: app
+                port: *port

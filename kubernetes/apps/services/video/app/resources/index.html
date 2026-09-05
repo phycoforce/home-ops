@@ -1,16 +1,45 @@
 <!doctype html>
-<html lang="en">
+<html lang="en" prefix="og: https://ogp.me/ns#">
 <head>
   <meta charset="utf-8">
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="robots" content="noindex, nofollow">
-  <title>video</title>
+  <title>bunny</title>
+
+  <!-- Unfurl metadata. Chat clients that announce themselves with a known bot
+       User-Agent are rewritten straight to the mp4 by the HTTPRoute, so they
+       embed the video itself; these tags are the fallback for everything else. -->
+  <meta property="og:site_name" content="bunny">
+  <meta property="og:title" content="bunny">
+  <meta property="og:type" content="video.other">
+  <meta property="og:url" content="https://${SECRET_DOMAIN_2:-example.com}/">
+  <meta property="og:video" content="https://${SECRET_DOMAIN_2:-example.com}/media/video.mp4">
+  <meta property="og:video:secure_url" content="https://${SECRET_DOMAIN_2:-example.com}/media/video.mp4">
+  <meta property="og:video:type" content="video/mp4">
+  <meta property="og:video:width" content="480">
+  <meta property="og:video:height" content="854">
+  <meta name="twitter:card" content="player">
+  <meta name="twitter:title" content="bunny">
+  <meta name="twitter:player:stream" content="https://${SECRET_DOMAIN_2:-example.com}/media/video.mp4">
+  <meta name="twitter:player:stream:content_type" content="video/mp4">
+  <meta name="theme-color" content="#000000">
+
   <style>
     html, body { margin: 0; height: 100%; background: #000; overflow: hidden; }
     video { width: 100vw; height: 100vh; object-fit: contain; display: block; }
   </style>
 </head>
 <body>
-  <video src="/media/video.mp4?v=2" controls autoplay loop playsinline></video>
+  <video id="player" controls autoplay loop playsinline></video>
+  <script>
+    // Rolled fresh on every page view: 1/20 not-a-bunny, 1/10 bunny-love,
+    // 17/20 the usual one. Bump V to bust Cloudflare/browser caches.
+    var V = 3;
+    var roll = Math.floor(Math.random() * 20);
+    var file = roll === 0 ? "not-a-bunny.mp4"
+             : roll < 3   ? "bunny-love.mp4"
+             :              "video.mp4";
+    document.getElementById("player").src = "/media/" + file + "?v=" + V;
+  </script>
 </body>
 </html>
