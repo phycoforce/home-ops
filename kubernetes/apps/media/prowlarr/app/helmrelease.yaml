@@ -29,7 +29,7 @@ spec:
               tag: 2.6.3.5592@sha256:8c9ee448bb6de0e3e8b9c2f536b7a3455ec6ff5e184c2fb2a8602791b2757442
             env:
               PROWLARR__AUTH__METHOD: External
-              PROWLARR__AUTH__REQUIRED: DisabledForLocalAddresses
+              PROWLARR__AUTH__REQUIRED: Enabled
               PROWLARR__APP__THEME: dark
               PROWLARR__SERVER__PORT: &port 80
               TZ: Europe/London

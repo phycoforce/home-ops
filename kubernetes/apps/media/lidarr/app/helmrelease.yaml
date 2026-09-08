@@ -29,7 +29,7 @@ spec:
               tag: 3.1.5@sha256:4919f82d018df539b2999e4bf8844d3907f95c2907e95da7d41c83b76d3f9cf6
             env:
               LIDARR__AUTH__METHOD: External
-              LIDARR__AUTH__REQUIRED: DisabledForLocalAddresses
+              LIDARR__AUTH__REQUIRED: Enabled
               LIDARR__APP__THEME: dark
               TZ: Europe/London
               LIDARR__SERVER__PORT: &port 80

@@ -29,13 +29,11 @@ spec:
               tag: 4.0.19.3011@sha256:47d56de90c81eb2a8f0d36771328a95e7299609579b88db82b1473c314f26a47
             env:
               SONARR__AUTH__METHOD: External
-              SONARR__AUTH__REQUIRED: DisabledForLocalAddresses
+              SONARR__AUTH__REQUIRED: Enabled
               SONARR__APP__THEME: dark
               TZ: Europe/London
               SONARR__UPDATE__BRANCH: develop
-              SONARR__SERVER__ALLOWEDHOSTS: sonarr.${SECRET_DOMAIN},sonarr.media.svc.cluster.local
               SONARR__SERVER__PORT: &port 80
-              SONARR__SERVER__TRUSTEDNETWORKS: 10.69.0.0/16
             envFrom:
               - secretRef:
                   name: sonarr-secret
@@ -51,9 +49,6 @@ spec:
                   httpGet:
                     path: /ping
                     port: *port
-                    httpHeaders:
-                      - name: Host
-                        value: localhost
                   initialDelaySeconds: 0
                   periodSeconds: 10
                   timeoutSeconds: 1

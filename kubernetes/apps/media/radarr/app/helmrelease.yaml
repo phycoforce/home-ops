@@ -29,7 +29,7 @@ spec:
               tag: 6.4.3.10645@sha256:0ebb4ae26ee9522674a4ad1855e926fd6b97c534ff982644c9c9a87bca740077
             env:
               RADARR__AUTH__METHOD: External
-              RADARR__AUTH__REQUIRED: DisabledForLocalAddresses
+              RADARR__AUTH__REQUIRED: Enabled
               RADARR__APP__THEME: dark
               TZ: Europe/London
               RADARR__UPDATE__BRANCH: develop
