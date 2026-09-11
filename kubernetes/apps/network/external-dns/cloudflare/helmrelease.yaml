@@ -26,7 +26,6 @@ spec:
       - --gateway-name=envoy-external
     triggerLoopOnEvent: true
     policy: sync
-    annotationPrefix: external-dns.alpha.kubernetes.io/
     sources: ["crd", "gateway-httproute"]
     txtSuffix: .k8s
     txtOwnerId: default
