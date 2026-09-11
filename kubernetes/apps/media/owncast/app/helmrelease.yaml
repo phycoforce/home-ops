@@ -69,6 +69,7 @@ spec:
         annotations:
           io.cilium/lb-ipam-ips: 10.0.20.244
           external-dns.alpha.kubernetes.io/hostname: stream-ingest.${SECRET_DOMAIN_2}
+          external-dns.kubernetes.io/hostname: stream-ingest.${SECRET_DOMAIN_2}
         ports:
           rtmp:
             enabled: true

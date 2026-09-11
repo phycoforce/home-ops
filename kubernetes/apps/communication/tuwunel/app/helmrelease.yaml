@@ -98,7 +98,9 @@ spec:
       matrix:
         annotations:
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
+          external-dns.kubernetes.io/cloudflare-proxied: "true"
           external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+          external-dns.kubernetes.io/target: "external.${SECRET_DOMAIN}"
           gatus.home-operations.com/endpoint: |-
             conditions: ["[STATUS] == 404"]
         hostnames:
@@ -119,7 +121,9 @@ spec:
       app:
         annotations:
           external-dns.alpha.kubernetes.io/cloudflare-proxied: "true"
+          external-dns.kubernetes.io/cloudflare-proxied: "true"
           external-dns.alpha.kubernetes.io/target: "external.${SECRET_DOMAIN}"
+          external-dns.kubernetes.io/target: "external.${SECRET_DOMAIN}"
           gatus.home-operations.com/endpoint: |-
             conditions: ["[STATUS] == 404"]
         hostnames:

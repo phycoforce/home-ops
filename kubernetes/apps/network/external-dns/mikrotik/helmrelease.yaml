@@ -66,6 +66,7 @@ spec:
       - --managed-record-types=TXT
       - --managed-record-types=SRV
     policy: sync
+    annotationPrefix: external-dns.alpha.kubernetes.io/
     sources: ["gateway-httproute", "service"]
     registry: txt
     txtOwnerId: default
