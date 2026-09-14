@@ -77,5 +77,15 @@
       },
       minimumGroupSize: 2,
     },
+    {
+      description: "Memini Group",
+      groupName: "memini",
+      matchDatasources: ["docker", "github-tags"],
+      matchPackageNames: ["/memini/"],
+      group: {
+        commitMessageTopic: "{{{groupName}}} group",
+      },
+      minimumGroupSize: 2,
+    },
   ],
 }

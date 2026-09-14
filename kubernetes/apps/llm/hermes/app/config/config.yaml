@@ -1,0 +1,50 @@
+# Hermes config.yaml keys owned by Git.
+#
+# The init container yq-merges this file OVER /opt/data/config.yaml on
+# every start: keys here always win, while keys hermes writes at runtime (the
+# "always approve" allowlist, `hermes config set`, schema migrations, model
+# selection) survive restarts. Do not add secrets here; hermes resolves ${VAR}
+# from the pod environment at runtime and Flux substitution is disabled on this
+# ConfigMap.
+#
+# model: is intentionally absent. Add it when a provider is chosen, e.g.
+#   model:
+#     provider: openai-codex
+#     default: <model id>
+
+toolsets:
+  - hermes-cli
+
+agent:
+  # Browser tools need Chromium plus the /dev/shm tmpfs; keep off until wanted.
+  disabled_toolsets:
+    - browser
+
+terminal:
+  # Unsandboxed shell inside the pod, as UID 10000 with a read-only root fs.
+  backend: local
+  cwd: /opt/data/workspace
+  timeout: 180
+
+approvals:
+  # Every dangerous terminal command asks the human in chat. "smart" (the
+  # default) lets an auxiliary LLM auto-approve, which is the wrong gate for a
+  # chat-driven agent that reads untrusted web content as input.
+  mode: manual
+  timeout: 300
+  cron_mode: deny
+  unattended_mode: deny
+
+memory:
+  # memini native MemoryProvider, installed by the init container into
+  # /opt/data/plugins/memini. Endpoint, namespace and key come from the
+  # MEMINI_* pod env. Gives automatic recall before each turn and per-turn
+  # capture; the MCP route would be model-initiated only.
+  provider: memini
+
+privacy:
+  # Gateway output is tee'd to stdout and lands in VictoriaLogs.
+  redact_pii: true
+
+security:
+  redact_secrets: true
