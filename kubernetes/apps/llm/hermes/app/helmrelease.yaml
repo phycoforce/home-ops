@@ -1,0 +1,220 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: hermes
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: hermes
+  interval: 1h
+  values:
+    controllers:
+      hermes:
+        # Exactly one writer per data volume: sessions, the SQLite state DB and
+        # memory stores are not safe for concurrent access.
+        strategy: Recreate
+        annotations:
+          reloader.stakater.com/auto: "true"
+        initContainers:
+          # Runs to completion before the app starts (not a sidecar). It seeds
+          # the data volume with the bits hermes cannot take from a read-only
+          # mount: the merged config.yaml, an empty .env, the kopia ignore file
+          # and the memini memory-provider plugin.
+          init:
+            image:
+              repository: docker.io/mikefarah/yq
+              tag: 4.53.6@sha256:cfc4eee658595834ef304eadb0c3ea721f3b7cb6404ad8b7cb909cc5b5145b23
+            env:
+              # The plugin is versioned in lockstep with the memini server chart.
+              # renovate: datasource=github-tags depName=eleboucher/memini
+              MEMINI_PLUGIN_REF: v0.7.29
+            command:
+              - sh
+              - -c
+              - |
+                set -eu
+                # Hermes rewrites config.yaml at runtime (schema migrations, the
+                # "always approve" allowlist, `hermes config set`), so the Git
+                # copy is merged OVER the on-disk file rather than replacing it.
+                if [ -f /opt/data/config.yaml ]; then
+                  yq eval-all 'select(fileIndex == 0) * select(fileIndex == 1)' \
+                    /opt/data/config.yaml /config/config.yaml > /opt/data/config.yaml.merged
+                  mv /opt/data/config.yaml.merged /opt/data/config.yaml
+                else
+                  cp /config/config.yaml /opt/data/config.yaml
+                fi
+                chmod 640 /opt/data/config.yaml
+                # $HERMES_HOME/.env is loaded with override=True and would shadow
+                # the external-secrets env; the image seeds it from .env.example
+                # on first boot unless it exists. Keep an empty one.
+                [ -f /opt/data/.env ] || : > /opt/data/.env
+                mkdir -p /opt/data/workspace
+                # Keep credential stores and caches out of kopiur snapshots.
+                # OAuth refresh tokens are single-use, so a restored copy is
+                # poison; re-auth after a restore instead.
+                printf '%s\n' .env auth.json .anthropic_oauth.json .claude/ \
+                  mcp-tokens/ cache/ logs/ > /opt/data/.kopiaignore
+                # memini native MemoryProvider plugin (two stdlib-only files),
+                # refreshed only when MEMINI_PLUGIN_REF changes.
+                dir=/opt/data/plugins/memini
+                if [ "$(cat "$dir/.ref" 2>/dev/null || true)" != "$MEMINI_PLUGIN_REF" ]; then
+                  mkdir -p "$dir"
+                  base="https://raw.githubusercontent.com/eleboucher/memini/${MEMINI_PLUGIN_REF}/integrations/hermes/plugin/memini"
+                  wget -qO "$dir/__init__.py.tmp" "$base/__init__.py"
+                  wget -qO "$dir/plugin.yaml.tmp" "$base/plugin.yaml"
+                  mv "$dir/__init__.py.tmp" "$dir/__init__.py"
+                  mv "$dir/plugin.yaml.tmp" "$dir/plugin.yaml"
+                  printf '%s\n' "$MEMINI_PLUGIN_REF" > "$dir/.ref"
+                fi
+        containers:
+          app:
+            image:
+              # Docker Hub is the only registry upstream publishes to.
+              # Never track latest/main: they are a different rolling digest.
+              repository: docker.io/nousresearch/hermes-agent
+              tag: v2026.9.14@sha256:99641e57ec762c59e54cb44aa6746b7fc68c18b3c5ddb088af54234c613d9294
+            # No `command:` — the image ENTRYPOINT execs s6-overlay /init, which
+            # owns the bootstrap (volume seeding, profile reconcile, dashboard).
+            args:
+              - gateway
+              - run
+            env:
+              TZ: Europe/London
+              HOME: /opt/data
+              HERMES_HOME: /opt/data
+              # Run the gateway as the container's main process so a crash
+              # reaches kubelet. Under s6 supervision the main process is
+              # `sleep infinity` and a dead gateway is invisible to probes.
+              HERMES_GATEWAY_NO_SUPERVISE: "1"
+              HERMES_GATEWAY_BOOTSTRAP_STATE: running
+              # s6 preinit with readOnlyRootFilesystem: / is read-only and /run
+              # is a kubelet emptyDir (root:10000 2777) that preinit cannot
+              # chown because allowPrivilegeEscalation=false disables its setuid.
+              S6_READ_ONLY_ROOT: "1"
+              S6_YES_I_WANT_A_WORLD_WRITABLE_RUN_BECAUSE_KUBERNETES: "1"
+              # OpenAI-compatible API plus the unauthenticated /health probe.
+              API_SERVER_ENABLED: "true"
+              API_SERVER_HOST: 0.0.0.0
+              API_SERVER_PORT: &apiPort 8642
+              # Web dashboard. A non-loopback bind fails closed without an auth
+              # provider, so the basic-auth vars in hermes-secret are load-bearing.
+              HERMES_DASHBOARD: "1"
+              HERMES_DASHBOARD_HOST: 0.0.0.0
+              HERMES_DASHBOARD_PORT: &dashboardPort 9119
+              HERMES_DASHBOARD_PUBLIC_URL: https://hermes.${SECRET_DOMAIN}
+              # memini native memory provider (see config.yaml memory.provider).
+              # MEMINI_BASE_URL is the variable the plugin reads; MEMINI_URL is
+              # a silent no-op that falls back to localhost. Top-level namespace:
+              # hermes is a personal assistant, so it neither inherits the
+              # cluster-ops memory in home-ops nor can write into it.
+              MEMINI_BASE_URL: http://memini.llm.svc.cluster.local:8080
+              MEMINI_NAMESPACE: hermes
+              # Talos has no unprivileged user namespaces; Chromium needs these
+              # if the browser toolset is ever enabled.
+              AGENT_BROWSER_ARGS: "--no-sandbox,--disable-dev-shm-usage"
+            envFrom:
+              - secretRef:
+                  name: hermes-secret
+            probes:
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: *apiPort
+                  periodSeconds: 10
+                  timeoutSeconds: 5
+                  failureThreshold: 30
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: *apiPort
+                  periodSeconds: 30
+                  timeoutSeconds: 5
+                  failureThreshold: 3
+              readiness: *probes
+            resources:
+              requests:
+                cpu: 200m
+                memory: 1Gi
+              limits:
+                memory: 3Gi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities:
+                drop:
+                  - ALL
+    defaultPodOptions:
+      # The agent has no business talking to the kube API directly.
+      automountServiceAccountToken: false
+      terminationGracePeriodSeconds: 120
+      securityContext:
+        runAsNonRoot: true
+        # 10000 is the `hermes` user baked into the image. The s6 stage2 hook
+        # exits 1 for any other non-root UID, so the cluster's 1001 convention
+        # cannot apply here; the only alternative is starting as root.
+        runAsUser: 10000
+        runAsGroup: 10000
+        fsGroup: 10000
+        fsGroupChangePolicy: OnRootMismatch
+        seccompProfile:
+          type: RuntimeDefault
+    service:
+      app:
+        ports:
+          http:
+            port: *dashboardPort
+          api:
+            port: *apiPort
+    route:
+      app:
+        hostnames:
+          - "{{ .Release.Name }}.${SECRET_DOMAIN}"
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+        rules:
+          - backendRefs:
+              - identifier: app
+                port: http
+    persistence:
+      data:
+        existingClaim: "{{ .Release.Name }}"
+        globalMounts:
+          - path: /opt/data
+      config:
+        type: configMap
+        name: hermes-config
+        advancedMounts:
+          hermes:
+            init:
+              - path: /config/config.yaml
+                subPath: config.yaml
+                readOnly: true
+      run:
+        type: emptyDir
+        advancedMounts:
+          hermes:
+            app:
+              - path: /run
+      tmp:
+        type: emptyDir
+        advancedMounts:
+          hermes:
+            app:
+              - path: /tmp
+      shm:
+        type: emptyDir
+        medium: Memory
+        sizeLimit: 1Gi
+        advancedMounts:
+          hermes:
+            app:
+              - path: /dev/shm
