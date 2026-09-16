@@ -79,6 +79,20 @@ spec:
         annotations:
           reloader.stakater.com/auto: "true"
         pod: &gpuPod
+          # Soft-pin both GPU pods to ontos, sharing its iGPU with llama-embed.
+          # Preferred rather than required: the standalone immich-gpu claim is
+          # allocated to a single node's GPU anyway, so this only makes the intended
+          # node explicit. The API pod (controller immich) is left unpinned on purpose.
+          # Layout table: kubernetes/apps/kube-system/intel-gpu-resource-driver/app/helmrelease.yaml
+          affinity:
+            nodeAffinity:
+              preferredDuringSchedulingIgnoredDuringExecution:
+                - weight: 100
+                  preference:
+                    matchExpressions:
+                      - key: kubernetes.io/hostname
+                        operator: In
+                        values: [ontos]
           resourceClaims:
             - name: gpu
               resourceClaimName: immich-gpu

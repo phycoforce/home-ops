@@ -18,7 +18,10 @@ spec:
           resourceClaimTemplateName: llmkube-llama-gpu
   resources:
     cpu: "250m"
-    memory: 2Gi
+    # 2Gi was OOMKilled 6x on 2026-09-16 (working set peaked at 1.87GiB): the
+    # 16384-token ubatch needed for long-document embeddings keeps large host-side
+    # buffers, and Vulkan staging memory is charged to this cgroup as well.
+    memory: 4Gi
 ---
 apiVersion: inference.llmkube.dev/v1alpha1
 kind: InferenceService
@@ -32,13 +35,13 @@ spec:
   image: ghcr.io/ggml-org/llama.cpp:server-vulkan-b10991@sha256:405442e3544f05026399dcc71cf322f484915f69ed3b429b497af15516263603
   podLabels:
     igpu-workload: "true"
-  topologySpreadConstraints:
-    - maxSkew: 1
-      topologyKey: kubernetes.io/hostname
-      whenUnsatisfiable: ScheduleAnyway
-      labelSelector:
-        matchLabels:
-          igpu-workload: "true"
+  # Hard pin: one LLM per iGPU, sharing ontos's GPU with immich (microservices +
+  # machine-learning). Layout table:
+  # kubernetes/apps/kube-system/intel-gpu-resource-driver/app/helmrelease.yaml
+  # Deliberately a nodeSelector rather than a soft preference: if ontos is down
+  # this model stays Pending instead of stacking onto another already-shared iGPU.
+  nodeSelector:
+    kubernetes.io/hostname: ontos
   contextSize: 32768
   parallelSlots: 2
   batchSize: 16384
@@ -67,7 +70,7 @@ spec:
       value: /app
   resources:
     cpu: 250m
-    memory: 2Gi
+    memory: 4Gi # keep in step with Model.spec.resources.memory above
   podSecurityContext:
     runAsUser: 1000
     runAsGroup: 1000

@@ -55,6 +55,19 @@ spec:
               limits:
                 memory: 10Gi
     defaultPodOptions:
+      # Soft-pin to logos, sharing its iGPU with llama-rerank. Preferred rather than
+      # required: the exclusive plex-gpu claim already limits plex to a node whose
+      # GPU is unclaimed, so a hard pin would only add rigidity during node outages.
+      # Layout table: kubernetes/apps/kube-system/intel-gpu-resource-driver/app/helmrelease.yaml
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values: [logos]
       resourceClaims:
         - name: gpu
           resourceClaimTemplateName: plex-gpu

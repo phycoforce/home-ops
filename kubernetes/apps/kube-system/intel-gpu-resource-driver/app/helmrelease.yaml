@@ -1,5 +1,22 @@
 ---
 # yaml-language-server: $schema=https://k8s-schemas.home-operations.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+#
+# iGPU layout (one Iris Xe per node, exposed via DRA as DeviceClass gpu.intel.com).
+# Each GPU carries exactly one exclusive ResourceClaim consumer plus one llm
+# InferenceService that rides alongside it with adminAccess: true.
+#
+#   node    | exclusive claim (soft-pinned)       | llm model (hard-pinned)
+#   --------|-------------------------------------|------------------------
+#   logos   | plex                                | llama-rerank
+#   ontos   | immich microservices + ML (shared)  | llama-embed
+#   pneuma  | owncast                             | llama-gemma4-e4b
+#
+# Rationale (2026-09-16): gemma4 saturates a GPU while generating, so it pairs with
+# owncast, which is idle unless live-streaming. plex is the only real video-engine
+# user and pairs with the tiny reranker. immich's import bursts pair with the
+# embedder. To reshuffle, edit the nodeSelector / nodeAffinity in each app; the
+# exclusive-claim apps can only ever run where a GPU is unclaimed, so a node
+# outage leaves them Pending regardless of the pin.
 apiVersion: helm.toolkit.fluxcd.io/v2
 kind: HelmRelease
 metadata:

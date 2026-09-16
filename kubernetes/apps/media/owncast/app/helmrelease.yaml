@@ -56,6 +56,20 @@ spec:
               limits:
                 memory: 1Gi
     defaultPodOptions:
+      # Soft-pin to pneuma, sharing its iGPU with llama-gemma4-e4b (owncast is idle
+      # unless live-streaming, so the chat model gets a near-dedicated GPU). Preferred
+      # rather than required: the exclusive owncast-gpu claim already limits owncast
+      # to a node whose GPU is unclaimed, so a hard pin would only add rigidity.
+      # Layout table: kubernetes/apps/kube-system/intel-gpu-resource-driver/app/helmrelease.yaml
+      affinity:
+        nodeAffinity:
+          preferredDuringSchedulingIgnoredDuringExecution:
+            - weight: 100
+              preference:
+                matchExpressions:
+                  - key: kubernetes.io/hostname
+                    operator: In
+                    values: [pneuma]
       resourceClaims:
         - name: gpu
           resourceClaimTemplateName: owncast-gpu

@@ -32,13 +32,13 @@ spec:
   image: ghcr.io/ggml-org/llama.cpp:server-vulkan-b10991@sha256:405442e3544f05026399dcc71cf322f484915f69ed3b429b497af15516263603
   podLabels:
     igpu-workload: "true"
-  topologySpreadConstraints:
-    - maxSkew: 1
-      topologyKey: kubernetes.io/hostname
-      whenUnsatisfiable: ScheduleAnyway
-      labelSelector:
-        matchLabels:
-          igpu-workload: "true"
+  # Hard pin: one LLM per iGPU, sharing pneuma's GPU with owncast (idle unless
+  # live-streaming), so the main chat model gets a near-dedicated GPU. Layout table:
+  # kubernetes/apps/kube-system/intel-gpu-resource-driver/app/helmrelease.yaml
+  # Deliberately a nodeSelector rather than a soft preference: if pneuma is down
+  # this model stays Pending instead of stacking onto another already-shared iGPU.
+  nodeSelector:
+    kubernetes.io/hostname: pneuma
   contextSize: 131072
   parallelSlots: 2
   flashAttention: true
