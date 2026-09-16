@@ -6,11 +6,28 @@
 # selection) survive restarts. Do not add secrets here; hermes resolves ${VAR}
 # from the pod environment at runtime and Flux substitution is disabled on this
 # ConfigMap.
-#
-# model: is intentionally absent. Add it when a provider is chosen, e.g.
-#   model:
-#     provider: openai-codex
-#     default: <model id>
+
+# Main model: GLM 5.3 Flash served by Charm Hyper (hosted, OpenAI-compatible,
+# zero data retention). Hermes has no built-in Hyper provider, so it is a named
+# custom provider; the key is HYPER_API_KEY from hermes-secret, resolved from
+# the pod environment by key_env at runtime.
+model:
+  provider: custom:hyper
+  default: glm-5.3-flash
+
+providers:
+  hyper:
+    api: https://hyper.charm.land/v1
+    key_env: HYPER_API_KEY
+    transport: chat_completions
+    models:
+      glm-5.3-flash:
+        # Hyper serves the full window (GET /v1/models: context_window 1048576,
+        # max_output_tokens 131072). Capped so a long-lived chat session
+        # compresses before per-turn input cost creeps up; raise it if
+        # compression bites too early.
+        # context_length: 1048576
+        context_length: 262144
 
 toolsets:
   - hermes-cli
