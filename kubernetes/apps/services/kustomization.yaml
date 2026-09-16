@@ -16,3 +16,4 @@ resources:
   - ./wastebin/ks.yaml
   - ./video/ks.yaml
   - ./immich/ks.yaml
+  - ./gokapi/ks.yaml

@@ -1,0 +1,128 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: gokapi
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: gokapi
+  interval: 1h
+  values:
+    controllers:
+      gokapi:
+        replicas: 1
+        # Storage is emptyDir: a rolling pair would each seed their own admin/DB,
+        # and a new pod is a wipe anyway, so be honest about it.
+        strategy: Recreate
+        annotations:
+          reloader.stakater.com/auto: "true"
+        pod:
+          securityContext:
+            runAsNonRoot: true
+            runAsUser: 1001
+            runAsGroup: 1001
+            fsGroup: 1001
+            fsGroupChangePolicy: OnRootMismatch
+            seccompProfile: { type: RuntimeDefault }
+        containers:
+          app:
+            image: &image
+              repository: docker.io/f0rc3/gokapi
+              tag: v2.2.4@sha256:43cd93b9e1f02d760923f67f6e74e1c4d4a9cccb9b08fa42ad60770333f231eb
+            env: &env
+              TZ: Europe/London
+              GOKAPI_CONFIG_DIR: /config
+              # Also sets TMPDIR in the docker build, so upload chunks land here
+              # and not on the read-only root fs.
+              GOKAPI_DATA_DIR: /data
+              GOKAPI_LOG_STDOUT: "true"
+              # Envoy pods are the direct peer; cloudflared sets CF-Connecting-IP.
+              GOKAPI_TRUSTED_PROXIES: 10.69.0.0/16
+              GOKAPI_DISABLE_DOCKER_TRUSTED_PROXY: "true"
+              GOKAPI_USE_CLOUDFLARE: "true"
+              # The download ID is the only thing guarding a share link (62^20).
+              GOKAPI_LENGTH_ID: "20"
+            securityContext: &securityContext
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /
+                    port: &port 53842
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+            resources:
+              requests:
+                cpu: 10m
+                memory: 64Mi
+              limits:
+                # ChunkSize 45MB x MaxParallelUploads 3 held in RAM (MaxMemory 50)
+                memory: 1Gi
+        initContainers:
+          # Every pod start is a fresh install. Copy the rendered config.json into
+          # the writable config dir, then let Gokapi create the super-admin from
+          # 1Password. --deployment-password exits after writing the user, which is
+          # why this is an init container rather than the main command.
+          seed:
+            image: *image
+            command: ["/bin/sh", "-c"]
+            args:
+              - |
+                set -eu
+                cp /seed/config.json /config/config.json
+                exec /app/gokapi --deployment-password "$GOKAPI_DEPLOYMENT_PASSWORD"
+            env:
+              <<: *env
+              GOKAPI_DEPLOYMENT_PASSWORD:
+                valueFrom:
+                  secretKeyRef:
+                    name: gokapi-secret
+                    key: GOKAPI_DEPLOYMENT_PASSWORD
+            securityContext: *securityContext
+    service:
+      app:
+        ports:
+          http:
+            port: *port
+    persistence:
+      config:
+        type: emptyDir
+        sizeLimit: 64Mi
+        globalMounts:
+          - path: /config
+      # Deliberately ephemeral: this is a temporary drop box. Shares expire on
+      # their own timers, and a pod restart/reschedule wipes whatever is left.
+      # Exceeding sizeLimit gets the pod evicted, i.e. also wiped.
+      data:
+        type: emptyDir
+        sizeLimit: 50Gi
+        globalMounts:
+          - path: /data
+      seed:
+        type: secret
+        name: gokapi-secret
+        advancedMounts:
+          gokapi:
+            seed:
+              - path: /seed/config.json
+                subPath: config.json
+                readOnly: true
+    route:
+      app:
+        annotations:
+          gatus.home-operations.com/endpoint: |-
+            conditions: ["[STATUS] == 200"]
+        hostnames: ["drop.${SECRET_DOMAIN_2}"]
+        parentRefs:
+          - name: envoy-external
+            namespace: network
