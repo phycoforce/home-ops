@@ -7,6 +7,24 @@ metadata:
 spec:
   components:
     - ../../../../components/kopiur
+  patches:
+    # kopiur restore movers run as the image's UID 65532 unless told otherwise
+    # and, being unprivileged, cannot chown, so restored files end up owned by
+    # 65532. mongod opens WiredTiger files with O_NOATIME, which the kernel only
+    # allows for the file OWNER, so a 65532-owned restore crash-loops mongod
+    # (exit 100, "Operation not permitted"). Restore as the app's own uid.
+    - target:
+        kind: Restore
+      patch: |
+        apiVersion: kopiur.home-operations.com/v1alpha1
+        kind: Restore
+        metadata:
+          name: unifi
+        spec:
+          mover:
+            securityContext:
+              runAsUser: 1001
+              runAsGroup: 1001
   dependsOn:
     - name: rook-ceph-cluster
       namespace: rook-ceph
