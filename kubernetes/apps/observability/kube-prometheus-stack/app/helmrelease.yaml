@@ -156,3 +156,19 @@ spec:
                 expr: node_zfs_zpool_state{state!="online"} > 0
                 labels:
                   severity: critical
+      unifi-rules:
+        groups:
+          - name: unifi
+            rules:
+              # When mongod cannot start, the controller respawns it every ~3s
+              # and leaks one listener thread per attempt (~1150/h) until the JVM
+              # hits pthread_create EAGAIN at ~32k and its supervisor dies. The
+              # pod stays Running/Ready throughout because the probe is a TCP
+              # check on 8443. A healthy controller sits around 160 threads.
+              - alert: UnifiControllerThreadLeak
+                annotations:
+                  summary: UniFi controller {{ $labels.pod }} has {{ $value }} threads (healthy is ~160), mongod is most likely crash-looping
+                expr: container_threads{namespace="network", container="app", pod=~"unifi-.*"} > 1000
+                for: 10m
+                labels:
+                  severity: critical
