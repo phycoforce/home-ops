@@ -107,6 +107,7 @@ params:
   net.ipv4.tcp_wmem: 4096 65536 67108864     # 10Gb/s | Max matches net.core.wmem_max
   net.ipv4.tcp_slow_start_after_idle: "0"     # 10Gb/s
   net/ipv6/conf/bond0.40/disable_ipv6: "1"    # IoT VLAN | Multus macvlan master only, keep the host off it (Talos sets accept_ra=2)
+  net/ipv6/conf/bond0.99/disable_ipv6: "1"    # Mgt VLAN | Multus macvlan master only, keep the host off it (Talos sets accept_ra=2)
   user.max_user_namespaces: 11255             # User Namespaces | Talos defaults this to 0
   vm.nr_hugepages: 1024                       # PostgreSQL | CNPG cluster requests hugepages-2Mi: 2Gi
 ---
