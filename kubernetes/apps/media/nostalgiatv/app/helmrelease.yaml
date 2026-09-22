@@ -1,0 +1,95 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: nostalgiatv
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: nostalgiatv
+  interval: 1h
+  values:
+    controllers:
+      nostalgiatv:
+        containers:
+          app:
+            image:
+              # Only published on Docker Hub; no GHCR mirror exists.
+              repository: docker.io/purestream711/nostalgiatv-server
+              tag: 0.10.3@sha256:74644ec9a7305cbe8ba9371bf8ae67c79eb2f3db9b12b422a415d5edcc6a404f
+            env:
+              TZ: Europe/London
+              # 30-day rolling schedule (image default), regenerated every 6h.
+              SCHEDULE_HOURS: "720"
+              LOG_LEVEL: INFO
+            probes:
+              liveness: &probes
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: &port 19850
+                  initialDelaySeconds: 0
+                  periodSeconds: 10
+                  timeoutSeconds: 1
+                  failureThreshold: 3
+              readiness: *probes
+              # The image's own HEALTHCHECK allows a 2m start period, so give the
+              # content index the same grace before liveness can restart the pod.
+              startup:
+                enabled: true
+                custom: true
+                spec:
+                  httpGet:
+                    path: /health
+                    port: *port
+                  failureThreshold: 30
+                  periodSeconds: 10
+            resources:
+              requests:
+                cpu: 10m
+                memory: 256Mi
+              limits:
+                # Bundled ffmpeg is spawned per tuner stream on top of the index.
+                memory: 2Gi
+            securityContext:
+              allowPrivilegeEscalation: false
+              readOnlyRootFilesystem: true
+              capabilities: { drop: ["ALL"] }
+    defaultPodOptions:
+      # The entrypoint only chowns + gosu-drops when started as root; as a
+      # pre-set non-root user it simply execs uvicorn, so the cluster-standard
+      # 1001 works without PUID/PGID.
+      securityContext:
+        runAsNonRoot: true
+        runAsUser: 1001
+        runAsGroup: 1001
+        fsGroup: 1001
+        fsGroupChangePolicy: OnRootMismatch
+    service:
+      app:
+        ports:
+          http:
+            port: *port
+    route:
+      app:
+        hostnames: ["{{ .Release.Name }}.${SECRET_DOMAIN}"]
+        parentRefs:
+          - name: envoy-internal
+            namespace: network
+    persistence:
+      # One PVC (from the kopiur component) carved into the image's three
+      # persistent dirs: SQLite DB/index/backups, profiles+channels, logos.
+      data:
+        existingClaim: "{{ .Release.Name }}"
+        globalMounts:
+          - path: /app/data
+            subPath: data
+          - path: /app/config
+            subPath: config
+          - path: /app/logos
+            subPath: logos
+      tmp:
+        type: emptyDir
