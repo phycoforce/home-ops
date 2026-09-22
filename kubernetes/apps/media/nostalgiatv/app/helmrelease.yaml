@@ -17,7 +17,7 @@ spec:
             image:
               # Only published on Docker Hub; no GHCR mirror exists.
               repository: docker.io/purestream711/nostalgiatv-server
-              tag: 0.10.3@sha256:74644ec9a7305cbe8ba9371bf8ae67c79eb2f3db9b12b422a415d5edcc6a404f
+              tag: 0.10.4@sha256:eb9cfd3940d9c89b4a660b6c764bb3e4cee9f6c8e34549c170c8cc5608aace1d
             env:
               TZ: Europe/London
               # 30-day rolling schedule (image default), regenerated every 6h.
