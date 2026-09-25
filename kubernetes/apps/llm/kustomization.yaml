@@ -10,5 +10,6 @@ resources:
   - ./namespace.yaml
   - ./llmkube/ks.yaml
   - ./litellm/ks.yaml
+  - ./hermes/ks.yaml
   - ./memini/ks.yaml
   - ./toolhive/ks.yaml
