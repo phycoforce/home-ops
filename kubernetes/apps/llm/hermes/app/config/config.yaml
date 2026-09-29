@@ -7,27 +7,17 @@
 # from the pod environment at runtime and Flux substitution is disabled on this
 # ConfigMap.
 
-# Main model: GLM 5.3 Flash served by Charm Hyper (hosted, OpenAI-compatible,
-# zero data retention). Hermes has no built-in Hyper provider, so it is a named
-# custom provider; the key is HYPER_API_KEY from hermes-secret, resolved from
-# the pod environment by key_env at runtime.
+# Main model: GPT-5.6 Terra on the ChatGPT subscription through the built-in
+# openai-codex provider (Codex backend, Responses API). There is no key to
+# inject: sign in once with the device-code flow from the dashboard's Accounts
+# tab ("ChatGPT or Codex Subscription") or `hermes auth add openai-codex`, which
+# writes the OAuth tokens to /opt/data/auth.json. Hermes refreshes them in
+# place and re-reads config and credentials per message, so no restart is
+# needed after sign-in. Codex caps the 5.6 family at a 272K window; hermes
+# raises the compaction trigger to 85% for this route on its own.
 model:
-  provider: custom:hyper
-  default: glm-5.3-flash
-
-providers:
-  hyper:
-    api: https://hyper.charm.land/v1
-    key_env: HYPER_API_KEY
-    transport: chat_completions
-    models:
-      glm-5.3-flash:
-        # Hyper serves the full window (GET /v1/models: context_window 1048576,
-        # max_output_tokens 131072). Capped so a long-lived chat session
-        # compresses before per-turn input cost creeps up; raise it if
-        # compression bites too early.
-        # context_length: 1048576
-        context_length: 262144
+  provider: openai-codex
+  default: gpt-5.6-terra
 
 toolsets:
   - hermes-cli
