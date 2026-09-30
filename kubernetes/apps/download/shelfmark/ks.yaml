@@ -8,6 +8,9 @@ spec:
   components:
     - ../../../../components/kopiur
     - ../../../../components/zeroscaler
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
   interval: 1h
   path: ./kubernetes/apps/download/shelfmark/app
   postBuild:
