@@ -111,6 +111,10 @@ spec:
               # cluster-ops memory in home-ops nor can write into it.
               MEMINI_BASE_URL: http://memini.llm.svc.cluster.local:8080
               MEMINI_NAMESPACE: hermes
+              # Z.ai global pay-as-you-go endpoint. Without it the zai provider
+              # sends a test request with the key to all four Z.ai endpoints
+              # (global, China, and both Coding Plan variants) to find one.
+              GLM_BASE_URL: https://api.z.ai/api/paas/v4
               # Talos has no unprivileged user namespaces; Chromium needs these
               # if the browser toolset is ever enabled.
               AGENT_BROWSER_ARGS: "--no-sandbox,--disable-dev-shm-usage"
