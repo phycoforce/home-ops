@@ -14,12 +14,14 @@ spec:
       capacity: ${KOPIUR_CAPACITY:=5Gi}
       mode: Persistent
       storageClassName: miroir-replicated
+    # The mover must run as the UID that owns the app's files: kopia cannot
+    # read owner-only files through group bits. Override per app in ks.yaml.
     podSecurityContext:
-      fsGroup: 1001
+      fsGroup: ${KOPIUR_PGID:=1001}
       fsGroupChangePolicy: OnRootMismatch
     securityContext:
-      runAsUser: 1001
-      runAsGroup: 1001
+      runAsUser: ${KOPIUR_PUID:=1001}
+      runAsGroup: ${KOPIUR_PGID:=1001}
     ttlSecondsAfterFinished: 300
   repository:
     kind: ClusterRepository

@@ -6,6 +6,25 @@ resources:
   - ./externalsecret.yaml
   - ./ocirepository.yaml
   - ./helmrelease.yaml
+# The kopiur component's Restore leaves the mover at its image UID (65532),
+# and non-root hermes cannot chown restored files back, so restore as the
+# KOPIUR_PUID/PGID set in ../ks.yaml. Patched here because cluster-apps
+# replaces any spec.patches list on the Flux Kustomization.
+patches:
+  - target:
+      kind: Restore
+    patch: |-
+      apiVersion: kopiur.home-operations.com/v1alpha1
+      kind: Restore
+      metadata:
+        name: hermes
+      spec:
+        mover:
+          podSecurityContext:
+            fsGroup: ${KOPIUR_PGID}
+          securityContext:
+            runAsUser: ${KOPIUR_PUID}
+            runAsGroup: ${KOPIUR_PGID}
 configMapGenerator:
   - name: hermes-config
     files:

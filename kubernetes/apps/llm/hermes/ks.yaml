@@ -19,6 +19,10 @@ spec:
     substitute:
       APP: hermes
       KOPIUR_CAPACITY: 10Gi
+      # hermes must run as UID 10000 (its image rejects any other non-root
+      # UID) and writes owner-only files; the kopia movers have to match.
+      KOPIUR_PUID: "10000"
+      KOPIUR_PGID: "10000"
     substituteFrom:
       - name: cluster-secrets
         kind: Secret
