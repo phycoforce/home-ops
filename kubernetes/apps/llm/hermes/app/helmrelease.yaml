@@ -29,7 +29,7 @@ spec:
             env:
               # The plugin is versioned in lockstep with the memini server chart.
               # renovate: datasource=github-tags depName=eleboucher/memini
-              MEMINI_PLUGIN_REF: v0.7.29
+              MEMINI_PLUGIN_REF: v0.7.32
             command:
               - sh
               - -c
@@ -61,7 +61,9 @@ spec:
                 dir=/opt/data/plugins/memini
                 if [ "$(cat "$dir/.ref" 2>/dev/null || true)" != "$MEMINI_PLUGIN_REF" ]; then
                   mkdir -p "$dir"
-                  base="https://raw.githubusercontent.com/eleboucher/memini/${MEMINI_PLUGIN_REF}/integrations/hermes/plugin/memini"
+                  # Unbraced on purpose: Flux postBuild substitutes braced vars in
+                  # strict mode and fails the build on this pod-only variable.
+                  base="https://raw.githubusercontent.com/eleboucher/memini/$MEMINI_PLUGIN_REF/integrations/hermes/plugin/memini"
                   wget -qO "$dir/__init__.py.tmp" "$base/__init__.py"
                   wget -qO "$dir/plugin.yaml.tmp" "$base/plugin.yaml"
                   mv "$dir/__init__.py.tmp" "$dir/__init__.py"
