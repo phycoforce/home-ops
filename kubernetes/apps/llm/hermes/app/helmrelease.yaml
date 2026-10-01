@@ -130,6 +130,13 @@ spec:
               # Unencrypted rooms only (already the default; explicit on purpose).
               # Cron delivery into E2EE rooms has open upstream bugs.
               MATRIX_E2EE_MODE: "off"
+              # The chat room with @phy: cron results and cross-platform messages
+              # land here. Set in Git only; /sethome writes /opt/data/.env, which
+              # would shadow this forever. Room IDs are not secrets.
+              MATRIX_HOME_ROOM: &matrixRoom "!9ZyuaZtauBknwSui0KxYVzKxTN1qQTMCGYKiEER-01g"
+              # The bot only responds in listed rooms. DM-classified rooms (two
+              # members or fewer) bypass this, so it guards future group rooms.
+              MATRIX_ALLOWED_ROOMS: *matrixRoom
               # Talos has no unprivileged user namespaces; Chromium needs these
               # if the browser toolset is ever enabled.
               AGENT_BROWSER_ARGS: "--no-sandbox,--disable-dev-shm-usage"
