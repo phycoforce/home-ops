@@ -86,10 +86,13 @@ spec:
               TZ: Europe/London
               HOME: /opt/data
               HERMES_HOME: /opt/data
-              # Run the gateway as the container's main process so a crash
-              # reaches kubelet. Under s6 supervision the main process is
-              # `sleep infinity` and a dead gateway is invisible to probes.
-              HERMES_GATEWAY_NO_SUPERVISE: "1"
+              # The gateway runs supervised by s6 (`gateway run` becomes a
+              # `sleep infinity` heartbeat). Do NOT set HERMES_GATEWAY_NO_SUPERVISE:
+              # a SIGTERM'd gateway leaves gateway_state.json at "running" on the
+              # PVC, so every later boot's reconciler starts the s6 slot and the
+              # foreground run exits 1 ("already running under s6"). Probes still
+              # see a dead gateway: /health is served by its api_server platform.
+              # BOOTSTRAP_STATE seeds "running" on a fresh volume for the first boot.
               HERMES_GATEWAY_BOOTSTRAP_STATE: running
               # s6 preinit with readOnlyRootFilesystem: / is read-only and /run
               # is a kubelet emptyDir (root:10000 2777) that preinit cannot
