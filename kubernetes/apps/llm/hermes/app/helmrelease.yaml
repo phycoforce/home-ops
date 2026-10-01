@@ -120,6 +120,16 @@ spec:
               # sends a test request with the key to all four Z.ai endpoints
               # (global, China, and both Coding Plan variants) to find one.
               GLM_BASE_URL: https://api.z.ai/api/paas/v4
+              # Matrix gateway platform, enabled by HOMESERVER + ACCESS_TOKEN
+              # (token in hermes-secret). The in-cluster Service keeps the bot
+              # off the ingress path; the user ID comes from whoami.
+              MATRIX_HOMESERVER: http://tuwunel.communication.svc.cluster.local
+              # Default-deny: the only sender hermes answers and the only
+              # inviter it accepts. Never set MATRIX_ALLOW_ALL_USERS.
+              MATRIX_ALLOWED_USERS: "@phy:${SECRET_DOMAIN}"
+              # Unencrypted rooms only (already the default; explicit on purpose).
+              # Cron delivery into E2EE rooms has open upstream bugs.
+              MATRIX_E2EE_MODE: "off"
               # Talos has no unprivileged user namespaces; Chromium needs these
               # if the browser toolset is ever enabled.
               AGENT_BROWSER_ARGS: "--no-sandbox,--disable-dev-shm-usage"
