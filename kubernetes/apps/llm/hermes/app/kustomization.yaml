@@ -1,0 +1,18 @@
+---
+# yaml-language-server: $schema=https://json.schemastore.org/kustomization
+apiVersion: kustomize.config.k8s.io/v1beta1
+kind: Kustomization
+resources:
+  - ./externalsecret.yaml
+  - ./ocirepository.yaml
+  - ./helmrelease.yaml
+configMapGenerator:
+  - name: hermes-config
+    files:
+      - ./config/config.yaml
+generatorOptions:
+  disableNameSuffixHash: true
+  annotations:
+    # config.yaml carries hermes's own ${VAR} references (resolved from the
+    # pod env at runtime); keep Flux from substituting them.
+    kustomize.toolkit.fluxcd.io/substitute: disabled
