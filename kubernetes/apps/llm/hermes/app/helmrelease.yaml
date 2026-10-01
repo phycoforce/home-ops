@@ -74,7 +74,7 @@ spec:
               # Docker Hub is the only registry upstream publishes to.
               # Never track latest/main: they are a different rolling digest.
               repository: docker.io/nousresearch/hermes-agent
-              tag: v2026.9.14@sha256:99641e57ec762c59e54cb44aa6746b7fc68c18b3c5ddb088af54234c613d9294
+              tag: v2026.9.24@sha256:fca358f12efd65bfaaca05884166f15c0e2788375ca30d77061ac1ebc96452b7
             # No `command:` — the image ENTRYPOINT execs s6-overlay /init, which
             # owns the bootstrap (volume seeding, profile reconcile, dashboard).
             args:
