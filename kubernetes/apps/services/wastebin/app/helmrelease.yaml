@@ -26,7 +26,7 @@ spec:
           app:
             image:
               repository: docker.io/quxfoo/wastebin
-              tag: 3.7.2@sha256:8ad3a7b7a757b3df9483c3e512ae98fd8e2a0c785205dd1dd20ac521fca91479
+              tag: 3.8.0@sha256:842f695438e6b1cc70b997f3e938bfba96eccb136880b38056506061dea8e11f
             env:
               TZ: "Europe/London"
               WASTEBIN_ADDRESS_PORT: "0.0.0.0:8088"
