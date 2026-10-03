@@ -59,6 +59,12 @@ spec:
     - "12"
     - --load-mode
     - mmap
+    # Disable the host-RAM prompt cache (default 8192 MiB). Embedding tasks never
+    # read it back, yet --cache-idle-slots (default on) saves every idle slot's KV
+    # state into it, so RSS ratchets per distinct input until OOMKilled.
+    # https://github.com/ggml-org/llama.cpp/issues/26293 (fix PR #26893, unmerged)
+    - --cache-ram
+    - "0"
   env:
     - name: ZES_ENABLE_SYSMAN
       value: "1"
