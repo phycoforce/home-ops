@@ -26,7 +26,7 @@ spec:
           app:
             image:
               repository: ghcr.io/static-web-server/static-web-server
-              tag: 2.44.0@sha256:2c1a7c3e0feaea5859307403b74e1c575f3ec1499094fc077344173d11abaae2
+              tag: 2.44.1@sha256:94618e3d17802265a21926217e6f9e7832b311b6fbf5933684001739fafed06a
             env:
               SERVER_PORT: &port 8080
               SERVER_ROOT: /public
