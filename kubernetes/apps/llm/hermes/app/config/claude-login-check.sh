@@ -12,7 +12,10 @@
 # the local credential file and still says "logged in" after the login has
 # been revoked or has expired server-side.
 set -u
-export HOME="${HOME:-/opt/data}"
+# Hermes runs cron scripts with HOME=/opt/data/home (its per-profile home for
+# subprocesses in a container), but the login lives under the pod's real
+# HOME, where the gateway runs `claude` and `claude auth login` wrote it.
+export HOME=/opt/data
 cd /tmp || exit 1
 if ! out=$(timeout 120 /opt/data/.local/bin/claude -p --model haiku --max-turns 1 \
   --tools '' --no-session-persistence 'Reply with the single word OK.' 2>&1 </dev/null); then
