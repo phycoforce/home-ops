@@ -29,9 +29,11 @@ configMapGenerator:
   - name: hermes-config
     files:
       - ./config/config.yaml
+      - ./config/claude-login-check.sh
 generatorOptions:
   disableNameSuffixHash: true
   annotations:
     # config.yaml carries hermes's own ${VAR} references (resolved from the
-    # pod env at runtime); keep Flux from substituting them.
+    # pod env at runtime) and the script its own shell expansions; keep Flux
+    # from substituting them.
     kustomize.toolkit.fluxcd.io/substitute: disabled

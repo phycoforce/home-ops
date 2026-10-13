@@ -7,16 +7,62 @@
 # from the pod environment at runtime and Flux substitution is disabled on this
 # ConfigMap.
 
-# Main model: GLM 5.3 Flash pay-as-you-go on Z.ai through the built-in zai
-# provider. The key is GLM_API_KEY from hermes-secret; GLM_BASE_URL in the
-# HelmRelease pins the global endpoint so hermes skips its endpoint probe.
+# Main model: Claude Sonnet 5.5 on the Claude Max plan's usage limits, through
+# the claude-subscription-directsdk provider plugin (installed by the init
+# container). Every model call runs the pinned `claude -p` as the Max account
+# logged in once with `claude auth login`; there is no API key, and the plugin
+# refuses to start with any ANTHROPIC_* key in the environment.
 model:
-  provider: zai
-  default: glm-5.3-flash
-  # Hermes's catalog lists 1310720. Capped so a long-lived chat session
-  # compresses (at 50% of this) before per-turn input cost creeps up; raise it
-  # if compression bites too early.
+  provider: claude-subscription-directsdk-experimental
+  default: claude-sonnet-5-5
+  # The route is 1M. Capped so a long-lived chat session compresses (at 50%
+  # of this) before every turn re-sends a huge context against the plan's
+  # limits; raise it if compression bites too early.
   context_length: 262144
+
+providers:
+  claude-subscription-directsdk-experimental:
+    # process:// counts as a local endpoint, so hermes's stale-call watchdog
+    # is off and a hung `claude -p` would hold the turn for the full 1800s
+    # request timeout. This bounds the whole call, not a silence.
+    stale_timeout_seconds: 900
+
+# No fallback model: a lapsed login or an exhausted plan fails the turn in
+# Matrix instead of quietly answering from another model. To bring Z.ai back,
+# uncomment this plus GLM_API_KEY (externalsecret.yaml) and GLM_BASE_URL
+# (helmrelease.yaml).
+# fallback_providers:
+#   - provider: zai
+#     model: glm-5.3-flash
+
+# Side tasks. Any task not listed runs on the main model ("auto"): compression,
+# background_review (the post-turn memory/skill pass, which replays the chat on
+# the warm prompt cache), goal_judge and /review stay on Sonnet. Images also go
+# to Sonnet natively because the plugin's routes declare vision, so
+# auxiliary.vision is deliberately unset. The tasks hermes itself marks as
+# short or cheap-model jobs run on Haiku 5.5 instead.
+auxiliary:
+  # One call per new session.
+  title_generation:
+    provider: claude-subscription-directsdk-experimental
+    model: claude-haiku-5-5
+    reasoning_effort: low
+  # Skill consolidation; only runs if curator.consolidate is turned on.
+  curator:
+    provider: claude-subscription-directsdk-experimental
+    model: claude-haiku-5-5
+  # Mail importance scorer, profile blurbs, kanban triage: unused today.
+  monitor:
+    provider: claude-subscription-directsdk-experimental
+    model: claude-haiku-5-5
+    reasoning_effort: low
+  profile_describer:
+    provider: claude-subscription-directsdk-experimental
+    model: claude-haiku-5-5
+    reasoning_effort: low
+  triage_specifier:
+    provider: claude-subscription-directsdk-experimental
+    model: claude-haiku-5-5
 
 toolsets:
   - hermes-cli
