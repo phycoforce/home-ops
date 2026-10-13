@@ -20,8 +20,9 @@ spec:
         initContainers:
           # Runs to completion before the app starts (not a sidecar). It seeds
           # the data volume with the bits hermes cannot take from a read-only
-          # mount: the merged config.yaml, an empty .env, the kopia ignore file
-          # and the memini memory-provider plugin.
+          # mount: the merged config.yaml, an empty .env, the kopia ignore file,
+          # the memini memory-provider plugin, the Claude subscription provider
+          # plugin with its Claude Code CLI, and the cron scripts.
           init:
             image:
               repository: docker.io/mikefarah/yq
@@ -30,6 +31,15 @@ spec:
               # The plugin is versioned in lockstep with the memini server chart.
               # renovate: datasource=github-tags depName=eleboucher/memini
               MEMINI_PLUGIN_REF: v0.7.32
+              # Native Claude Code CLI behind the directsdk provider. Haiku 5.5
+              # (the auxiliary tasks) needs >= 2.1.293, so this tracks `latest`;
+              # the `stable` channel was still 2.1.287 on 2026-10-13.
+              # renovate: datasource=npm depName=@anthropic-ai/claude-code
+              CLAUDE_CODE_VERSION: 2.1.296
+              # The plugin repo has no tags. Bump to the commit hermes-agent's
+              # plugin-catalog/claude-subscription-directsdk.yaml pins whenever
+              # the hermes image is upgraded.
+              DIRECTSDK_PLUGIN_REF: 682b22d019a1109421faa62efe43e16b23c2ebef
             command:
               - sh
               - -c
@@ -53,9 +63,11 @@ spec:
                 mkdir -p /opt/data/workspace
                 # Keep credential stores and caches out of kopiur snapshots.
                 # OAuth refresh tokens are single-use, so a restored copy is
-                # poison; re-auth after a restore instead.
+                # poison; re-auth after a restore instead. The 250 MB claude
+                # binary is re-downloaded below when it is missing.
                 printf '%s\n' .env auth.json .anthropic_oauth.json .claude/ \
-                  mcp-tokens/ cache/ logs/ > /opt/data/.kopiaignore
+                  '.claude.json*' .local/bin/claude mcp-tokens/ cache/ logs/ \
+                  > /opt/data/.kopiaignore
                 # memini native MemoryProvider plugin (two stdlib-only files),
                 # refreshed only when MEMINI_PLUGIN_REF changes.
                 dir=/opt/data/plugins/memini
@@ -70,6 +82,45 @@ spec:
                   mv "$dir/plugin.yaml.tmp" "$dir/plugin.yaml"
                   printf '%s\n' "$MEMINI_PLUGIN_REF" > "$dir/.ref"
                 fi
+                # claude-subscription-directsdk model-provider plugin (stdlib
+                # only). Staged under cache/ and moved in whole: hermes imports
+                # every plugins/ subdir whose plugin.yaml says model-provider,
+                # so a half-written copy there would load as a second provider.
+                dir=/opt/data/plugins/claude-subscription-directsdk
+                if [ "$(cat "$dir/.ref" 2>/dev/null || true)" != "$DIRECTSDK_PLUGIN_REF" ]; then
+                  stage=/opt/data/cache/claude-subscription-directsdk
+                  rm -rf "$stage"
+                  mkdir -p "$stage"
+                  base="https://raw.githubusercontent.com/NousResearch/hermes-official-plugins/$DIRECTSDK_PLUGIN_REF/claude-subscription-directsdk"
+                  for f in plugin.yaml __init__.py directsdk.py directsdk_setup.py \
+                    admission.py model_catalog.py inert_mcp.py; do
+                    wget -qO "$stage/$f" "$base/$f"
+                  done
+                  printf '%s\n' "$DIRECTSDK_PLUGIN_REF" > "$stage/.ref"
+                  rm -rf "$dir"
+                  mv "$stage" "$dir"
+                fi
+                # Claude Code CLI that the plugin runs for every model call. The
+                # npm -g install it suggests cannot write a read-only root, so
+                # fetch the native binary into ~/.local/bin (on the image PATH
+                # and in the plugin's search list), checked against the
+                # release manifest's sha256.
+                bin=/opt/data/.local/bin
+                if [ ! -x "$bin/claude" ] || \
+                  [ "$(cat "$bin/.claude-version" 2>/dev/null || true)" != "$CLAUDE_CODE_VERSION" ]; then
+                  mkdir -p "$bin"
+                  base="https://downloads.claude.ai/claude-code-releases/$CLAUDE_CODE_VERSION"
+                  sum=$(wget -qO- "$base/manifest.json" | yq -p json '.platforms["linux-x64"].checksum')
+                  wget -qO "$bin/claude.tmp" "$base/linux-x64/claude"
+                  echo "$sum  $bin/claude.tmp" | sha256sum -c -
+                  chmod 755 "$bin/claude.tmp"
+                  mv "$bin/claude.tmp" "$bin/claude"
+                  printf '%s\n' "$CLAUDE_CODE_VERSION" > "$bin/.claude-version"
+                fi
+                # Cron scripts load only from /opt/data/scripts (the job itself
+                # is created by hand; see the script's header).
+                mkdir -p /opt/data/scripts
+                cp /config/claude-login-check.sh /opt/data/scripts/claude-login-check.sh
         containers:
           app:
             image:
@@ -119,7 +170,13 @@ spec:
               # Z.ai global pay-as-you-go endpoint. Without it the zai provider
               # sends a test request with the key to all four Z.ai endpoints
               # (global, China, and both Coding Plan variants) to find one.
-              GLM_BASE_URL: https://api.z.ai/api/paas/v4
+              # Parked with GLM_API_KEY while hermes runs on the Claude plan.
+              # GLM_BASE_URL: https://api.z.ai/api/paas/v4
+              # The Claude Code CLI is pinned by the init container: never let
+              # it self-update on the PVC (blocks a manual `claude update` too),
+              # and skip its warnings about the hand-placed install.
+              DISABLE_UPDATES: "1"
+              DISABLE_INSTALLATION_CHECKS: "1"
               # Matrix gateway platform, enabled by HOMESERVER + ACCESS_TOKEN
               # (token in hermes-secret). The in-cluster Service keeps the bot
               # off the ingress path; the user ID comes from whoami.
@@ -168,7 +225,10 @@ spec:
             resources:
               requests:
                 cpu: 200m
-                memory: 1Gi
+                # Peak was ~630Mi on Z.ai; every model call now also runs a
+                # `claude -p` process, up to three at once (turn, title,
+                # background review).
+                memory: 1536Mi
               limits:
                 memory: 3Gi
             securityContext:
@@ -221,8 +281,7 @@ spec:
         advancedMounts:
           hermes:
             init:
-              - path: /config/config.yaml
-                subPath: config.yaml
+              - path: /config
                 readOnly: true
       run:
         type: emptyDir

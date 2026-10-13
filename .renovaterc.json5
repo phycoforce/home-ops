@@ -12,4 +12,13 @@
     ":semanticCommits",
     ":timezone(Europe/London)",
   ],
+  packageRules: [
+    {
+      description: "Claude Code ships near-daily: bump the CLI pinned in hermes weekly, and only to releases 3+ days old so a pulled one is never proposed",
+      matchDatasources: ["npm"],
+      matchPackageNames: ["@anthropic-ai/claude-code"],
+      schedule: ["before 6am on Monday"],
+      minimumReleaseAge: "3 days",
+    },
+  ],
 }
