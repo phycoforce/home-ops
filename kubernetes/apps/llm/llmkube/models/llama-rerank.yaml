@@ -29,7 +29,7 @@ metadata:
 spec:
   modelRef: llama-rerank
   replicas: 1
-  image: ghcr.io/ggml-org/llama.cpp:server-vulkan-b11641@sha256:df5209b227af28d491dc26de7c3a5b894060047d0963640e6aeb360f80651412
+  image: ghcr.io/ggml-org/llama.cpp:server-vulkan-b11669@sha256:49477bf9880e3e9d916e455268028f6157666cf1e97cddab781c6804386d74f6
   podLabels:
     igpu-workload: "true"
   # Hard pin: one LLM per iGPU, sharing logos's GPU with plex. Layout table:
