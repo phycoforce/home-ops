@@ -1,0 +1,118 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: kritika
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: kritika
+  interval: 1h
+  values:
+    replicas: 2
+    deploymentAnnotations:
+      secret.reloader.stakater.com/auto: "true"
+    config:
+      webUrl: https://{{ .Release.Name }}.${SECRET_DOMAIN_2}
+      auth:
+        admin:
+          password: { env: KRITIKA_AUTH_ADMIN_PASSWORD }
+      review:
+        model: anthropic/~sonnet-latest
+        fallback: anthropic/~opus-latest
+        # Anthropic's starting point for Sonnet on multistep tool use; fits ~200 reviews/month in the API credits
+        effort: medium
+      confidence:
+        model: anthropic/~sonnet-latest
+        fallback: anthropic/~haiku-latest
+        effort: low
+      embedding:
+        model: local/llama-embed
+        dims: 1024
+        queryPrompt: "Instruct: Given a code change, retrieve code that implements similar logic\nQuery:"
+        similarFloor: 0.3
+        # memini shares llama-embed (2 slots, 5s recall timeout): keep index batches small so its queries interleave
+        maxBatch: 8
+        maxBatchChars: 32000
+      apps:
+        github:
+          accounts: [phycoforce]
+          clientId: { env: KRITIKA_GITHUB_CLIENT_ID }
+          privateKey: { env: KRITIKA_GITHUB_PRIVATE_KEY }
+          webhookSecret: { env: KRITIKA_GITHUB_WEBHOOK_SECRET }
+      providers:
+        anthropic:
+          type: anthropic
+          apiKey: { env: KRITIKA_ANTHROPIC_API_KEY }
+          retries: 2
+          pricing:
+            ~opus-latest: { input: 4, output: 20, cacheRead: 0.2, cacheWrite: 5 }
+            ~sonnet-latest: { input: 2, output: 10, cacheRead: 0.2, cacheWrite: 2.5 }
+            ~haiku-latest: { input: 0.1, output: 0.5, cacheRead: 0.01, cacheWrite: 0.125 }
+        local:
+          type: openai
+          baseUrl: http://llama-embed.llm.svc.cluster.local:8080/v1
+          apiKey: { env: KRITIKA_LLAMA_EMBED_API_KEY }
+          pricing:
+            llama-embed: { input: 0, output: 0 }
+      egress:
+        allow: ["*"]
+        deny: [10.0.0.0/8, 172.16.0.0/12, 192.168.0.0/16, "*.internal"]
+      trigger:
+        exclude: [{ name: forks, expr: pr.fork }]
+    env:
+      # llama.cpp takes no key, but kritika requires one by reference
+      KRITIKA_LLAMA_EMBED_API_KEY: unused
+    envFrom:
+      - secretRef:
+          name: kritika-secret
+    database:
+      app:
+        existingSecret: kritika-postgres-app
+      owner:
+        existingSecret: kritika-postgres-credentials
+      runner:
+        existingSecret: kritika-postgres-runner
+    runner:
+      podTemplate:
+        spec:
+          resources:
+            requests:
+              cpu: 10m
+              memory: 512Mi
+            limits:
+              memory: 2Gi
+    httpRoute:
+      enabled: true
+      annotations:
+        gatus.home-operations.com/endpoint: |-
+          conditions: ["[STATUS] == 200"]
+          path: /api/v1/meta
+      parentRefs:
+        - name: envoy-external
+          namespace: network
+      hostnames:
+        - "{{ .Release.Name }}.${SECRET_DOMAIN_2}"
+    monitoring:
+      dashboards:
+        enabled: true
+        grafanaOperator:
+          enabled: true
+          matchLabels:
+            dashboards: grafana
+      prometheusRule:
+        enabled: true
+      serviceMonitor:
+        enabled: true
+    networkPolicy:
+      enabled: true
+      type: cilium
+      # 8080: llama-embed in the llm namespace
+      egressPorts: [443, 8080]
+    resources:
+      requests:
+        cpu: 10m
+        memory: 64Mi
+      limits:
+        memory: 512Mi
