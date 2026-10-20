@@ -60,13 +60,14 @@ There is a template over at [onedr0p/cluster-template](https://github.com/onedr0
 - [rook-ceph](https://rook.io/): Cloud native distributed block storage for Kubernetes
 - [spegel](https://github.com/XenitAB/spegel): stateless cluster local OCI registry mirror
 - [envoy-gateway](https://github.com/envoyproxy/gateway): Gateway API management for my HTTProutes.
-- [volsync](https://github.com/backube/volsync): backup and recovery of persistent volume claims
+- [kopiur](https://github.com/home-operations/kopiur): kopia-native backup and recovery of persistent volume claims
+- [miroir](https://github.com/home-operations/miroir): DRBD-replicated local block storage for cache and scratch volumes
 
 ### GitOps
 
 [Flux](https://github.com/fluxcd/flux2) watches the clusters in my [kubernetes](./kubernetes/) folder (see Directories below) and makes the changes to my clusters based on the state of my Git repository.
 
-The way Flux works for me here is it will recursively search the `kubernetes/${cluster}/apps` folder until it finds the most top level `kustomization.yaml` per directory and then apply all the resources listed in it. That aforementioned `kustomization.yaml` will generally only have a namespace resource and one or many Flux kustomizations (`ks.yaml`). Under the control of those Flux kustomizations there will be a `HelmRelease` or other resources related to the application which will be applied.
+The way Flux works for me here is it will recursively search the `kubernetes/apps` folder until it finds the most top level `kustomization.yaml` per directory and then apply all the resources listed in it. That aforementioned `kustomization.yaml` will generally only have a namespace resource and one or many Flux kustomizations (`ks.yaml`). Under the control of those Flux kustomizations there will be a `HelmRelease` or other resources related to the application which will be applied.
 
 [Renovate](https://github.com/renovatebot/renovate) watches my **entire** repository looking for dependency updates, when they are found a PR is automatically created. When some PRs are merged Flux applies the changes to my cluster.
 
@@ -101,7 +102,7 @@ The alternative solution to these two problems would be to host a Kubernetes clu
 
 ## 🌐 DNS
 
-In my cluster there are two instances of [ExternalDNS](https://github.com/kubernetes-sigs/external-dns) running. One for syncing private DNS records to my `RB5009` using [ExternalDNS webhook provider for Mikrotik](https://github.com/mirceanton/external-dns-provider-mikrotik), while another instance syncs public DNS to `Cloudflare`. This setup is managed by creating ingresses with two specific classes: `internal` for private DNS and `external` for public DNS. The `external-dns` instances then syncs the DNS records to their respective platforms accordingly.
+In my cluster there are two instances of [ExternalDNS](https://github.com/kubernetes-sigs/external-dns) running. One for syncing private DNS records to my `RB5009` using [ExternalDNS webhook provider for Mikrotik](https://github.com/mirceanton/external-dns-provider-mikrotik), while another instance syncs public DNS to `Cloudflare`. This setup is managed by attaching `HTTPRoute`s to one of two [Envoy Gateway](https://github.com/envoyproxy/gateway) gateways: `envoy-internal` for private DNS and `envoy-external` for public DNS. The `external-dns` instances then sync the DNS records to their respective platforms accordingly.
 
 ---
 
