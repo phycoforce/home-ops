@@ -9,7 +9,7 @@ resources:
   - ./ocirepository.yaml
   - ./helmrelease.yaml
 patches:
-  # Keep this in the native Kustomization: cluster-apps replaces each Flux
+  # Keep this in the native Kustomization: the FluxInstance replaces each Flux
   # Kustomization's spec.patches with Helm defaults, discarding per-app patches.
   # An unprivileged restore writes files as the mover's UID. WiredTiger uses
   # O_NOATIME, which requires the file owner, so restore as UniFi's UID 1001.
