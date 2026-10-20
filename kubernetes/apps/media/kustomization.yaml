@@ -10,6 +10,7 @@ resources:
   - ./namespace.yaml
   - ./sonarr/ks.yaml
   - ./radarr/ks.yaml
+  - ./radarr-uhd/ks.yaml
   - ./bazarr/ks.yaml
   - ./prowlarr/ks.yaml
   - ./lidarr/ks.yaml
