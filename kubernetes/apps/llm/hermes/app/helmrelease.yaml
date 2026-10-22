@@ -30,7 +30,7 @@ spec:
             env:
               # The plugin is versioned in lockstep with the memini server chart.
               # renovate: datasource=github-tags depName=eleboucher/memini
-              MEMINI_PLUGIN_REF: v0.7.36
+              MEMINI_PLUGIN_REF: v0.7.37
               # Native Claude Code CLI behind the directsdk provider. Haiku 5.5
               # (the auxiliary tasks) needs >= 2.1.293, so this tracks `latest`;
               # the `stable` channel was still 2.1.287 on 2026-10-13.
