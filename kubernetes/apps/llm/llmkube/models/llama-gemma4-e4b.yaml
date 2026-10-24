@@ -29,7 +29,7 @@ metadata:
 spec:
   modelRef: llama-gemma4-e4b
   replicas: 1
-  image: ghcr.io/ggml-org/llama.cpp:server-vulkan-b11804@sha256:a644fb651975d9dea49140302577a3b945993fd5efd3400bf89c7d525d03c103
+  image: ghcr.io/ggml-org/llama.cpp:server-vulkan-b11854@sha256:2716be5463dcecd02ace322f77fa0ea10b7168c5c8f0e45458b303541fca6632
   podLabels:
     igpu-workload: "true"
   # Hard pin: one LLM per iGPU, sharing pneuma's GPU with owncast (idle unless
