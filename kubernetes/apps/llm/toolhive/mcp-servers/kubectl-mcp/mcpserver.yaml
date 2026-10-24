@@ -33,8 +33,10 @@ spec:
             # 2.0 exits on a non-loopback bind without OAuth; exposure is unchanged from 1.x.
             - --allow-unauthenticated
             # 2.0 loads only core+helm by default; add the ecosystems this cluster runs.
+            # helm is left out: its release tools all need Secrets (Forbidden by design),
+            # and the flux MCP covers HelmRelease history.
             - --toolsets
-            - default,diagnostics,crds,certs,cilium
+            - core,diagnostics,crds,certs,cilium
           env:
             - name: MCP_K8S_PROVIDER
               value: in-cluster
