@@ -35,7 +35,7 @@ spec:
               # (the auxiliary tasks) needs >= 2.1.293, so this tracks `latest`;
               # the `stable` channel was still 2.1.287 on 2026-10-13.
               # renovate: datasource=npm depName=@anthropic-ai/claude-code
-              CLAUDE_CODE_VERSION: 2.1.301
+              CLAUDE_CODE_VERSION: 2.1.310
               # The plugin repo has no tags. Bump to the commit hermes-agent's
               # plugin-catalog/claude-subscription-directsdk.yaml pins whenever
               # the hermes image is upgraded.
