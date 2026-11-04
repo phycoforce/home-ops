@@ -32,7 +32,7 @@ metadata:
 spec:
   modelRef: llama-embed
   replicas: 1
-  image: ghcr.io/ggml-org/llama.cpp:server-vulkan-b12098@sha256:ea25dfe06c405f1b67eb03755b3307d31d85f600c5ba9d98e5d5a2a5df0361de
+  image: ghcr.io/ggml-org/llama.cpp:server-vulkan-b12110@sha256:dd0ca57c2543cbd99ec09890b2601a86930f086d6f6543faf49698421df907a4
   podLabels:
     igpu-workload: "true"
   # Hard pin: one LLM per iGPU, sharing ontos's GPU with immich (microservices +
