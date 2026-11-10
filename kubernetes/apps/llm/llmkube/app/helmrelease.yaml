@@ -23,8 +23,9 @@ spec:
       keep: true
     controllerManager:
       replicaCount: 1
+      # The chart binds the lease Role only when leader election is on; the watch canary needs it
       leaderElection:
-        enabled: false
+        enabled: true
       resources:
         requests:
           cpu: 10m
