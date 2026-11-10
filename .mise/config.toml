@@ -11,5 +11,5 @@ _.file = [
 ]
 
 [tools]
-"github:home-operations/flate" = "v0.7.1"
+"github:home-operations/flate" = "v0.7.3"
 "uv" = "latest"
