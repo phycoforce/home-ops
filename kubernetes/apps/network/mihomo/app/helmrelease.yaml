@@ -18,7 +18,7 @@ spec:
           app:
             image:
               repository: docker.io/metacubex/mihomo
-              tag: v1.19.33@sha256:9211361a3ed85305383288d38c05e85862d6d5a590c10007c37fc059cca82e9c
+              tag: v1.19.34@sha256:4c2495d705f152897a58eac410350f243835fd01ce2fe44949a571faa824d532
             args: ["-d", "/config"]
             securityContext:
               allowPrivilegeEscalation: false
