@@ -21,9 +21,18 @@ sonarr:
       - trash_id: 72dae194fc92bf828f32cde7744e51a1 # WEB-1080p
         reset_unmatched_scores:
           enabled: true
+      # Curated 4K: prefers WEB-2160p, falls back to WEB-1080p and upgrades.
+      - trash_id: c4cadd6b35b95f62c3d47a408e53e2f7 # WEB-2160p (Combined)
+        reset_unmatched_scores:
+          enabled: true
       - trash_id: 20e0fc959f1f1704bed501f23bdae76f  # [Anime] Remux-1080p
         reset_unmatched_scores:
           enabled: true
+    # DV Boost only applies to 2160p profiles. "DV (w/o HDR fallback)" is
+    # deliberately not added: playback is on fully DV-capable equipment.
+    custom_format_groups:
+      add:
+        - trash_id: e0b2774083df4265f25c9e5bc6c80940 # [HDR Formats] DV Boost
     custom_formats:
       - trash_ids:
           - 32b367365729d530ca1c124a0b180c64 # Bad Dual Groups
@@ -32,6 +41,7 @@ sonarr:
           - 06d66ab109d4d2eddb2794d21526d140 # Retags
         assign_scores_to:
           - trash_id: 72dae194fc92bf828f32cde7744e51a1 # WEB-1080p
+          - trash_id: c4cadd6b35b95f62c3d47a408e53e2f7 # WEB-2160p (Combined)
       - trash_ids:
           - 026d5aadd1a6b4e550b134cb6c72b3ca # Uncensored
         assign_scores_to:
