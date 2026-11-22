@@ -27,6 +27,7 @@ spec:
             limits:
               memory: 2Gi
       envoyService:
+        allocateLoadBalancerNodePorts: false
         externalTrafficPolicy: Cluster
       envoyHpa:
         minReplicas: 1
