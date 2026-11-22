@@ -16,8 +16,8 @@ spec:
         kind: Secret
   prune: true
   sourceRef:
-    kind: GitRepository
-    name: flux-system
+    kind: ExternalArtifact
+    name: victoria-logs
     namespace: flux-system
   wait: false
   targetNamespace: observability
@@ -34,8 +34,8 @@ spec:
   path: ./kubernetes/apps/observability/victoria-logs/collector
   prune: true
   sourceRef:
-    kind: GitRepository
-    name: flux-system
+    kind: ExternalArtifact
+    name: victoria-logs
     namespace: flux-system
   wait: false
   targetNamespace: observability

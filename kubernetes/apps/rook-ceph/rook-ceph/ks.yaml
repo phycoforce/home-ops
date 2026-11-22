@@ -9,8 +9,8 @@ spec:
   path: ./kubernetes/apps/rook-ceph/rook-ceph/app
   prune: true
   sourceRef:
-    kind: GitRepository
-    name: flux-system
+    kind: ExternalArtifact
+    name: rook-ceph
     namespace: flux-system
   wait: true
   targetNamespace: rook-ceph
@@ -32,8 +32,8 @@ spec:
   path: ./kubernetes/apps/rook-ceph/rook-ceph/csi
   prune: true
   sourceRef:
-    kind: GitRepository
-    name: flux-system
+    kind: ExternalArtifact
+    name: rook-ceph
     namespace: flux-system
   targetNamespace: rook-ceph
   wait: true
@@ -69,7 +69,7 @@ spec:
         kind: Secret
   prune: true
   sourceRef:
-    kind: GitRepository
-    name: flux-system
+    kind: ExternalArtifact
+    name: rook-ceph
     namespace: flux-system
   targetNamespace: rook-ceph

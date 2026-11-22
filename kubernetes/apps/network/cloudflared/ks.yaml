@@ -19,8 +19,8 @@ spec:
   prune: true
   retryInterval: 2m
   sourceRef:
-    kind: GitRepository
-    name: flux-system
+    kind: ExternalArtifact
+    name: cloudflared
     namespace: flux-system
   wait: false
   targetNamespace: network

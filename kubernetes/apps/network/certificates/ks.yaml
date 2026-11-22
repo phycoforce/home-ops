@@ -13,8 +13,8 @@ spec:
         kind: Secret
   prune: true
   sourceRef:
-    kind: GitRepository
-    name: flux-system
+    kind: ExternalArtifact
+    name: certificates
     namespace: flux-system
   wait: true
   targetNamespace: network
@@ -35,8 +35,8 @@ spec:
         kind: Secret
   prune: true
   sourceRef:
-    kind: GitRepository
-    name: flux-system
+    kind: ExternalArtifact
+    name: certificates
     namespace: flux-system
   wait: false
   targetNamespace: network

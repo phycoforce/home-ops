@@ -13,8 +13,8 @@ spec:
         kind: Secret
   prune: true
   sourceRef:
-    kind: GitRepository
-    name: flux-system
+    kind: ExternalArtifact
+    name: blackbox-exporter
     namespace: flux-system
   wait: false
   targetNamespace: observability

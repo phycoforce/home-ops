@@ -13,8 +13,8 @@ spec:
         kind: Secret
   prune: true
   sourceRef:
-    kind: GitRepository
-    name: flux-system
+    kind: ExternalArtifact
+    name: konflate
     namespace: flux-system
   targetNamespace: flux-system
   wait: false

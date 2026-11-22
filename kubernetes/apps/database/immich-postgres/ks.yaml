@@ -24,8 +24,8 @@ spec:
   prune: true
   retryInterval: 2m
   sourceRef:
-    kind: GitRepository
-    name: flux-system
+    kind: ExternalArtifact
+    name: immich-postgres
     namespace: flux-system
   # bound health-check failure to 10m instead of the 1h interval default; immich dependsOn this ks
   timeout: 10m

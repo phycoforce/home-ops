@@ -9,8 +9,8 @@ spec:
   path: ./kubernetes/apps/llm/toolhive/crds
   prune: true
   sourceRef:
-    kind: GitRepository
-    name: flux-system
+    kind: ExternalArtifact
+    name: toolhive
     namespace: flux-system
   wait: true
   targetNamespace: llm
@@ -27,8 +27,8 @@ spec:
   path: ./kubernetes/apps/llm/toolhive/app
   prune: true
   sourceRef:
-    kind: GitRepository
-    name: flux-system
+    kind: ExternalArtifact
+    name: toolhive
     namespace: flux-system
   wait: true
   targetNamespace: llm
@@ -49,8 +49,8 @@ spec:
         kind: Secret
   prune: true
   sourceRef:
-    kind: GitRepository
-    name: flux-system
+    kind: ExternalArtifact
+    name: toolhive
     namespace: flux-system
   wait: false
   targetNamespace: llm
@@ -67,8 +67,8 @@ spec:
   path: ./kubernetes/apps/llm/toolhive/mcp-servers
   prune: true
   sourceRef:
-    kind: GitRepository
-    name: flux-system
+    kind: ExternalArtifact
+    name: toolhive
     namespace: flux-system
   wait: false
   targetNamespace: llm

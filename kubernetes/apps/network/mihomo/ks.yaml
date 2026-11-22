@@ -12,8 +12,8 @@ spec:
       APP: mihomo
   prune: true
   sourceRef:
-    kind: GitRepository
-    name: flux-system
+    kind: ExternalArtifact
+    name: mihomo
     namespace: flux-system
   wait: false
   targetNamespace: network
