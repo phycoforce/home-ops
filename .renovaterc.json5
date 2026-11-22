@@ -15,6 +15,17 @@
   // No branch protection requires up-to-date branches, and `auto` would
   // still rebase every automerge PR each time main moves
   rebaseWhen: "conflicted",
+  customManagers: [
+    {
+      description: "Process CNPG ImageCatalog extension image references",
+      customType: "regex",
+      managerFilePatterns: ["/\\.ya?ml$/"],
+      matchStrings: [
+        "reference:\\s+(?<depName>[^@\\s]+):(?<currentValue>[^@\\s/]+)(?:@(?<currentDigest>sha256:[a-f0-9]+))?",
+      ],
+      datasourceTemplate: "docker",
+    },
+  ],
   packageRules: [
     {
       description: "Claude Code ships near-daily: bump the CLI pinned in hermes weekly, and only to releases 3+ days old so a pulled one is never proposed",

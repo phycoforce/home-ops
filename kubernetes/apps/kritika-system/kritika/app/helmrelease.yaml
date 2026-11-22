@@ -72,8 +72,6 @@ spec:
         existingSecret: kritika-postgres-app
       owner:
         existingSecret: kritika-postgres-credentials
-      runner:
-        existingSecret: kritika-postgres-runner
     runner:
       podTemplate:
         spec:
@@ -106,10 +104,20 @@ spec:
       serviceMonitor:
         enabled: true
     networkPolicy:
-      enabled: true
       type: cilium
-      # 8080: llama-embed in the llm namespace
-      egressPorts: [443, 8080]
+      extraEgress:
+        - to:
+            - namespaceSelector:
+                matchLabels:
+                  kubernetes.io/metadata.name: llm
+              podSelector:
+                matchLabels:
+                  app: llama-embed
+          ports:
+            - port: 8080
+      postgres:
+        podSelector:
+          cnpg.io/cluster: kritika-postgres
     resources:
       requests:
         cpu: 10m
