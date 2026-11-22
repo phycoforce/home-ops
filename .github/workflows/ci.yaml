@@ -17,6 +17,9 @@ permissions:
   contents: read
 
 env:
+  # cloudflared substitutes from this bootstrap Secret, which flate cannot see
+  # in kubernetes/apps. It only holds a 1Password reference.
+  FLATE_SUPPLY: ./bootstrap/kustomize/network/secret.yaml
   # renovate: datasource=github-releases depName=home-operations/flate
   FLATE_VERSION: "0.8.0"
   # renovate: datasource=custom.talos-factory depName=siderolabs/talos
