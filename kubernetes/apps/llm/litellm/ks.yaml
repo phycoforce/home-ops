@@ -16,8 +16,8 @@ spec:
   path: ./kubernetes/apps/llm/litellm/app
   prune: true
   sourceRef:
-    kind: GitRepository
-    name: flux-system
+    kind: ExternalArtifact
+    name: litellm
     namespace: flux-system
   wait: false
   targetNamespace: llm

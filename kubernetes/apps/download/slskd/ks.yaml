@@ -21,8 +21,8 @@ spec:
       CONTROLLER: StatefulSet
   prune: true
   sourceRef:
-    kind: GitRepository
-    name: flux-system
+    kind: ExternalArtifact
+    name: slskd
     namespace: flux-system
   wait: false
   targetNamespace: download

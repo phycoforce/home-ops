@@ -21,8 +21,8 @@ spec:
         kind: Secret
   prune: true
   sourceRef:
-    kind: GitRepository
-    name: flux-system
+    kind: ExternalArtifact
+    name: palworld
     namespace: flux-system
   wait: false
   targetNamespace: games
@@ -43,8 +43,8 @@ spec:
   path: ./kubernetes/apps/games/palworld/exporter
   prune: true
   sourceRef:
-    kind: GitRepository
-    name: flux-system
+    kind: ExternalArtifact
+    name: palworld
     namespace: flux-system
   wait: false
   targetNamespace: games
@@ -70,8 +70,8 @@ spec:
         kind: Secret
   prune: true
   sourceRef:
-    kind: GitRepository
-    name: flux-system
+    kind: ExternalArtifact
+    name: palworld
     namespace: flux-system
   wait: false
   targetNamespace: games

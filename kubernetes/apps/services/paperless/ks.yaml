@@ -24,8 +24,8 @@ spec:
       ZEROSCALER_JOB_NAME: probe_success_nfs_postgres_gate
   prune: true
   sourceRef:
-    kind: GitRepository
-    name: flux-system
+    kind: ExternalArtifact
+    name: paperless
     namespace: flux-system
   wait: false
   targetNamespace: services

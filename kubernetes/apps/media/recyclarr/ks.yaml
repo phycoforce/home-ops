@@ -17,8 +17,8 @@ spec:
       APP: recyclarr
   prune: true
   sourceRef:
-    kind: GitRepository
-    name: flux-system
+    kind: ExternalArtifact
+    name: recyclarr
     namespace: flux-system
   wait: false
   targetNamespace: media

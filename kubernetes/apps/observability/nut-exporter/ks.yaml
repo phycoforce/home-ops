@@ -9,8 +9,8 @@ spec:
   path: ./kubernetes/apps/observability/nut-exporter/app
   prune: true
   sourceRef:
-    kind: GitRepository
-    name: flux-system
+    kind: ExternalArtifact
+    name: nut-exporter
     namespace: flux-system
   wait: true
   targetNamespace: observability
@@ -27,8 +27,8 @@ spec:
   path: ./kubernetes/apps/observability/nut-exporter/dashboard
   prune: true
   sourceRef:
-    kind: GitRepository
-    name: flux-system
+    kind: ExternalArtifact
+    name: nut-exporter
     namespace: flux-system
   wait: false
   targetNamespace: observability
