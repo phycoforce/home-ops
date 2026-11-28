@@ -1,0 +1,47 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/helm.toolkit.fluxcd.io/helmrelease_v2.json
+apiVersion: helm.toolkit.fluxcd.io/v2
+kind: HelmRelease
+metadata:
+  name: miru
+spec:
+  chartRef:
+    kind: OCIRepository
+    name: miru
+  interval: 1h
+  values:
+    workload:
+      annotations:
+        reloader.stakater.com/auto: "true"
+    existingSecret: miru-secret
+    podSecurityContext:
+      runAsUser: 1001
+      runAsGroup: 1001
+      fsGroup: 1001
+    resources:
+      requests:
+        cpu: 10m
+      limits:
+        cpu: null
+        memory: 512Mi
+    auth:
+      mode: none
+    server:
+      trustProxyHeaders: true
+    plex:
+      url: http://plex.media.svc.cluster.local:32400
+    persistence:
+      existingClaim: miru
+    httpRoute:
+      enabled: true
+      parentRefs:
+        - name: envoy-internal
+          namespace: network
+      hostnames:
+        - miru.${SECRET_DOMAIN}
+    metrics:
+      enabled: true
+      serviceMonitor:
+        enabled: true
+      grafanaDashboard:
+        enabled: true

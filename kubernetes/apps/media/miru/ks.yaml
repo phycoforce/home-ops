@@ -1,0 +1,29 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/kustomize.toolkit.fluxcd.io/kustomization_v1.json
+apiVersion: kustomize.toolkit.fluxcd.io/v1
+kind: Kustomization
+metadata:
+  name: miru
+spec:
+  components:
+    - ../../../../components/kopiur
+    - ../../../../components/zeroscaler
+  dependsOn:
+    - name: rook-ceph-cluster
+      namespace: rook-ceph
+  interval: 1h
+  path: ./kubernetes/apps/media/miru/app
+  postBuild:
+    substitute:
+      APP: miru
+      KOPIUR_CAPACITY: 5Gi
+    substituteFrom:
+      - name: cluster-secrets
+        kind: Secret
+  prune: true
+  sourceRef:
+    kind: ExternalArtifact
+    name: miru
+    namespace: flux-system
+  wait: false
+  targetNamespace: media
