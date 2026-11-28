@@ -15,7 +15,6 @@ resources:
   - ./prowlarr/ks.yaml
   - ./lidarr/ks.yaml
   - ./plex/ks.yaml
-  - ./tautulli/ks.yaml
   - ./recyclarr/ks.yaml
   - ./seerr/ks.yaml
   - ./agregarr/ks.yaml
