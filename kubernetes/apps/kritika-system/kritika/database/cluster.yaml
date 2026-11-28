@@ -1,0 +1,42 @@
+---
+# yaml-language-server: $schema=https://k8s-schemas.home-operations.com/postgresql.cnpg.io/cluster_v1.json
+apiVersion: postgresql.cnpg.io/v1
+kind: Cluster
+metadata:
+  name: kritika-postgres
+spec:
+  instances: 2
+  imageCatalogRef:
+    apiGroup: postgresql.cnpg.io
+    kind: ImageCatalog
+    name: kritika-postgres
+    major: 18
+  postgresql:
+    extensions:
+      - name: vchord
+    shared_preload_libraries:
+      - vchord
+    synchronous:
+      method: any
+      number: 1
+      dataDurability: preferred
+  primaryUpdateStrategy: unsupervised
+  primaryUpdateMethod: switchover
+  enableSuperuserAccess: false
+  affinity:
+    podAntiAffinityType: required
+  storage:
+    size: 10Gi
+    storageClass: miroir-local
+  resources:
+    requests:
+      cpu: 100m
+      memory: 512Mi
+    limits:
+      memory: 2Gi
+  bootstrap:
+    initdb:
+      database: kritika
+      owner: kritika
+      secret:
+        name: kritika-postgres-credentials
